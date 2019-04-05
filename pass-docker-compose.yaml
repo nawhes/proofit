@@ -1,0 +1,502 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+networks:
+  pheromone:
+
+services:
+  ca.server.com:
+    container_name: ca.server.com
+    image: nawhes/pheromone:ca-server
+    environment:
+      - FABRIC_CA_HOME=/fabric-ca
+      - FABRIC_CA_SERVER_CA_NAME=ca.server.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/fabric-ca
+      - FABRIC_CA_SERVER_KEYFILE=/fabric-ca
+    port:
+      - 7054:7054
+    command: sh -c 'fabric-ca-server start -b admin:adminpw'
+    networks:
+      - pheromone
+
+  ca.client.com:
+    container_name: ca.client.com
+    image: nawhes/pheromone:orderer
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/orderer.orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/orderer/msp
+    working_dir: /ca-client/asdfasdf
+    command: orderer
+    ports:
+      - 7050:7050
+    networks:
+      - pheromone
+  
+  couchdb.univ.com:
+    container_name: couchdb.univ.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  peer0.univ.com:
+    container_name: peer0.univ.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer0.univ.com
+      - CORE_PEER_ADDRESS=peer0.univ.com:7051
+      - CORE_PEER_LOCALMSIPID=univMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabric/crypto-config/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=peer0.univ.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=peer0.univ.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.univ.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdb.univ.com
+    networks:
+      - pheromone
+
+  couchdbuniv.app.com:
+    container_name: couchdbuniv.univapp.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  univ.app.com:
+    container_name: univ.app.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=univ.app.com
+      - CORE_PEER_ADDRESS=univ.app.com:7051
+      - CORE_PEER_LOCALMSIPID=appMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=univ.app.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=univ.app.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.univ.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdbuniv.app.com
+    networks:
+      - pheromone
+
+  couchdbuniv.hiring.com:
+    container_name: couchdbuniv.hiring.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  univ.hiring.com:
+    container_name: univ.hiring.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=univ.hiring.com
+      - CORE_PEER_ADDRESS=univ.hiring.com:7051
+      - CORE_PEER_LOCALMSIPID=hiringMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=univ.hiring.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=univ.hiring.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdbuniv.hiring.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdbuniv.hiring.com
+    networks:
+      - pheromone
+
+  couchdb.academy.com:
+    container_name: couchdb.academy.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  pee0.academy.com:
+    container_name: peer0.academy.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer0.academy.com
+      - CORE_PEER_ADDRESS=peer0.academy.com:7051
+      - CORE_PEER_LOCALMSIPID=academyMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=peer0.academy.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=peer0.academy.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.academy.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdb.academy.com
+    networks:
+      - pheromone
+
+  couchdbacademy.app.com:
+    container_name: couchdbacademy.app.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  academy.app.com:
+    container_name: academy.app.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=academy.app.com
+      - CORE_PEER_ADDRESS=academy.app.com:7051
+      - CORE_PEER_LOCALMSIPID=appMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=academy.app.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=academy.app.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdbacademy.app.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdbacademy.app.com
+    networks:
+      - pheromone
+
+  couchdbacademy.hiring.com:
+    container_name: couchdbacademy.hiring.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  academy.hiring.com:
+    container_name: academy.hiring.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=academy.hiring.com
+      - CORE_PEER_ADDRESS=academy.hiring.com:7051
+      - CORE_PEER_LOCALMSIPID=univMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=academy.hiring.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=academy.hiring.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdbacademy.hiring.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdbacademy.hiring.com
+    networks:
+      - pheromone
+ 
+  couchdb.app.com:
+    container_name: couchdb.app.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  peer0.app.com:
+    container_name: peer0.app.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer0.app.com
+      - CORE_PEER_ADDRESS=peer0.app.com:7051
+      - CORE_PEER_LOCALMSIPID=appMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=peer0.app.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=peer0.app.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.app.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdb.app.com
+    networks:
+      - pheromone
+
+  couchdbapp.hiring.com:
+    container_name: couchdbapp.hiring.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  app.hiring.com:
+    container_name: app.hiring.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=app.hiring.com
+      - CORE_PEER_ADDRESS=app.hiring.com:7051
+      - CORE_PEER_LOCALMSIPID=hiringMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=app.hiring.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=app.hiring.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdbapp.hiring.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdbapp.hiring.com
+    networks:
+      - pheromone
+
+  couchdb.hiring.com:
+    container_name: couchdb.hiring.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  peer0.hiring.com:
+    container_name: peer0.hiring.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer0.hiring.com
+      - CORE_PEER_ADDRESS=peer0.hiring.com:7051
+      - CORE_PEER_LOCALMSIPID=hiringMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=peer0.hiring.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=peer0.hiring.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.hiring.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdb.hiring.com
+    networks:
+      - pheromone
+
+  couchdbhiring.app.com:
+    container_name: couchdbhiring.app.com
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - pheromone
+
+  hiring.app.com:
+    container_name: hiring.app.com
+    image: nawhes/pheromone:peer-node
+    environment:
+      - CORE_VM_ENDPOINT=uninx:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pheromone
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=hiring.app.com
+      - CORE_PEER_ADDRESS=hiring.app.com:7051
+      - CORE_PEER_LOCALMSIPID=appMSP
+      - CORE_PEER_MSPCONFIGPATH=/fabricasdfasdf/msp/peer
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_CHAINCODEADDRESS=hiring.app.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_EXTERNALENDPOINT=hiring.app.com:7051
+      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdbhiring.app.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /fabric-sdk-node
+    command: peer node start
+    ports:
+      - 7051:7051
+    depends_on:
+      - ca.server.com
+      - ca.client.com
+      - couchdbhiring.app.com
+    networks:
+      - pheromone
+
