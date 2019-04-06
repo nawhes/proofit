@@ -6,7 +6,49 @@
 version: '2'
 
 networks:
-  pheromone:
+  proofit:
+    driver: bridge
+      driver_opts:
+        com.docker.network.enable_ipv6: "false"
+      ipam:
+        driver: default
+        config:
+        - subnet: 172.172.0.1/24
+          
+  appdb:
+    driver: bridge
+    iapm:
+      driver: default
+      config:
+      - subnet: 172.172.1.0/28
+
+  languagedb:
+    driver: bridge
+    iapm:
+      driver: default
+      config:
+      - subnet: 172.172.1.16/28
+
+  qualifydb:
+    driver: bridge
+    iapm:
+      driver: default
+      config:
+      - subnet: 172.172.1.32/28
+
+  recruitdb:
+    driver: bridge
+    iapm:
+      driver: default
+      config:
+      - subnet: 172.172.1.48/28
+
+  univdb:
+    driver: bridge
+    iapm:
+      driver: default
+      config:
+      - subnet: 172.172.1.64/28
 
 services:
   server.ca.com:
@@ -20,7 +62,10 @@ services:
       - ./ca/server/:/fabric/
     container_name: server.ca.com
     networks:
-      - pheromone
+      proofit:
+        # ipv4_address: 172.172.0.1
+        aliases:
+          - server.ca.com
 
   client.ca.com:
     image: nawhes/fabric-orderer:1
@@ -31,7 +76,10 @@ services:
       - ./ca/client/:/fabric/
     container_name: client.ca.com
     networks:
-      - pheromone
+      proofit:
+        # ipv4_address: 172.172.0.2
+        aliases:
+          - client.ca.com
     depends_on:
       - server.ca.com
      
@@ -49,8 +97,10 @@ services:
         - ./ca/orderer/config/:/config/
         - ./ca/orderer/:/fabric/
     container_name: orderer.ca.com
-    networks:
-      - pheromone
+      proofit:
+        # ipv4_address: 172.172.0.3
+        aliases:
+          - orderer.ca.com
 
   app.app.com:
     container_name: app.app.com
@@ -63,15 +113,15 @@ services:
       - CORE_PEER_CHAINCODEADDRESS=app.app.com:7052
       - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=app.app.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=academy.app.com:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=language.app.com:751
       - CORE_PEER_LICALMSPID=app
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=appcouchdb.app.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=appdb:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
       # provide the credentials for ledger to connect to CouchDB.  The username and password must
       # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=appcouchdb.app.com
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=appcouchdb
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=appdb
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=appdb
     tty: true
     ports:
       - 7051:7051
@@ -81,296 +131,253 @@ services:
         - ./app/app/config/:/config/
     depends_on:
       - orderer.ca.com
-      - appcouchdb.app.com
+      - appdb
     networks:
-      - pheromone
+      proofit:
+        # ipv4_address: 172.172.0.4
+        aliases:
+          - app.app.com
+      appdb:
+        # ipv4_address: 172.172.1.1
+        aliases:
+          - app
 
-  appcouchdb.app.com:
-    container_name: appcouchdb.app.com
+  appdb:
+    container_name: appdb
     image: hyperledger/fabric-couchdb
     # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
     # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
     environment:
-      - COUCHDB_USER=appcouchdb.app.com
-      - COUCHDB_PASSWORD=appcouchdb
+      - COUCHDB_USER=appdb
+      - COUCHDB_PASSWORD=appdb
     ports:
-      - 6984:5984
+      - 5984:5984
     networks:
-      - pheromone
+      appdb:
+        # ipv4_address: 172.172.1.2
+        aliases:
+          - appdb
 
-  academy.app.com:
-    container_name: academy.app.com
-    image: nawhes/fabric-peer:1
-    environment:
-      - GODEBUG=netdns=go
-      - CORE_PEER_ID=academy.app.com
-      - CORE_PEER_ADDRESS=academy.app.com:8051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
-      - CORE_PEER_CHAINCODEADDRESS=academy.app.com:8052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:8052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=academy.app.com:8051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=hiring.app.com:9051
-      - CORE_PEER_LICALMSPID=app
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=academycouchdb.app.com:5984
-     # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-     # provide the credentials for ledger to connect to CouchDB.  The username and password must
-     # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=academycouchdb.app.com
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=academycouchdb
-    tty: true
-    ports:
-      - 8051:8051
-      - 8052:8052
-    volumes:
-        - ./app/academy/:/fabric/
-        - ./app/academy/config/:/config/
-    depends_on:
-      - orderer.ca.com
-      - academycouchdb.app.com
-    networks:
-      - pheromone
-
-  academycouchdb.app.com:
-    container_name: academycouchdb.app.com
-    image: hyperledger/fabric-couchdb
-    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-    environment:
-      - GODEBUG=netdns=go
-      - COUCHDB_USER=academycouchdb.app.com
-      - COUCHDB_PASSWORD=academycouchdb
-    ports:
-      - 7984:5984
-    networks:
-      - pheromone
-           
-  hiring.app.com:
-    container_name: hiring.app.com
-    image: nawhes/fabric-peer:1
-    environment:
-      - GODEBUG=netdns=go
-      - CORE_PEER_ID=hiring.app.com
-      - CORE_PEER_ADDRESS=hiring.app.com:9051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
-      - CORE_PEER_CHAINCODEADDRESS=hiring.app.com:9052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:9052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=hiring.app.com:9051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
-      - CORE_PEER_LICALMSPID=app
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=hiringcouchdb.app.com:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=hiringcouchdb.app.com
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=hiringcouchdb
-    tty: true
-    ports:
-      - 9051:9051
-      - 9052:9052
-    volumes:
-       - ./app/hiring/:/fabric/
-       - ./app/hiring/config/:/config/
-    depends_on:
-      - orderer.ca.com
-      - hiringcouchdb.app.com
-    networks:
-      - pheromone
-
-  hiringcouchdb.app.com:
-    container_name: hiringcouchdb.app.com
-    image: hyperledger/fabric-couchdb
-    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-    environment:
-      - COUCHDB_USER=hiringcouchdb.app.com
-      - COUCHDB_PASSWORD=hiringcouchdb
-    ports:
-      - 8984:5984
-    networks:
-      - pheromone
- 
-  app.hiring.com:
-    container_name: app.hiring.com
-    image: nawhes/fabric-peer:1
-    environment:
-      - GODEBUG=netdns=go
-      - CORE_PEER_ID=app.hiring.com
-      - CORE_PEER_ADDRESS=app.hiring.com:10051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
-      - CORE_PEER_CHAINCODEADDRESS=app.hiring.com:10052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:10052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=app.hiring.com:10051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=academy.hiring.com:11051
-      - CORE_PEER_LICALMSPID=hiring
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=appcouchdb.hiring.com:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=appcouchdb.hiring.com
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=appcouchdb
-    tty: true
-    ports:
-      - 10051:10051
-      - 10052:10052
-    volumes:
-       - ./hiring/app/:/fabric/
-       - ./hiring/app/config/:/config/
-    depends_on:
-      - orderer.ca.com
-      - appcouchdb.hiring.com
-    networks:
-      - pheromone
-
-  appcouchdb.hiring.com:
-    container_name: appcouchdb.hiring.com
-    image: hyperledger/fabric-couchdb
-    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-    environment:
-      - COUCHDB_USER=appcouchdb.hiring.com
-      - COUCHDB_PASSWORD=appcouchdb
-    ports:
-      - 9984:5984
-    networks:
-      - pheromone
-
-  academy.hiring.com:
-    container_name: academy.hiring.com
-    image: nawhes/fabric-peer:1
-    environment:
-      - GODEBUG=netdns=go
-      - CORE_PEER_ID=academy.hiring.com
-      - CORE_PEER_ADDRESS=academy.hiring.com:11051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:11051
-      - CORE_PEER_CHAINCODEADDRESS=academy.hiring.com:11052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:11052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=academy.hiring.com:11051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=hiring.hiring.com:12051
-      - CORE_PEER_LICALMSPID=hiring
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=academycouchdb.hiring.com:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=academycouchdb.hiring.com
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=academycouchdb
-    tty: true
-    ports:
-      - 11051:11051
-      - 11052:11052
-    volumes:
-       - ./hiring/academy/:/fabric/
-       - ./hiring/academy/config/:/config/
-    depends_on:
-      - orderer.ca.com
-      - academycouchdb.hiring.com
-    networks:
-      - pheromone
-
-  academycouchdb.hiring.com:
-    container_name: academycouchdb.hiring.com
-    image: hyperledger/fabric-couchdb
-    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-    environment:
-      - COUCHDB_USER=academycouchdb.hiring.com
-      - COUCHDB_PASSWORD=academycouchdb
-    ports:
-      - 10984:5984
-    networks:
-      - pheromone
- 
-  hiring.hiring.com:
-    container_name: hiring.hiring.com
-    image: nawhes/fabric-peer:1
-    environment:
-      - GODEBUG=netdns=go
-      - CORE_PEER_ID=hiring.hiring.com
-      - CORE_PEER_ADDRESS=hiring.hiring.com:12051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:12051
-      - CORE_PEER_CHAINCODEADDRESS=academy.academy.com:12052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:12052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=academy.academy.com:12051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=app.hiring.com:10051
-      - CORE_PEER_LICALMSPID=hiring
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=hiringcouchdb.hiring.com:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=hiringcouchdb.hiring.com
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=hiringcouchdb
-    tty: true
-    ports:
-      - 12051:12051
-      - 12052:12052
-    volumes:
-       - ./hiring/hiring/:/fabric/
-       - ./hiring/hiring/config/:/config/
-    depends_on:
-      - orderer.ca.com
-      - hiringcouchdb.hiring.com
-    networks:
-      - pheromone
-
-  hiringcouchdb.hiring.com:
-    container_name: hiringcouchdb.hiring.com
-    image: hyperledger/fabric-couchdb
-    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-    environment:
-      - COUCHDB_USER=hiringcouchdb.hiring.com
-      - COUCHDB_PASSWORD=hiringcouchdb
-    ports:
-      - 11984:5984
-    networks:
-      - pheromone 
-
-  academy.academy.com:
-    container_name: academy.academy.com
+  language.language.com:
+    container_name: language.language.com
     image: nawhes/fabric-peer:1
     environment: 
       - GODEBUG=netdns=go 
-      - CORE_PEER_ID=academy.academy.com
-      - CORE_PEER_ADDRESS=academy.academy.com:13051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:13051
-      - CORE_PEER_CHAINCODEADDRESS=academy.academy.com:13052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:13052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=academy.academy.com:13051
+      - CORE_PEER_ID=language.language.com
+      - CORE_PEER_ADDRESS=language.language.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=language.language.com:7052
+      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=language.language.com:7051
       - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
-      - CORE_PEER_LICALMSPID=academy
+      - CORE_PEER_LICALMSPID=language
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=academycouchdb.academy.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=languagedb:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
       # provide the credentials for ledger to connect to CouchDB.  The username and password must
       # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=academycouchdb.hiring.com
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=academycouchdb
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=languagedb
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=languagedb
     tty: true
     ports:
-      - 13051:13051
-      - 13052:13052
+      - 7051:7051
+      - 7052:7052
     volumes:
-        - ./academy/academy/:/fabric/
-        - ./academy/academy/config/:/config/
+        - ./language/language/:/fabric/
+        - ./language/language/config/:/config/
     depends_on:
       - orderer.ca.com
-      - academycouchdb.academy.com
+      - language
     networks:
-      - pheromone
+      proofit:
+        # ipv4_address: 172.172.0.5
+        aliases:
+          - language.language.com
+      languagedb:
+        # ipv4_address: 172.172.1.17
+        aliases:
+          - language
 
-  academycouchdb.academy.com:
-    container_name: academycouchdb.academy.com
+  languagedb:
+    container_name: languagedb
     image: hyperledger/fabric-couchdb
     # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
     # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
     environment:
-      - COUCHDB_USER=academycouchdb.academy.com
-      - COUCHDB_PASSWORD=academycouchdb
+      - COUCHDB_USER=languagedb
+      - COUCHDB_PASSWORD=languagedb
     ports:
-      - 12984:5984
+      - 5984:5984
     networks:
-      - pheromone 
+      languagedb:
+        # ipv4_address: 172.172.1.18
+        aliases:
+          - langaugedb
+
+  qualify.qualify.com:
+    container_name: qualify.qualify.com
+    image: nawhes/fabric-peer:1
+    environment: 
+      - GODEBUG=netdns=go 
+      - CORE_PEER_ID=qualify.qualify.com
+      - CORE_PEER_ADDRESS=qualify.qualify.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=qualify.qualify.com:7052
+      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=qualify.qualify.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
+      - CORE_PEER_LICALMSPID=qualify
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=qualifydb:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=qualifydb
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=qualifydb
+    tty: true
+    ports:
+      - 7051:7051
+      - 7052:7052
+    volumes:
+        - ./qualify/qualify/:/fabric/
+        - ./qualify/qualify/config/:/config/
+    depends_on:
+      - orderer.ca.com
+      - qualify
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.6
+        aliases:
+          - qualify.qualify.com
+      qualifydb:
+        # ipv4_address: 172.172.1.33
+        aliases:
+          - qualify 
+
+  qualifydb:
+    container_name: qualifydb
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=qualifydb
+      - COUCHDB_PASSWORD=qualifydb
+    ports:
+      - 5984:5984
+    networks:
+      qualifydb:
+        # ipv4_address: 172.172.1.34
+        aliases:
+          - qualifydb
+
+  recruit.recruit.com:
+    container_name: recruit.recruit.com
+    image: nawhes/fabric-peer:1
+    environment:
+      - GODEBUG=netdns=go
+      - CORE_PEER_ID=recruit.recruit.com
+      - CORE_PEER_ADDRESS=recruit.recruit.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=language.language.com:7052
+      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=language.language.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
+      - CORE_PEER_LICALMSPID=recruit
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=recruitdb:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=recruitdb
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=recruitdb
+    tty: true
+    ports:
+      - 7051:7051
+      - 7052:7052
+    volumes:
+       - ./recruit/recruit/:/fabric/
+       - ./recruit/recruit/config/:/config/
+    depends_on:
+      - orderer.ca.com
+      - recruitdb
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.7
+        aliases:
+          - recruit.recruit.com
+      recruitdb:
+        # ipv4_address: 172.172.1.33
+        aliases:
+          - recruit
+
+  recruitdb:
+    container_name: recruitdb
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=recruitdb
+      - COUCHDB_PASSWORD=recruitdb
+    ports:
+      - 5984:5984
+    networks:
+      recruitdb:
+        # ipv4_address: 172.172.1.34
+        aliases:
+          - recruitdb
+
+  univ.univ.com:
+    container_name: univ.univ.com
+    image: nawhes/fabric-peer:1
+    environment:
+      - GODEBUG=netdns=go
+      - CORE_PEER_ID=univ.univ.com
+      - CORE_PEER_ADDRESS=univ.univ.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=language.language.com:7052
+      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=language.language.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
+      - CORE_PEER_LICALMSPID=univ
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=univdb:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=univdb
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=univdb
+    tty: true
+    ports:
+      - 7051:7051
+      - 7052:7052
+    volumes:
+       - ./univ/univ/:/fabric/
+       - ./univ/univ/config/:/config/
+    depends_on:
+      - orderer.ca.com
+      - univdb
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.8
+        aliases:
+          - univ.univ.com
+      univdb:
+        # ipv4_address: 172.172.1.65
+        aliases:
+          - univ
+
+  univdb:
+    container_name: univdb
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=univdb
+      - COUCHDB_PASSWORD=univdb
+    ports:
+      - 5984:5984
+    networks:
+      univdb:
+        # ipv4_address: 172.172.1.66
+        aliases:
+          - univdb
