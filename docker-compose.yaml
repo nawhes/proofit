@@ -22,14 +22,14 @@ networks:
       config:
       - subnet: 172.172.1.0/28
 
-  languagedb:
+  toeicdb:
     driver: bridge
     iapm:
       driver: default
       config:
       - subnet: 172.172.1.16/28
 
-  qualifydb:
+  qnetdb:
     driver: bridge
     iapm:
       driver: default
@@ -43,7 +43,7 @@ networks:
       config:
       - subnet: 172.172.1.48/28
 
-  univdb:
+  smudb:
     driver: bridge
     iapm:
       driver: default
@@ -52,14 +52,20 @@ networks:
 
 services:
   server.ca.com:
-    image: nawhes/fabric-ca-server:1
+    image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=server.ca.com
+      # - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      # - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/4239aa0dcd76daeeb8ba0cda701851d14504d31aad1b2ddddbac6a57365e497c_sk
     tty: true
     ports:
       - 7054:7054
+    command: /bin/bash
     volumes:
-      - ./crypto-config/ca/:/crypto-config/ca/
+      - ./ca/server.ca.com/fabric-ca-server/:/etc/hyperledger/fabric-ca-server/
+      - ./ca/server.ca.com/fabric-ca-server-config/:/etc/hyperledger/fabric-ca-server-config/
     container_name: server.ca.com
     networks:
       proofit:
@@ -67,68 +73,111 @@ services:
         aliases:
           - server.ca.com
 
-  client.ca.com:
-    image: nawhes/fabric-orderer:1
+  admin.ca.com:
+    image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
     tty: true
+    command: /bin/bash
     volumes:
-      - ./crypto-config/ca/client/:/crypto-config/ca/client/
-    container_name: client.ca.com
+      - ./ca/admin.ca.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./ca/admin.ca.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
+    container_name: admin.ca.com
     networks:
       proofit:
         # ipv4_address: 172.172.0.2
         aliases:
-          - client.ca.com
+          - admin.ca.com
     depends_on:
       - server.ca.com
      
   orderer.ca.com:
-    image: nawhes/fabric-orderer:1
+    image: hyperledger/fabric-orderer
     environment:
       - GODEBUG=netdns=go
       - FABRIC_LOGGIN_SPEC=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LOCALMSPID=ca
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+    command: /bin/bash
     tty: true
     ports:
       - 7050:7050
     volumes:
-        - ./crypto-config/ca/orderer/config/:/crypto-config/ca/orderer/config/
-        - ./crypto-config/ca/orderer/:/crypto-config/ca/orderer/
+        - ./ca/orderer.ca.com/config/:/etc/hyperledger/configtx
+        - ./ca/orderer.ca.com/orderer/:/opt/gopath/src/github.com/hyperledger/fabric/orderer
     container_name: orderer.ca.com
+    networks:
       proofit:
         # ipv4_address: 172.172.0.3
         aliases:
           - orderer.ca.com
 
-  app.app.com:
-    container_name: app.app.com
-    image: nawhes/fabric-peer:1
+  zookeeper.ca.com:
+    image: hyperledger/fabric-zookeeper
+    # restart: always
+    ports:
+      - 2181:2181
+    networks:
+      proofit:
+        aliases:
+          - zookeeper.ca.com
+  
+  kafka.ca.com:
+    image: hyperledger/fabric-kafka
+    # restart: always
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka.ca.com
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_BROKER_ID=0
+      - KAFKA_MESSAGE_MAX_BYTES=103809024 # 99 * 1024 * 1024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024 # 99 * 1024 * 1024
+      - KAFKA_NUM_REPLICA_FETCHERS=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper.ca.com:2181
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper.ca.com
+    networks:
+      proofit:
+        aliases:
+          - kafka.ca.com
+
+  admin.app.com:
+    image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
-      - CORE_PEER_ID=app.app.com
-      - CORE_PEER_ADDRESS=app.app.com:7051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=app.app.com:7052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=app.app.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=language.app.com:751
-      - CORE_PEER_LICALMSPID=app
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=appdb:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=appdb
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=appdb
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+    tty: true
+    command: /bin/bash
+    volumes:
+      - ./app/admin.app.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./app/admin.app.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
+    container_name: admin.app.com
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.2
+        aliases:
+          - admin.app.com
+
+  app.app.com:
+    container_name: app.app.com
+    image: hyperledger/fabric-peer
+    environment:
+      - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: /bin/bash
     tty: true
     ports:
       - 7051:7051
       - 7052:7052
     volumes:
-        - ./crypto-config/peerOrganizations/app:/crypto-config/peerOrganizations/app
-        - ./crypto-config/peerOrganizations/app/config/:/crypto-config/peerOrganizations/app/config/
+        - /var/run/:/host/var/run/
+        - ./app/app.app.com/msp/:/etc/hyperledger/msp/
+        - ./app/app.app.com/config/:/etc/hyperledger/configtx/
     depends_on:
       - orderer.ca.com
       - appdb
@@ -158,145 +207,22 @@ services:
         aliases:
           - appdb
 
-  language.language.com:
-    container_name: language.language.com
-    image: nawhes/fabric-peer:1
-    environment: 
-      - GODEBUG=netdns=go 
-      - CORE_PEER_ID=language.language.com
-      - CORE_PEER_ADDRESS=language.language.com:7051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=language.language.com:7052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=language.language.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
-      - CORE_PEER_LICALMSPID=language
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=languagedb:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=languagedb
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=languagedb
-    tty: true
-    ports:
-      - 7051:7051
-      - 7052:7052
-    volumes:
-        - ./crypto-config/peerOrganizations/language/:/crypto-config/peerOrganizations/language/
-        - ./crypto-config/peerOrganizations/language/config/:/crypto-config/peerOrganizations/language/config/
-    depends_on:
-      - orderer.ca.com
-      - language
-    networks:
-      proofit:
-        # ipv4_address: 172.172.0.5
-        aliases:
-          - language.language.com
-      languagedb:
-        # ipv4_address: 172.172.1.17
-        aliases:
-          - language
-
-  languagedb:
-    container_name: languagedb
-    image: hyperledger/fabric-couchdb
-    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-    environment:
-      - COUCHDB_USER=languagedb
-      - COUCHDB_PASSWORD=languagedb
-    ports:
-      - 5984:5984
-    networks:
-      languagedb:
-        # ipv4_address: 172.172.1.18
-        aliases:
-          - langaugedb
-
-  qualify.qualify.com:
-    container_name: qualify.qualify.com
-    image: nawhes/fabric-peer:1
-    environment: 
-      - GODEBUG=netdns=go
-      - CORE_PEER_ID=qualify.qualify.com
-      - CORE_PEER_ADDRESS=qualify.qualify.com:7051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=qualify.qualify.com:7052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=qualify.qualify.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
-      - CORE_PEER_LICALMSPID=qualify
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=qualifydb:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=qualifydb
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=qualifydb
-    tty: true
-    ports:
-      - 7051:7051
-      - 7052:7052
-    volumes:
-        - ./crypto-config/peerOrganizations/qualify/:/crypto-config/peerOrganizations/qualify/
-        - ./crypto-config/peerOrganizations/qualify/config/:/crypto-config/peerOrganizations/qualify/config/
-    depends_on:
-      - orderer.ca.com
-      - qualify
-    networks:
-      proofit:
-        # ipv4_address: 172.172.0.6
-        aliases:
-          - qualify.qualify.com
-      qualifydb:
-        # ipv4_address: 172.172.1.33
-        aliases:
-          - qualify 
-
-  qualifydb:
-    container_name: qualifydb
-    image: hyperledger/fabric-couchdb
-    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-    environment:
-      - COUCHDB_USER=qualifydb
-      - COUCHDB_PASSWORD=qualifydb
-    ports:
-      - 5984:5984
-    networks:
-      qualifydb:
-        # ipv4_address: 172.172.1.34
-        aliases:
-          - qualifydb
-
-  recruit.recruit.com:
-    container_name: recruit.recruit.com
-    image: nawhes/fabric-peer:1
+  recruit.app.com:
+    container_name: recruit.app.com
+    image: hyperledger/fabric-peer
     environment:
       - GODEBUG=netdns=go
-      - CORE_PEER_ID=recruit.recruit.com
-      - CORE_PEER_ADDRESS=recruit.recruit.com:7051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=language.language.com:7052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=language.language.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
-      - CORE_PEER_LICALMSPID=recruit
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=recruitdb:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=recruitdb
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=recruitdb
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: /bin/bash
     tty: true
     ports:
       - 7051:7051
       - 7052:7052
     volumes:
-       - ./crypto-config/peerOrganizations/recruit/:/crypto-config/peerOrganizations/recruit/
-       - ./crypto-config/peerOrganizations/recruit/config/:/crypto-config/peerOrganizations/recruit/config/
+        - /var/run/:/host/var/run/
+        - ./app/recruit.app.com/msp/:/etc/hyperledger/msp/
+        - ./app/recruit.app.com/config/:/etc/hyperledger/configtx/
     depends_on:
       - orderer.ca.com
       - recruitdb
@@ -304,7 +230,7 @@ services:
       proofit:
         # ipv4_address: 172.172.0.7
         aliases:
-          - recruit.recruit.com
+          - recruit.app.com
       recruitdb:
         # ipv4_address: 172.172.1.33
         aliases:
@@ -326,58 +252,188 @@ services:
         aliases:
           - recruitdb
 
-  univ.univ.com:
-    container_name: univ.univ.com
-    image: nawhes/fabric-peer:1
+  admin.language.com:
+    image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
-      - CORE_PEER_ID=univ.univ.com
-      - CORE_PEER_ADDRESS=univ.univ.com:7051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=language.language.com:7052
-      - CORE_PEER_CAHINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=language.language.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=app.app.com:7051
-      - CORE_PEER_LICALMSPID=univ
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=univdb:5984
-      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
-      # provide the credentials for ledger to connect to CouchDB.  The username and password must
-      # match the username and password set for the associated CouchDB.
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=univdb
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=univdb
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+    tty: true
+    command: /bin/bash
+    volumes:
+      - ./language/admin.language.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./language/admin.language.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
+    container_name: admin.language.com
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.2
+        aliases:
+          - admin.language.com
+
+  toeic.language.com:
+    container_name: toeic.language.com
+    image: hyperledger/fabric-peer
+    environment:
+      - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: /bin/bash
     tty: true
     ports:
       - 7051:7051
       - 7052:7052
     volumes:
-       - ./crypto-config/peerOrganizations/univ/:/crypto-config/peerOrganizations/univ/
-       - ./crypto-config/peerOrganizations/univ/config/:/crypto-config/peerOrganizations/univ/config/
+        - /var/run/:/host/var/run/
+        - ./language/toeic.language.com/msp/:/etc/hyperledger/msp/
+        - ./language/toeic.language.com/config/:/etc/hyperledger/configtx/
     depends_on:
       - orderer.ca.com
-      - univdb
+      - toeic
     networks:
       proofit:
-        # ipv4_address: 172.172.0.8
+        # ipv4_address: 172.172.0.5
         aliases:
-          - univ.univ.com
-      univdb:
-        # ipv4_address: 172.172.1.65
+          - toeic.language.com
+      toeicdb:
+        # ipv4_address: 172.172.1.17
         aliases:
-          - univ
+          - toeic
 
-  univdb:
-    container_name: univdb
+  toeicdb:
+    container_name: toeicdb
     image: hyperledger/fabric-couchdb
     # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
     # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
     environment:
-      - COUCHDB_USER=univdb
-      - COUCHDB_PASSWORD=univdb
+      - COUCHDB_USER=toeicdb
+      - COUCHDB_PASSWORD=toeicdb
+    ports:
+      - 5984:5984
+    networks:
+      toeicdb:
+        # ipv4_address: 172.172.1.18
+        aliases:
+          - toeicdb
+
+  admin.qualify.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - GODEBUG=netdns=go
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+    tty: true
+    command: /bin/bash
+    volumes:
+      - ./qualify/admin.qualify.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./qualify/admin.qualify.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
+    container_name: admin.qualify.com
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.2
+        aliases:
+          - admin.qualify.com
+
+  qnet.qualify.com:
+    container_name: qnet.qualify.com
+    image: hyperledger/fabric-peer
+    environment:
+      - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: /bin/bash
+    tty: true
+    ports:
+      - 7051:7051
+      - 7052:7052
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./qualify/qnet.qualify.com/msp/:/etc/hyperledger/msp/
+        - ./qualify/qnet.qualify.com/config/:/etc/hyperledger/configtx/
+    depends_on:
+      - orderer.ca.com
+      - qnetdb
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.6
+        aliases:
+          - qnet.qualify.com
+      qnetdb:
+        # ipv4_address: 172.172.1.33
+        aliases:
+          - qnet 
+
+  qnetdb:
+    container_name: qnetdb
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=qnetdb
+      - COUCHDB_PASSWORD=qnetdb
+    ports:
+      - 5984:5984
+    networks:
+      qnetdb:
+        # ipv4_address: 172.172.1.34
+        aliases:
+          - qnetdb
+
+  admin.univ.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - GODEBUG=netdns=go
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+    tty: true
+    command: /bin/bash
+    volumes:
+      - ./univ/admin.univ.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./univ/admin.univ.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
+    container_name: admin.univ.com
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.2
+        aliases:
+          - admin.univ.com
+
+  smu.univ.com:
+    container_name: smu.univ.com
+    image: hyperledger/fabric-peer
+    environment:
+      - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: /bin/bash
+    tty: true
+    ports:
+      - 7051:7051
+      - 7052:7052
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./univ/smu.univ.com/msp/:/etc/hyperledger/msp/
+        - ./univ/smu.univ.com/config/:/etc/hyperledger/configtx/
+    depends_on:
+      - orderer.ca.com
+      - smudb
+    networks:
+      proofit:
+        # ipv4_address: 172.172.0.8
+        aliases:
+          - smu.univ.com
+      univdb:
+        # ipv4_address: 172.172.1.65
+        aliases:
+          - smu
+
+  smudb:
+    container_name: smudb
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=smudb
+      - COUCHDB_PASSWORD=smudb
     ports:
       - 5984:5984
     networks:
       univdb:
         # ipv4_address: 172.172.1.66
         aliases:
-          - univdb
+          - smudb
