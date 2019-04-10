@@ -125,28 +125,14 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: admin.qualify.com
-  secret: admin.qualify.com
-  type: client
-  affiliation: com.qualify
+  name: orderer
+  secret: orderer
+  type: orderer
+  affiliation: com.ca
   maxenrollments: 0
   attributes:
-   - name: hf.Registrar.Roles
-     value: client,orderer,peer,user
-   - name: hf.Registrar.DelegateRoles
-     value: client,orderer,peer,user
-   - name: hf.Registrar.Attributes
-     value: "*"
-   - name: hf.GenCRL
-     value: true
-   - name: hf.Revoker
-     value: true
-   - name: hf.AffiliationMgr
-     value: true
-   - name: hf.IntermediateCA
-     value: true
    - name: role
-     value: admin
+     value: orderer
      ecert: true
 
 #############################################################################
