@@ -16,45 +16,60 @@ Organizations:
 
     # SampleOrg defines an MSP using the sampleconfig. It should never be used
     # in production but may be used as a template for other definitions.
-    - &ca
+    - &SampleOrg
         # Name is the key by which this org will be referenced in channel
         # configuration transactions.
         # Name can include alphanumeric characters as well as dots and dashes.
-        Name: com.ca
+        Name: SampleOrg
 
         # ID is the key by which this org's MSP definition will be referenced.
         # ID can include alphanumeric characters as well as dots and dashes.
-        ID: com.ca
+        ID: SampleOrg
 
         # MSPDir is the filesystem path which contains the MSP configuration.
-        MSPDir: ./msp/
+        MSPDir: msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
         #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
-        Policies: &caPolicies
+        Policies: &SampleOrgPolicies
             Readers:
                 Type: Signature
-                Rule: "OR('com.ca.peer', 'com.ca.client')"
+                Rule: "OR('SampleOrg.member')"
                 # If your MSP is configured with the new NodeOUs, you might
                 # want to use a more specific rule like the following:
                 # Rule: "OR('SampleOrg.admin', 'SampleOrg.peer', 'SampleOrg.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('com.ca.peer', 'com.ca.client')"
+                Rule: "OR('SampleOrg.member')"
                 # If your MSP is configured with the new NodeOUs, you might
                 # want to use a more specific rule like the following:
                 # Rule: "OR('SampleOrg.admin', 'SampleOrg.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('com.ca.admin')"
-        
+                Rule: "OR('SampleOrg.admin')"
+
         # AnchorPeers defines the location of peers which can be used for
         # cross-org gossip communication. Note, this value is only encoded in
         # the genesis block in the Application section context.
-        # AnchorPeers:
-        #     - Host: 127.0.0.1
-        #       Port: 7051
+        AnchorPeers:
+            - Host: 127.0.0.1
+              Port: 7051
+
+    - &ca
+        Name: com.ca
+        ID: com.ca
+        MSPDir: ./msp/
+        Policies: &caPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('com.ca.peer', 'com.ca.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('com.ca.peer', 'com.ca.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('com.ca.admin')"
 
     - &app
         Name: com.app
