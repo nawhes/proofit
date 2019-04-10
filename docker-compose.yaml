@@ -55,16 +55,15 @@ services:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=server.ca.com
-      # - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
-      # - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/4239aa0dcd76daeeb8ba0cda701851d14504d31aad1b2ddddbac6a57365e497c_sk
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/ca-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/msp/keystore/6b03deddf967a9bc02cafa30af733def8c3c69a91dd6255c10cdd87e206ee45d_sk
     working_dir: /etc/hyperledger/fabric-ca-server/
     tty: true
     ports:
       - 7054:7054
-    command: /bin/bash
+    command: sh -c 'fabric-ca-server start'
     volumes:
       - ./ca/server.ca.com/fabric-ca-server/:/etc/hyperledger/fabric-ca-server/
-      - ./ca/server.ca.com/fabric-ca-server-config/:/etc/hyperledger/fabric-ca-server-config/
     container_name: server.ca.com
     networks:
       proofit:
@@ -82,7 +81,6 @@ services:
     command: /bin/bash
     volumes:
       - ./ca/admin.ca.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./ca/admin.ca.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.ca.com
     networks:
       proofit:
