@@ -103,8 +103,8 @@ services:
     ports:
       - 7050:7050
     volumes:
-        - ./ca/orderer.ca.com/config/:/etc/hyperledger/configtx
-        - ./ca/orderer.ca.com/orderer/:/opt/gopath/src/github.com/hyperledger/fabric/orderer
+        - ./ca/orderer.ca.com/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./ca/orderer.production/:/var/hyperledger/production/orderer
     container_name: orderer.ca.com
     networks:
       proofit:
@@ -176,8 +176,8 @@ services:
       - 7052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./app/app.app.com/msp/:/etc/hyperledger/msp/
-        - ./app/app.app.com/config/:/etc/hyperledger/configtx/
+        - ./app/app.app.com/:/etc/hyperledger/
+        - ./app/app.production/:/var/hyperledger/production
     depends_on:
       - orderer.ca.com
       - appdb
@@ -199,8 +199,8 @@ services:
     environment:
       - COUCHDB_USER=appdb
       - COUCHDB_PASSWORD=appdb
-    # ports:
-    #   - 5984:5984
+    ports:
+      - 5984:5984
     networks:
       appdb:
         # ipv4_address: 172.172.1.2
@@ -221,8 +221,8 @@ services:
       - 8052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./app/recruit.app.com/msp/:/etc/hyperledger/msp/
-        - ./app/recruit.app.com/config/:/etc/hyperledger/configtx/
+        - ./app/recruit.app.com/:/etc/hyperledger/
+        - ./app/recruit.production/:/var/hyperledger/production
     depends_on:
       - orderer.ca.com
       - recruitdb
@@ -244,8 +244,8 @@ services:
     environment:
       - COUCHDB_USER=recruitdb
       - COUCHDB_PASSWORD=recruitdb
-    # ports:
-    #   - 6984:5984
+    ports:
+      - 6984:5984
     networks:
       recruitdb:
         # ipv4_address: 172.172.1.34
@@ -283,8 +283,8 @@ services:
       - 9052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./language/toeic.language.com/msp/:/etc/hyperledger/msp/
-        - ./language/toeic.language.com/config/:/etc/hyperledger/configtx/
+        - ./language/toeic.language.com/:/etc/hyperledger/
+        - ./language/toeic.production/:/var/hyperledger/production
     depends_on:
       - orderer.ca.com
       - toeicdb
@@ -306,8 +306,8 @@ services:
     environment:
       - COUCHDB_USER=toeicdb
       - COUCHDB_PASSWORD=toeicdb
-    # ports:
-    #   - 7984:5984
+    ports:
+      - 7984:5984
     networks:
       toeicdb:
         # ipv4_address: 172.172.1.18
@@ -345,8 +345,8 @@ services:
       - 10052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./qualify/qnet.qualify.com/msp/:/etc/hyperledger/msp/
-        - ./qualify/qnet.qualify.com/config/:/etc/hyperledger/configtx/
+        - ./qualify/qnet.qualify.com/:/etc/hyperledger/
+        - ./qualify/qnet.production/:/var/hyperledger/production
     depends_on:
       - orderer.ca.com
       - qnetdb
@@ -368,8 +368,8 @@ services:
     environment:
       - COUCHDB_USER=qnetdb
       - COUCHDB_PASSWORD=qnetdb
-    # ports:
-    #   - 8984:5984
+    ports:
+      - 8984:5984
     networks:
       qnetdb:
         # ipv4_address: 172.172.1.34
@@ -407,8 +407,8 @@ services:
       - 11052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./univ/smu.univ.com/msp/:/etc/hyperledger/msp/
-        - ./univ/smu.univ.com/config/:/etc/hyperledger/configtx/
+        - ./univ/smu.univ.com/:/etc/hyperledger/
+        - ./univ/smu.production/:/var/hyperledger/production
     depends_on:
       - orderer.ca.com
       - smudb
@@ -430,8 +430,8 @@ services:
     environment:
       - COUCHDB_USER=smudb
       - COUCHDB_PASSWORD=smudb
-    # ports:
-    #   - 9984:5984
+    ports:
+      - 9984:5984
     networks:
       smudb:
         # ipv4_address: 172.172.1.66

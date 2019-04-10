@@ -11,10 +11,10 @@
 peer:
 
     # The Peer id is used for identifying this Peer instance.
-    id: jdoe
+    id: qnet.qualify.com
 
     # The networkId allows for logical seperation of networks
-    networkId: dev
+    networkId: proofit
 
     # The Address at local network interface this Peer will listen on.
     # By default, it will listen on all network interfaces
@@ -202,21 +202,21 @@ peer:
     # not mutual TLS auth. See comments on chaincodeListenAddress for more info
     tls:
         # Require server-side TLS
-        enabled:  false
+        enabled:  true
         # Require client certificates / mutual TLS.
         # Note that clients that are not configured to use a certificate will
         # fail to connect to the peer.
         clientAuthRequired: false
         # X.509 certificate used for TLS server
         cert:
-            file: tls/server.crt
+            file: tls/cert.pem # tls/server.crt
         # Private key used for TLS server (and client if clientAuthEnabled
         # is set to true
         key:
-            file: tls/server.key
+            file: tls/2f9b7649904851bcb2abc8a2d4c6e6276ec014f9d137aefbf25dddf29cdf55b9_sk # tls/server.key
         # Trusted root certificate chain for tls.cert
         rootcert:
-            file: tls/ca.crt
+            file: tls/server-ca-com-7054 # tls/ca.crt
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
@@ -280,7 +280,7 @@ peer:
     # to match the name of one of the MSPs in each of the channel
     # that this peer is a member of. Otherwise this peer's messages
     # will not be identified as valid by other nodes.
-    localMspId: SampleOrg
+    localMspId: com.qualify
 
     # CLI common client config options
     client:
@@ -559,7 +559,7 @@ ledger:
     # stateDatabase - options are "goleveldb", "CouchDB"
     # goleveldb - default state database stored in goleveldb.
     # CouchDB - store state database in CouchDB
-    stateDatabase: goleveldb
+    stateDatabase: CouchDB
     # Limit on the number of records to return per query
     totalQueryLimit: 100000
     couchDBConfig:
@@ -567,14 +567,14 @@ ledger:
        # not map the CouchDB container port to a server port in docker-compose.
        # Otherwise proper security must be provided on the connection between
        # CouchDB client (on the peer) and server.
-       couchDBAddress: 127.0.0.1:5984
+       couchDBAddress: qnetdb:5984
        # This username must have read and write authority on CouchDB
-       username:
+       username: qnetdb
        # The password is recommended to pass as an environment variable
        # during start up (eg LEDGER_COUCHDBCONFIG_PASSWORD).
        # If it is stored here, the file must be access control protected
        # to prevent unintended users from discovering the password.
-       password:
+       password: qnetdb
        # Number of retries for CouchDB errors
        maxRetries: 3
        # Number of retries for CouchDB errors during peer startup

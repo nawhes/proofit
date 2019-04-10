@@ -29,13 +29,13 @@ General:
 
     # TLS: TLS settings for the GRPC server.
     TLS:
-        Enabled: false
+        Enabled: true
         # PrivateKey governs the file location of the private key of the TLS certificate.
-        PrivateKey: tls/server.key
+        PrivateKey: tls/395c154beeadeb268e6044fdef242a37ea5f5427c1a78b7c56bb9ae22a80d9a0_sk # tls/server.key
         # Certificate governs the file location of the server TLS certificate.
-        Certificate: tls/server.crt
+        Certificate: tls/cert.pem # tls/server.crt
         RootCAs:
-          - tls/ca.crt
+          - tls/server-ca-com-7054.pem # tls/ca.crt
         ClientAuthRequired: false
         ClientRootCAs:
     # Keepalive settings for the GRPC server.
@@ -83,7 +83,7 @@ General:
     #  - provisional: Utilizes a genesis profile, specified by GenesisProfile,
     #                 to dynamically generate a new genesis block.
     #  - file: Uses the file provided by GenesisFile as the genesis block.
-    GenesisMethod: provisional
+    GenesisMethod: file
 
     # Genesis profile: The profile to use to dynamically generate the genesis
     # block to use when initializing the orderer system channel and
@@ -107,7 +107,7 @@ General:
     # ID of one of the organizations defined in the orderer system channel's
     # /Channel/Orderer configuration. The sample organization defined in the
     # sample configuration provided has an MSP ID of "SampleOrg".
-    LocalMSPID: SampleOrg
+    LocalMSPID: com.ca
 
     # Enable an HTTP service for Go "pprof" profiling as documented at:
     # https://golang.org/pkg/net/http/pprof
