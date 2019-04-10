@@ -123,8 +123,8 @@ registry:
 
   # Contains identity information which is used when LDAP is disabled
   identities:
-     - name: client
-       pass: client
+     - name: admin.ca.com
+       pass: admin.ca.com
        type: client
        affiliation: ""
        attrs:
@@ -241,7 +241,6 @@ affiliations:
         app:
         language:
         qualify:
-        recriut:
         univ:
 
 #############################################################################
@@ -302,7 +301,7 @@ signing:
 #     CA certificates though it can still issue end entity certificates.
 ###########################################################################
 csr:
-   cn: fabric-ca-server
+   cn: server.ca.com
    keyrequest:
      algo: ecdsa
      size: 256
@@ -311,9 +310,8 @@ csr:
         ST: "Seoul"
         L:
         O: SMU
-        OU: pheromone
+        OU: proofit
    hosts:
-     - aca95aa385fe
      - localhost
    ca:
       expiry: 131400h
