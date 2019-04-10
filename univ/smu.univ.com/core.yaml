@@ -216,7 +216,7 @@ peer:
             file: tls/440adfd9de74899c8658574991794ddafe71fbfc855cf010edf434d1a6b15e22_sk # tls/server.key
         # Trusted root certificate chain for tls.cert
         rootcert:
-            file: tls/server-ca-com-7054 # tls/ca.crt
+            file: tls/server-ca-com-7054.pem # tls/ca.crt
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
