@@ -114,6 +114,7 @@ services:
 
   zookeeper.ca.com:
     image: hyperledger/fabric-zookeeper
+    container_name: zookeeper.ca.com
     # restart: always
     ports:
       - 2181:2181
@@ -125,6 +126,7 @@ services:
   kafka.ca.com:
     image: hyperledger/fabric-kafka
     # restart: always
+    container_name: kafka.ca.com
     environment:
       - KAFKA_ADVERTISED_HOST_NAME=kafka.ca.com
       - KAFKA_ADVERTISED_PORT=9092
@@ -197,8 +199,8 @@ services:
     environment:
       - COUCHDB_USER=appdb
       - COUCHDB_PASSWORD=appdb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 5984:5984
     networks:
       appdb:
         # ipv4_address: 172.172.1.2
@@ -215,8 +217,8 @@ services:
     command: /bin/bash
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 8051:7051
+      - 8052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./app/recruit.app.com/msp/:/etc/hyperledger/msp/
@@ -242,8 +244,8 @@ services:
     environment:
       - COUCHDB_USER=recruitdb
       - COUCHDB_PASSWORD=recruitdb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 6984:5984
     networks:
       recruitdb:
         # ipv4_address: 172.172.1.34
@@ -277,8 +279,8 @@ services:
     command: /bin/bash
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 9051:7051
+      - 9052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./language/toeic.language.com/msp/:/etc/hyperledger/msp/
@@ -304,8 +306,8 @@ services:
     environment:
       - COUCHDB_USER=toeicdb
       - COUCHDB_PASSWORD=toeicdb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 7984:5984
     networks:
       toeicdb:
         # ipv4_address: 172.172.1.18
@@ -339,8 +341,8 @@ services:
     command: /bin/bash
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 10051:7051
+      - 10052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./qualify/qnet.qualify.com/msp/:/etc/hyperledger/msp/
@@ -366,8 +368,8 @@ services:
     environment:
       - COUCHDB_USER=qnetdb
       - COUCHDB_PASSWORD=qnetdb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 8984:5984
     networks:
       qnetdb:
         # ipv4_address: 172.172.1.34
@@ -401,8 +403,8 @@ services:
     command: /bin/bash
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 11051:7051
+      - 11052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./univ/smu.univ.com/msp/:/etc/hyperledger/msp/
@@ -428,8 +430,8 @@ services:
     environment:
       - COUCHDB_USER=smudb
       - COUCHDB_PASSWORD=smudb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 9984:5984
     networks:
       smudb:
         # ipv4_address: 172.172.1.66

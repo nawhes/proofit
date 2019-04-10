@@ -125,7 +125,7 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: orderer
+  name: orderer.ca.com
   secret: orderer
   type: orderer
   affiliation: com.ca
