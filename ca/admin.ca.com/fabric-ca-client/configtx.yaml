@@ -16,7 +16,7 @@ Organizations:
 
     # SampleOrg defines an MSP using the sampleconfig. It should never be used
     # in production but may be used as a template for other definitions.
-    - &com.ca
+    - &ca
         # Name is the key by which this org will be referenced in channel
         # configuration transactions.
         # Name can include alphanumeric characters as well as dots and dashes.
@@ -56,7 +56,7 @@ Organizations:
         #     - Host: 127.0.0.1
         #       Port: 7051
 
-    - &com.app
+    - &app
         Name: com.app
         ID: com.app
         MSPDir: ./app/msp/
@@ -74,7 +74,7 @@ Organizations:
             - Host: app.app.com
               Port: 7051
 
-    - &com.language
+    - &language
         Name: com.language
         ID: com.language
         MSPDir: ./language/msp/
@@ -92,7 +92,7 @@ Organizations:
             - Host: toeic.language.com
               Port: 7051
 
-    - &com.qualify
+    - &qualify
         Name: com.qualify
         ID: com.qualify
         MSPDir: ./qualify/msp/
@@ -110,7 +110,7 @@ Organizations:
             - Host: qnet.qualify.com
               Port: 7051
 
-    - &com.univ
+    - &univ
         Name: com.univ
         ID: com.univ
         MSPDir: ./univ/msp
@@ -439,48 +439,48 @@ Profiles:
         Orderer:
             <<: *OrdererDefaults
             Organizations:
-                - *com.ca
+                - *ca
         Consortiums:
             proofit:
                 Organizations:
-                    - *com.app
-                    - *com.language
-                    - *com.qualify
-                    - *com.univ
+                    - *app
+                    - *language
+                    - *qualify
+                    - *univ
 
     AccountChannel:
         Consortium: AccountConsortium
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *com.app
-                - *com.language
-                - *com.qualify
-                - *com.univ
+                - *app
+                - *language
+                - *qualify
+                - *univ
 
     UnivChannel:
         Consortium: UnivConsortium
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *com.app
-                - *com.univ
+                - *app
+                - *univ
 
     LanguageChannel:
         Consortium: LanguageConsortium
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *com.app
-                - *com.language
+                - *app
+                - *language
 
     QualifyChannel:
         Consortium: QualifyConsortium
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *com.app
-                - *com.qualify
+                - *app
+                - *qualify
 
     # SampleSingleMSPSolo defines a configuration which uses the Solo orderer,
     # and contains a single MSP definition (the MSP sampleconfig).
