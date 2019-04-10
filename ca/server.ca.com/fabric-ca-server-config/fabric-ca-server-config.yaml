@@ -60,10 +60,10 @@ crlsizelimit: 512000
 #############################################################################
 tls:
   # Enable TLS (default: false)
-  enabled: false
+  enabled: true
   # TLS for the server's listening port
-  certfile:
-  keyfile:
+  certfile: ./../fabric-ca-server/ca-cert.pem
+  keyfile: ./../fabric-ca-server/msp/keystore/6b03deddf967a9bc02cafa30af733def8c3c69a91dd6255c10cdd87e206ee45d_sk
   clientauth:
     type: noclientcert
     certfiles:
@@ -80,11 +80,11 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name:
+  name: server.ca.com
   # Key file (is only used to import a private key into BCCSP)
-  keyfile:
+  keyfile: ./../fabric-ca-server/msp/keystore/6b03deddf967a9bc02cafa30af733def8c3c69a91dd6255c10cdd87e206ee45d_sk
   # Certificate file (default: ca-cert.pem)
-  certfile:
+  certfile: ./../fabric-ca-server/ca-cert.pem
   # Chain file
   chainfile:
 
@@ -123,8 +123,8 @@ registry:
 
   # Contains identity information which is used when LDAP is disabled
   identities:
-     - name: admin.ca.com
-       pass: admin.ca.com
+     - name: client.ca.com
+       pass: client.ca.com
        type: client
        affiliation: ""
        attrs:
@@ -237,11 +237,11 @@ ldap:
 # which are always stored in lower case.
 #############################################################################
 affiliations:
-        ca:
-        app:
-        language:
-        qualify:
-        univ:
+   ca:
+   app:
+   language:
+   qualify:
+   univ:
 
 #############################################################################
 #  Signing section
