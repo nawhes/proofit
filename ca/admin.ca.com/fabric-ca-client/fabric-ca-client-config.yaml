@@ -59,10 +59,10 @@ mspdir: msp
 #############################################################################
 tls:
   # TLS section for secure socket connection
-  certfiles:
+  certfiles: ./tls/server-ca-com-7054.pem
   client:
-    certfile:
-    keyfile:
+    certfile: ./tls/cert.pem
+    keyfile: ./tls/0f6a1406c24ec8f038f152829f77f03e3cd6e5a07279deaa445ad4cac69f44bb_sk
 
 #############################################################################
 #  Certificate Signing Request section for generating the CSR for an
@@ -99,19 +99,19 @@ tls:
 #
 #############################################################################
 csr:
-  cn: hiring.hiring.com
+  cn: admin.ca.com
   keyrequest:
     algo: ecdsa
     size: 256
   serialnumber:
   names:
-    - C: US
-      ST: North Carolina
+    - C: KR
+      ST: Seoul
       L:
-      O: Hyperledger
-      OU: Fabric
+      O: SMU
+      OU: Proofit
   hosts:
-    - f1c42c26d1c8
+    - dd59be9523cb
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server
@@ -125,17 +125,15 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-#  name: academy.hiring.com
-#  secret: academy
-  name: app.hiring.com
-  secret: app
-  type: peer
-  affiliation: hiring
+  name: orderer.ca.com
+  secret: orderer
+  type: orderer
+  affiliation: com.ca
   maxenrollments: 0
   attributes:
-    - name: role
-      value: peer
-      ecert: true
+   - name: role
+     value: orderer
+     ecert: true
 
 #############################################################################
 #  Enrollment section used to enroll an identity with fabric-ca server

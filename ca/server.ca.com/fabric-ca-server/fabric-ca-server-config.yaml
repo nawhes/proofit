@@ -62,8 +62,8 @@ tls:
   # Enable TLS (default: false)
   enabled: false
   # TLS for the server's listening port
-  certfile:
-  keyfile:
+  certfile: ./ca-cert.pem
+  keyfile: ./msp/keystore/2157be309554b32e1abe4e534d54074f8379749753e1c99d7e9e13dbe8d4a3ec_sk
   clientauth:
     type: noclientcert
     certfiles:
@@ -80,11 +80,11 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name:
+  name: server.ca.com
   # Key file (is only used to import a private key into BCCSP)
-  keyfile:
+  keyfile: ./msp/keystore/2157be309554b32e1abe4e534d54074f8379749753e1c99d7e9e13dbe8d4a3ec_sk
   # Certificate file (default: ca-cert.pem)
-  certfile:
+  certfile: ./ca-cert.pem
   # Chain file
   chainfile:
 
@@ -124,7 +124,7 @@ registry:
   # Contains identity information which is used when LDAP is disabled
   identities:
      - name: admin
-       pass: adminpw
+       pass: admin
        type: client
        affiliation: ""
        attrs:
@@ -237,11 +237,12 @@ ldap:
 # which are always stored in lower case.
 #############################################################################
 affiliations:
-   org1:
-      - department1
-      - department2
-   org2:
-      - department1
+        com:
+          - ca
+          - app
+          - language
+          - qualify
+          - univ
 
 #############################################################################
 #  Signing section
@@ -301,18 +302,17 @@ signing:
 #     CA certificates though it can still issue end entity certificates.
 ###########################################################################
 csr:
-   cn: fabric-ca-server
+   cn: server.ca.com
    keyrequest:
      algo: ecdsa
      size: 256
    names:
-      - C: US
-        ST: "North Carolina"
+      - C: KR
+        ST: "Seoul"
         L:
-        O: Hyperledger
-        OU: Fabric
+        O: SMU
+        OU: proofit
    hosts:
-     - 4bcfd8973ef2
      - localhost
    ca:
       expiry: 131400h
@@ -441,5 +441,61 @@ intermediate:
 # locked out.
 #############################################################################
 cfg:
+  affiliations:
+    allowremove: true
   identities:
     passwordattempts: 10
+    allowremove: true
+
+###############################################################################
+#
+#    Operations section
+#
+###############################################################################
+operations:
+    # host and port for the operations server
+    listenAddress: 127.0.0.1:9443
+
+    # TLS configuration for the operations endpoint
+    tls:
+        # TLS enabled
+        enabled: false
+
+        # path to PEM encoded server certificate for the operations server
+        cert:
+            file:
+
+        # path to PEM encoded server key for the operations server
+        key:
+            file:
+
+        # require client certificate authentication to access all resources
+        clientAuthRequired: false
+
+        # paths to PEM encoded ca certificates to trust for client authentication
+        clientRootCAs:
+            files: []
+
+###############################################################################
+#
+#    Metrics section
+#
+###############################################################################
+metrics:
+    # statsd, prometheus, or disabled
+    provider: disabled
+
+    # statsd configuration
+    statsd:
+        # network type: tcp or udp
+        network: udp
+
+        # statsd server address
+        address: 127.0.0.1:8125
+
+        # the interval at which locally cached counters and gauges are pushsed
+        # to statsd; timings are pushed immediately
+        writeInterval: 10s
+
+        # prefix is prepended to all emitted statsd merics
+        prefix: server

@@ -55,16 +55,15 @@ services:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=server.ca.com
-      # - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
-      # - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/4239aa0dcd76daeeb8ba0cda701851d14504d31aad1b2ddddbac6a57365e497c_sk
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/ca-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/msp/keystore/6b03deddf967a9bc02cafa30af733def8c3c69a91dd6255c10cdd87e206ee45d_sk
     working_dir: /etc/hyperledger/fabric-ca-server/
     tty: true
     ports:
       - 7054:7054
-    command: /bin/bash
+    command: sh -c 'fabric-ca-server start'
     volumes:
       - ./ca/server.ca.com/fabric-ca-server/:/etc/hyperledger/fabric-ca-server/
-      - ./ca/server.ca.com/fabric-ca-server-config/:/etc/hyperledger/fabric-ca-server-config/
     container_name: server.ca.com
     networks:
       proofit:
@@ -82,7 +81,6 @@ services:
     command: /bin/bash
     volumes:
       - ./ca/admin.ca.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./ca/admin.ca.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.ca.com
     networks:
       proofit:
@@ -116,6 +114,7 @@ services:
 
   zookeeper.ca.com:
     image: hyperledger/fabric-zookeeper
+    container_name: zookeeper.ca.com
     # restart: always
     ports:
       - 2181:2181
@@ -127,6 +126,7 @@ services:
   kafka.ca.com:
     image: hyperledger/fabric-kafka
     # restart: always
+    container_name: kafka.ca.com
     environment:
       - KAFKA_ADVERTISED_HOST_NAME=kafka.ca.com
       - KAFKA_ADVERTISED_PORT=9092
@@ -155,7 +155,6 @@ services:
     command: /bin/bash
     volumes:
       - ./app/admin.app.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./app/admin.app.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.app.com
     networks:
       proofit:
@@ -200,8 +199,8 @@ services:
     environment:
       - COUCHDB_USER=appdb
       - COUCHDB_PASSWORD=appdb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 5984:5984
     networks:
       appdb:
         # ipv4_address: 172.172.1.2
@@ -218,8 +217,8 @@ services:
     command: /bin/bash
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 8051:7051
+      - 8052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./app/recruit.app.com/msp/:/etc/hyperledger/msp/
@@ -245,8 +244,8 @@ services:
     environment:
       - COUCHDB_USER=recruitdb
       - COUCHDB_PASSWORD=recruitdb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 6984:5984
     networks:
       recruitdb:
         # ipv4_address: 172.172.1.34
@@ -263,7 +262,6 @@ services:
     command: /bin/bash
     volumes:
       - ./language/admin.language.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./language/admin.language.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.language.com
     networks:
       proofit:
@@ -281,8 +279,8 @@ services:
     command: /bin/bash
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 9051:7051
+      - 9052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./language/toeic.language.com/msp/:/etc/hyperledger/msp/
@@ -308,8 +306,8 @@ services:
     environment:
       - COUCHDB_USER=toeicdb
       - COUCHDB_PASSWORD=toeicdb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 7984:5984
     networks:
       toeicdb:
         # ipv4_address: 172.172.1.18
@@ -326,7 +324,6 @@ services:
     command: /bin/bash
     volumes:
       - ./qualify/admin.qualify.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./qualify/admin.qualify.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.qualify.com
     networks:
       proofit:
@@ -344,8 +341,8 @@ services:
     command: /bin/bash
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 10051:7051
+      - 10052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./qualify/qnet.qualify.com/msp/:/etc/hyperledger/msp/
@@ -371,8 +368,8 @@ services:
     environment:
       - COUCHDB_USER=qnetdb
       - COUCHDB_PASSWORD=qnetdb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 8984:5984
     networks:
       qnetdb:
         # ipv4_address: 172.172.1.34
@@ -389,7 +386,6 @@ services:
     command: /bin/bash
     volumes:
       - ./univ/admin.univ.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./univ/admin.univ.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.univ.com
     networks:
       proofit:
@@ -407,8 +403,8 @@ services:
     command: /bin/bash
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 11051:7051
+      - 11052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./univ/smu.univ.com/msp/:/etc/hyperledger/msp/
@@ -434,8 +430,8 @@ services:
     environment:
       - COUCHDB_USER=smudb
       - COUCHDB_PASSWORD=smudb
-    ports:
-      - 5984:5984
+    # ports:
+    #   - 9984:5984
     networks:
       smudb:
         # ipv4_address: 172.172.1.66
