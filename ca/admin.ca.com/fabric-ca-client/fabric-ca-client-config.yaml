@@ -62,7 +62,7 @@ tls:
   certfiles: ./tls/server-ca-com-7054.pem
   client:
     certfile: ./tls/cert.pem
-    keyfile: ./tls/015773ec0721b68013240a6d4770d50699c437079bbbce8c5fbfaeebc0e13f2c_sk
+    keyfile: ./tls/0f6a1406c24ec8f038f152829f77f03e3cd6e5a07279deaa445ad4cac69f44bb_sk
 
 #############################################################################
 #  Certificate Signing Request section for generating the CSR for an
@@ -125,13 +125,29 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name:
-  type:
-  affiliation:
+  name: admin.qualify.com
+  secret: admin.qualify.com
+  type: client
+  affiliation: com.qualify
   maxenrollments: 0
   attributes:
-   # - name:
-   #   value:
+   - name: hf.Registrar.Roles
+     value: client,orderer,peer,user
+   - name: hf.Registrar.DelegateRoles
+     value: client,orderer,peer,user
+   - name: hf.Registrar.Attributes
+     value: "*"
+   - name: hf.GenCRL
+     value: true
+   - name: hf.Revoker
+     value: true
+   - name: hf.AffiliationMgr
+     value: true
+   - name: hf.IntermediateCA
+     value: true
+   - name: role
+     value: admin
+     ecert: true
 
 #############################################################################
 #  Enrollment section used to enroll an identity with fabric-ca server

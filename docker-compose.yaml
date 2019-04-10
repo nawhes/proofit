@@ -153,7 +153,6 @@ services:
     command: /bin/bash
     volumes:
       - ./app/admin.app.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./app/admin.app.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.app.com
     networks:
       proofit:
@@ -261,7 +260,6 @@ services:
     command: /bin/bash
     volumes:
       - ./language/admin.language.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./language/admin.language.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.language.com
     networks:
       proofit:
@@ -324,7 +322,6 @@ services:
     command: /bin/bash
     volumes:
       - ./qualify/admin.qualify.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./qualify/admin.qualify.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.qualify.com
     networks:
       proofit:
@@ -387,7 +384,6 @@ services:
     command: /bin/bash
     volumes:
       - ./univ/admin.univ.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./univ/admin.univ.com/fabric-ca-client-config/:/etc/hyperledger/fabric-ca-client-config/
     container_name: admin.univ.com
     networks:
       proofit:

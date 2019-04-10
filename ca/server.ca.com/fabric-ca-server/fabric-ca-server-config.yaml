@@ -63,7 +63,7 @@ tls:
   enabled: false
   # TLS for the server's listening port
   certfile: ./ca-cert.pem
-  keyfile: ./msp/keystore/6b03deddf967a9bc02cafa30af733def8c3c69a91dd6255c10cdd87e206ee45d_sk
+  keyfile: ./msp/keystore/2157be309554b32e1abe4e534d54074f8379749753e1c99d7e9e13dbe8d4a3ec_sk
   clientauth:
     type: noclientcert
     certfiles:
@@ -82,7 +82,7 @@ ca:
   # Name of this CA
   name: server.ca.com
   # Key file (is only used to import a private key into BCCSP)
-  keyfile: ./msp/keystore/6b03deddf967a9bc02cafa30af733def8c3c69a91dd6255c10cdd87e206ee45d_sk
+  keyfile: ./msp/keystore/2157be309554b32e1abe4e534d54074f8379749753e1c99d7e9e13dbe8d4a3ec_sk
   # Certificate file (default: ca-cert.pem)
   certfile: ./ca-cert.pem
   # Chain file
@@ -123,8 +123,8 @@ registry:
 
   # Contains identity information which is used when LDAP is disabled
   identities:
-     - name: admin.ca.com
-       pass: admin.ca.com
+     - name: admin
+       pass: admin
        type: client
        affiliation: ""
        attrs:
@@ -238,6 +238,7 @@ ldap:
 #############################################################################
 affiliations:
         com:
+          - ca
           - app
           - language
           - qualify
