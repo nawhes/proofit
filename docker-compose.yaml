@@ -53,7 +53,7 @@ services:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server/
       - FABRIC_CA_SERVER_CA_NAME=server.ca.com
       - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/ca-cert.pem
       - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/msp/keystore/6b03deddf967a9bc02cafa30af733def8c3c69a91dd6255c10cdd87e206ee45d_sk
@@ -75,7 +75,7 @@ services:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: /bin/bash
@@ -97,14 +97,14 @@ services:
       - FABRIC_LOGGIN_SPEC=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LOCALMSPID=ca
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer/
     command: orderer
     tty: true
     ports:
       - 7050:7050
     volumes:
         - ./ca/orderer.ca.com/:/opt/gopath/src/github.com/hyperledger/fabric/
-        - ./ca/orderer.production/:/var/hyperledger/production/orderer
+        - ./ca/orderer.production/:/var/hyperledger/production/orderer/
     container_name: orderer.ca.com
     networks:
       proofit:
@@ -149,7 +149,7 @@ services:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: /bin/bash
@@ -168,7 +168,7 @@ services:
     environment:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
     command: peer node start
     tty: true
     ports:
@@ -176,8 +176,8 @@ services:
       - 7052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./app/app.app.com/:/etc/hyperledger/
-        - ./app/app.production/:/var/hyperledger/production
+        - ./app/app.app.com/:/etc/hyperledger/fabric/
+        - ./app/app.production/:/var/hyperledger/production/
     depends_on:
       - orderer.ca.com
       - appdb
@@ -213,7 +213,7 @@ services:
     environment:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
     command: peer node start
     tty: true
     ports:
@@ -221,8 +221,8 @@ services:
       - 8052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./app/recruit.app.com/:/etc/hyperledger/
-        - ./app/recruit.production/:/var/hyperledger/production
+        - ./app/recruit.app.com/:/etc/hyperledger/fabric/
+        - ./app/recruit.production/:/var/hyperledger/production/
     depends_on:
       - orderer.ca.com
       - recruitdb
@@ -275,7 +275,7 @@ services:
     environment:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
     command: peer node start
     tty: true
     ports:
@@ -283,7 +283,7 @@ services:
       - 9052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./language/toeic.language.com/:/etc/hyperledger/
+        - ./language/toeic.language.com/:/etc/hyperledger/fabric/
         - ./language/toeic.production/:/var/hyperledger/production
     depends_on:
       - orderer.ca.com
@@ -318,7 +318,7 @@ services:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: /bin/bash
@@ -337,7 +337,7 @@ services:
     environment:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
     command: peer node start
     tty: true
     ports:
@@ -345,7 +345,7 @@ services:
       - 10052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./qualify/qnet.qualify.com/:/etc/hyperledger/
+        - ./qualify/qnet.qualify.com/:/etc/hyperledger/fabric/
         - ./qualify/qnet.production/:/var/hyperledger/production
     depends_on:
       - orderer.ca.com
@@ -399,7 +399,7 @@ services:
     environment:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
     command: peer node start
     tty: true
     ports:
@@ -407,7 +407,7 @@ services:
       - 11052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./univ/smu.univ.com/:/etc/hyperledger/
+        - ./univ/smu.univ.com/:/etc/hyperledger/fabric/
         - ./univ/smu.production/:/var/hyperledger/production
     depends_on:
       - orderer.ca.com
