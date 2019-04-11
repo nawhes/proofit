@@ -59,10 +59,10 @@ mspdir: msp
 #############################################################################
 tls:
   # TLS section for secure socket connection
-  certfiles: 
+  certfiles:
   client:
-    certfile: 
-    keyfile: 
+    certfile:
+    keyfile:
 
 #############################################################################
 #  Certificate Signing Request section for generating the CSR for an
@@ -99,19 +99,19 @@ tls:
 #
 #############################################################################
 csr:
-  cn: admin.ca.com
+  cn: admin.lanugage.com
   keyrequest:
     algo: ecdsa
     size: 256
   serialnumber:
   names:
-    - C: KR
-      ST: Seoul
+    - C: US
+      ST: North Carolina
       L:
-      O: SMU
-      OU: Proofit
+      O: Hyperledger
+      OU: Fabric
   hosts:
-    - dd59be9523cb
+    - e2eda328ad18
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server
@@ -125,29 +125,13 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: admin.language.com
-  secret: language
-  type: client
-  affiliation: language
+  name:
+  type:
+  affiliation:
   maxenrollments: 0
   attributes:
-   - name: hf.Registrar.Roles
-     value: client,orderer,peer,user
-   - name: hf.Registrar.DelegateRoles
-     value: client,orderer,peer,user
-   - name: hf.Registrar.Attributes
-     value: "*"
-   - name: hf.GenCRL
-     value: true
-   - name: hf.Revoker
-     value: true
-   - name: hf.AffiliationMgr
-     value: true
-   - name: hf.IntermediateCA
-     value: true
-   - name: role
-     value: admin
-     ecert: true
+   # - name:
+   #   value:
 
 #############################################################################
 #  Enrollment section used to enroll an identity with fabric-ca server
