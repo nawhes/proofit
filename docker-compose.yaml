@@ -103,8 +103,9 @@ services:
     ports:
       - 7050:7050
     volumes:
-        - ./ca/orderer.ca.com/:/opt/gopath/src/github.com/hyperledger/fabric/
-        - ./ca/orderer.production/:/var/hyperledger/production/orderer/
+        - ./ca/orderer.ca.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./ca/orderer.ca.com/production/:/var/hyperledger/production/orderer/
+        - ./ca/orderer.ca.com/etc/:/etc/hyperledger/fabric/
     container_name: orderer.ca.com
     networks:
       proofit:
@@ -176,8 +177,9 @@ services:
       - 7052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./app/app.app.com/:/etc/hyperledger/fabric/
-        - ./app/app.production/:/var/hyperledger/production/
+        - ./app/app.app.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./app/app.app.com/etc/:/etc/hyperledger/fabric/
+        - ./app/app.app.com/production/:/var/hyperledger/production/
     depends_on:
       - orderer.ca.com
       - appdb
@@ -221,8 +223,9 @@ services:
       - 8052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./app/recruit.app.com/:/etc/hyperledger/fabric/
-        - ./app/recruit.production/:/var/hyperledger/production/
+        - ./app/recruit.app.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./app/recruit.app.com/etc/:/etc/hyperledger/fabric/
+        - ./app/recruit.app.com/production/:/var/hyperledger/production/
     depends_on:
       - orderer.ca.com
       - recruitdb
@@ -283,8 +286,9 @@ services:
       - 9052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./language/toeic.language.com/:/etc/hyperledger/fabric/
-        - ./language/toeic.production/:/var/hyperledger/production
+        - ./language/toeic.language.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./language/toeic.language.com/etc/:/etc/hyperledger/fabric/
+        - ./language/toeic.language.com/production/:/var/hyperledger/production/
     depends_on:
       - orderer.ca.com
       - toeicdb
@@ -345,8 +349,9 @@ services:
       - 10052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./qualify/qnet.qualify.com/:/etc/hyperledger/fabric/
-        - ./qualify/qnet.production/:/var/hyperledger/production
+        - ./qualify/qnet.qualify.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./qualify/qnet.qualify.com/etc/:/etc/hyperledger/fabric/
+        - ./qualify/qnet.qualify.com/production/:/var/hyperledger/production/
     depends_on:
       - orderer.ca.com
       - qnetdb
@@ -407,8 +412,9 @@ services:
       - 11052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./univ/smu.univ.com/:/etc/hyperledger/fabric/
-        - ./univ/smu.production/:/var/hyperledger/production
+        - ./univ/smu.univ.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./univ/smu.univ.com/etc/:/etc/hyperledger/fabric/
+        - ./univ/smu.univ.com/production/:/var/hyperledger/production/
     depends_on:
       - orderer.ca.com
       - smudb
