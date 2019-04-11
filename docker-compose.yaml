@@ -54,9 +54,6 @@ services:
     environment:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server/
-      - FABRIC_CA_SERVER_CA_NAME=server.ca.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/ca-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/msp/keystore/6b03deddf967a9bc02cafa30af733def8c3c69a91dd6255c10cdd87e206ee45d_sk
     working_dir: /etc/hyperledger/fabric-ca-server/
     tty: true
     ports:
