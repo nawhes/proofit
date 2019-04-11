@@ -126,8 +126,9 @@ csr:
 #############################################################################
 id:
   name: qnet.qualify.com
+  secret: qualify
   type: peer
-  affiliation: com.qualify
+  affiliation: qualify
   maxenrollments: 0
   attributes:
     - name: role

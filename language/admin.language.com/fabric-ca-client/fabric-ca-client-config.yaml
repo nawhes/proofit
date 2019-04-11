@@ -126,8 +126,9 @@ csr:
 #############################################################################
 id: 
   name: toeic.language.com
+  secret: toeic
   type: peer
-  affiliation: com.language
+  affiliation: language
   maxenrollments: 0
   attributes:
     - name: role

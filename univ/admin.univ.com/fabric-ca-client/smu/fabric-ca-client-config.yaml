@@ -40,7 +40,7 @@
 #############################################################################
 
 # URL of the Fabric-ca-server (default: http://localhost:7054)
-url: http://server.ca.com:7054
+url: http://server.ca.com
 
 # Membership Service Provider (MSP) directory
 # This is useful when the client is used to enroll a peer or orderer, so
@@ -99,19 +99,19 @@ tls:
 #
 #############################################################################
 csr:
-  cn: admin.univ.com
+  cn: smu.univ.com
   keyrequest:
     algo: ecdsa
     size: 256
   serialnumber:
   names:
-    - C: KR
-      ST: Seoul
+    - C: US
+      ST: North Carolina
       L:
-      O: SMU
-      OU: Proofit
+      O: Hyperledger
+      OU: Fabric
   hosts:
-    - 4f6c9bfb23ad
+    - d58fa1a3a0b8
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server
@@ -125,14 +125,13 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: smu.univ.com
-  type: peer
-  affiliation: univ
+  name:
+  type:
+  affiliation:
   maxenrollments: 0
   attributes:
-    - name: role
-      value: peer
-      ecert: true
+   # - name:
+   #   value:
 
 #############################################################################
 #  Enrollment section used to enroll an identity with fabric-ca server

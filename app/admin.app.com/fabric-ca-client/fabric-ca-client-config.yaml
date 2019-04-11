@@ -125,10 +125,10 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: recruit.app.com
-  secret: recruit
+  name: app.app.com
+  secret: app
   type: peer
-  affiliation: com.app
+  affiliation: app
   maxenrollments: 0
   attributes:
     - name: role

@@ -99,17 +99,17 @@ tls:
 #
 #############################################################################
 csr:
-  cn: admin.lanugage.com
+  cn: admin.ca.com
   keyrequest:
     algo: ecdsa
     size: 256
   serialnumber:
   names:
-    - C: US
-      ST: North Carolina
+    - C: KR
+      ST: Seoul
       L:
-      O: Hyperledger
-      OU: Fabric
+      O: SMU
+      OU: Proofit
   hosts:
     - e2eda328ad18
 
@@ -125,13 +125,15 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name:
-  type:
-  affiliation:
+  name: orderer.ca.com
+  secret: orderer
+  type: orderer
+  affiliation: ca
   maxenrollments: 0
   attributes:
-   # - name:
-   #   value:
+    - name: role
+      value: orderer
+      ecert: true
 
 #############################################################################
 #  Enrollment section used to enroll an identity with fabric-ca server
