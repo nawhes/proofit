@@ -97,7 +97,7 @@ services:
       - FABRIC_LOGGIN_SPEC=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LOCALMSPID=ca
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer/
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
     command: orderer
     tty: true
     ports:
@@ -169,7 +169,7 @@ services:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
-    command: peer node start
+    command: /bin/bash # peer node start
     tty: true
     ports:
       - 7051:7051

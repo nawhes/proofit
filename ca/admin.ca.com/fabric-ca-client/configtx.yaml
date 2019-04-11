@@ -456,7 +456,7 @@ Profiles:
             Organizations:
                 - *ca
         Consortiums:
-            proofit:
+            Proofit:
                 Organizations:
                     - *app
                     - *language
@@ -464,7 +464,7 @@ Profiles:
                     - *univ
 
     AccountChannel:
-        Consortium: AccountConsortium
+        Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
             Organizations:
@@ -474,7 +474,7 @@ Profiles:
                 - *univ
 
     UnivChannel:
-        Consortium: UnivConsortium
+        Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
             Organizations:
@@ -482,7 +482,7 @@ Profiles:
                 - *univ
 
     LanguageChannel:
-        Consortium: LanguageConsortium
+        Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
             Organizations:
@@ -490,7 +490,7 @@ Profiles:
                 - *language
 
     QualifyChannel:
-        Consortium: QualifyConsortium
+        Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
             Organizations:
