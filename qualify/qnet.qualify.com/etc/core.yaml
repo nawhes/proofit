@@ -213,14 +213,14 @@ peer:
         # Private key used for TLS server (and client if clientAuthEnabled
         # is set to true
         key:
-            file: tls/2f9b7649904851bcb2abc8a2d4c6e6276ec014f9d137aefbf25dddf29cdf55b9_sk # tls/server.key
+            file: tls/9a6f57371a8087005ebaeb0c96cfc65fda27d2b9c5eb713d0fdc8b759f92cc2d_sk # tls/server.key
         # Trusted root certificate chain for tls.cert
         rootcert:
             file: tls/server-ca-com-7054.pem # tls/ca.crt
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
-              - tls/ca.crt
+              - tls/server-ca-com-7054.pem # tls/ca.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:
@@ -256,7 +256,7 @@ peer:
             # Location of Key Store
             FileKeyStore:
                 # If "", defaults to 'mspConfigPath'/keystore
-                KeyStore:
+                KeyStore: ./msp/keystore
         # Settings for the PKCS#11 crypto provider (i.e. when DEFAULT: PKCS11)
         PKCS11:
             # Location of the PKCS11 module library
@@ -280,7 +280,7 @@ peer:
     # to match the name of one of the MSPs in each of the channel
     # that this peer is a member of. Otherwise this peer's messages
     # will not be identified as valid by other nodes.
-    localMspId: com.qualify
+    localMspId: qualify
 
     # CLI common client config options
     client:

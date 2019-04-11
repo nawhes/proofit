@@ -31,7 +31,7 @@ General:
     TLS:
         Enabled: true
         # PrivateKey governs the file location of the private key of the TLS certificate.
-        PrivateKey: tls/395c154beeadeb268e6044fdef242a37ea5f5427c1a78b7c56bb9ae22a80d9a0_sk # tls/server.key
+        PrivateKey: tls/06cd8d5278ba62c4e7d4cc216ae4be66205996a6917bd2ab39eb8b6d41d88163_sk # tls/server.key
         # Certificate governs the file location of the server TLS certificate.
         Certificate: tls/cert.pem # tls/server.crt
         RootCAs:
@@ -107,7 +107,7 @@ General:
     # ID of one of the organizations defined in the orderer system channel's
     # /Channel/Orderer configuration. The sample organization defined in the
     # sample configuration provided has an MSP ID of "SampleOrg".
-    LocalMSPID: com.ca
+    LocalMSPID: ca
 
     # Enable an HTTP service for Go "pprof" profiling as documented at:
     # https://golang.org/pkg/net/http/pprof
@@ -135,7 +135,7 @@ General:
             # Location of key store. If this is unset, a location will be
             # chosen using: 'LocalMSPDir'/keystore
             FileKeyStore:
-                KeyStore:
+                KeyStore: ./msp/keystore
 
     # Authentication contains configuration parameters related to authenticating
     # client messages
