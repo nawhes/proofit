@@ -62,11 +62,11 @@ tls:
   # Enable TLS (default: false)
   enabled: false
   # TLS for the server's listening port
-  certfile: ./ca-cert.pem
-  keyfile: ./msp/keystore/2157be309554b32e1abe4e534d54074f8379749753e1c99d7e9e13dbe8d4a3ec_sk
+  certfile: /etc/hyperledger/fabric-ca-server/ca-cert.pem
+  keyfile: /etc/hyperledger/fabric-ca-server/msp/keystore/e3e50c27164b4c10adc819cd46a1705a09be13ace61f343e06bdf200cfb089d0_sk
   clientauth:
-    type: noclientcert
-    certfiles:
+    type: VerifyClientCertIfGiven
+    certfiles: ./ca-cert.pem
 
 #############################################################################
 #  The CA section contains information related to the Certificate Authority
@@ -82,9 +82,9 @@ ca:
   # Name of this CA
   name: server.ca.com
   # Key file (is only used to import a private key into BCCSP)
-  keyfile: ./msp/keystore/2157be309554b32e1abe4e534d54074f8379749753e1c99d7e9e13dbe8d4a3ec_sk
+  keyfile: /etc/hyperledger/fabric-ca-server/msp/keystore/e3e50c27164b4c10adc819cd46a1705a09be13ace61f343e06bdf200cfb089d0_sk
   # Certificate file (default: ca-cert.pem)
-  certfile: ./ca-cert.pem
+  certfile: /etc/hyperledger/fabric-ca-server/ca-cert.pem
   # Chain file
   chainfile:
 
@@ -237,12 +237,11 @@ ldap:
 # which are always stored in lower case.
 #############################################################################
 affiliations:
-        com:
-          - ca
-          - app
-          - language
-          - qualify
-          - univ
+        ca:
+        app:
+        language:
+        qualify:
+        univ:
 
 #############################################################################
 #  Signing section

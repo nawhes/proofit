@@ -59,10 +59,10 @@ mspdir: msp
 #############################################################################
 tls:
   # TLS section for secure socket connection
-  certfiles: ./tls/server-ca-com-7054.pem
+  certfiles: 
   client:
-    certfile: ./tls/cert.pem
-    keyfile: ./tls/0f6a1406c24ec8f038f152829f77f03e3cd6e5a07279deaa445ad4cac69f44bb_sk
+    certfile: 
+    keyfile: 
 
 #############################################################################
 #  Certificate Signing Request section for generating the CSR for an
@@ -125,14 +125,28 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: orderer.ca.com
-  secret: orderer
-  type: orderer
-  affiliation: com.ca
-  maxenrollments: 0
+  name: admin.ca.com
+  secret: ca
+  type: client
+  affiliation: ca
+  maxenrollments: 1
   attributes:
+   - name: hf.Registrar.Roles
+     value: client,orderer,peer,user
+   - name: hf.Registrar.DelegateRoles
+     value: client,orderer,peer,user
+   - name: hf.Registrar.Attributes
+     value: "*"
+   - name: hf.GenCRL
+     value: true
+   - name: hf.Revoker
+     value: true
+   - name: hf.AffiliationMgr
+     value: true
+   - name: hf.IntermediateCA
+     value: true
    - name: role
-     value: orderer
+     value: admin
      ecert: true
 
 #############################################################################
