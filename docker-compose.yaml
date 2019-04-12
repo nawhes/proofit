@@ -93,9 +93,8 @@ services:
       - GODEBUG=netdns=go
       - FABRIC_LOGGIN_SPEC=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-      - ORDERER_GENERAL_LOCALMSPID=ca
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
-    command: /bin/bash # orderer
+    command: orderer
     tty: true
     ports:
       - 7050:7050
@@ -109,6 +108,10 @@ services:
         # ipv4_address: 172.172.0.3
         aliases:
           - orderer.ca.com
+    depends_on:
+      - server.ca.com
+      - kafka.ca.com
+      - zookeeper.ca.com
 
   zookeeper.ca.com:
     image: hyperledger/fabric-zookeeper
