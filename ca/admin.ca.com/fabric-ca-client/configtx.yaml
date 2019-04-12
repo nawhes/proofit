@@ -15,88 +15,88 @@
 Organizations:
 
     - &ca
-        Name: com.ca
-        ID: com.ca
-        MSPDir: ./msp/
+        Name: ca
+        ID: ca
+        MSPDir: ./ca/msp/
         Policies: &caPolicies
             Readers:
                 Type: Signature
-                Rule: "OR('com.ca.peer', 'com.ca.client')"
+                Rule: "OR('ca.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('com.ca.peer', 'com.ca.client')"
+                Rule: "OR('ca.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('com.ca.admin')"
+                Rule: "OR('ca.admin')"
 
     - &app
-        Name: com.app
-        ID: com.app
+        Name: app
+        ID: app
         MSPDir: ./app/msp/
         Policies: &appPolicies
             Readers:
                 Type: Signature
-                Rule: "OR('com.app.peer', 'com.app.client')"
+                Rule: "OR('app.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('com.app.peer', 'com.app.client')"
+                Rule: "OR('app.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('com.app.admin')"
+                Rule: "OR('app.admin')"
         AnchorPeers:
             - Host: app.app.com
               Port: 7051
 
     - &language
-        Name: com.language
-        ID: com.language
+        Name: language
+        ID: language
         MSPDir: ./language/msp/
         Policies: &languagePolicies
             Readers:
                 Type: Signature
-                Rule: "OR('com.language.peer', 'com.language.client')"
+                Rule: "OR('language.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('com.language.peer', 'com.language.client')"
+                Rule: "OR('language.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('com.language.admin')"
+                Rule: "OR('language.admin')"
         AnchorPeers:
             - Host: toeic.language.com
               Port: 7051
 
     - &qualify
-        Name: com.qualify
-        ID: com.qualify
+        Name: qualify
+        ID: qualify
         MSPDir: ./qualify/msp/
         Policies: &qualifyPolicies
             Readers:
                 Type: Signature
-                Rule: "OR('com.qualify.peer', 'com.qualify.client')"
+                Rule: "OR('qualify.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('com.qualify.peer', 'com.qualify.client')"
+                Rule: "OR('qualify.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('com.qualify.admin')"
+                Rule: "OR('qualify.admin')"
         AnchorPeers:
             - Host: qnet.qualify.com
               Port: 7051
 
     - &univ
-        Name: com.univ
-        ID: com.univ
+        Name: univ
+        ID: univ
         MSPDir: ./univ/msp
         Policies: &univPolicies
             Readers:
                 Type: Signature
-                Rule: "OR('com.univ.peer', 'com.univ.client')"
+                Rule: "OR('univ.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('com.univ.peer', 'com.univ.client')"
+                Rule: "OR('univ.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('com.univ.admin')"
+                Rule: "OR('univ.admin')"
         AnchorPeers:
             - Host: smu.univ.com
               Port: 7051
@@ -242,6 +242,11 @@ Application: &ApplicationDefaults
     # Organizations lists the orgs participating on the application side of the
     # network.
     Organizations:
+        - *ca
+        - *app
+        - *language
+        - *qualify
+        - *univ
 
     # Policies defines the set of policies at this level of the config tree
     # For Application policies, their canonical path is
@@ -335,6 +340,7 @@ Orderer: &OrdererDefaults
     # Organizations lists the orgs participating on the orderer side of the
     # network.
     Organizations:
+        - *ca
 
     # Policies defines the set of policies at this level of the config tree
     # For Orderer policies, their canonical path is
@@ -408,14 +414,16 @@ Channel: &ChannelDefaults
 ################################################################################
 Profiles:
 
-    Genesis:
-        Orderer:
+    Genesis: 
+        <<: *ChannelDefaults
+        Orderer: 
             <<: *OrdererDefaults
-            Organizations:
-                - *ca
+        Application: 
+            <<: *ApplicationDefaults
         Consortiums:
             Proofit:
                 Organizations:
+                    - *ca
                     - *app
                     - *language
                     - *qualify
@@ -425,17 +433,13 @@ Profiles:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
-            Organizations:
-                - *app
-                - *language
-                - *qualify
-                - *univ
 
     UnivChannel:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
             Organizations:
+                - *ca
                 - *app
                 - *univ
 
@@ -444,6 +448,7 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
+                - *ca
                 - *app
                 - *language
 
@@ -452,5 +457,6 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
+                - *ca
                 - *app
                 - *qualify
