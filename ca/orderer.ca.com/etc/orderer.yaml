@@ -29,13 +29,13 @@ General:
 
     # TLS: TLS settings for the GRPC server.
     TLS:
-        Enabled: true
+        Enabled: false
         # PrivateKey governs the file location of the private key of the TLS certificate.
-        PrivateKey: /etc/hyperledger/fabric/tls/server.key
+        PrivateKey: 
         # Certificate governs the file location of the server TLS certificate.
-        Certificate: /etc/hyperledger/fabric/tls/server.crt
+        Certificate: 
         RootCAs:
-          - /etc/hyperledger/fabric/tls/ca.crt
+          - 
         ClientAuthRequired: false
         ClientRootCAs:
     # Keepalive settings for the GRPC server.
@@ -90,7 +90,7 @@ General:
     # GenesisMethod is set to "provisional". See the configtx.yaml file for the
     # descriptions of the available profiles. Ignored if GenesisMethod is set to
     # "file".
-    GenesisProfile: Genesis
+    GenesisProfile: SampleDevModeKafka
 
     # Genesis file: The file containing the genesis block to use when
     # initializing the orderer system channel and GenesisMethod is set to

@@ -1,0 +1,15 @@
+=============== Apr 12, 2019 (UTC) ===============
+21:11:18.878616 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+21:11:18.889586 db@open opening
+21:11:18.892532 version@stat F·[] S·0B[] Sc·[]
+21:11:18.911217 db@janitor F·2 G·0
+21:11:18.911263 db@open done T·21.63417ms
+=============== Apr 12, 2019 (UTC) ===============
+21:17:35.466449 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+21:17:35.466715 version@stat F·[] S·0B[] Sc·[]
+21:17:35.466726 db@open opening
+21:17:35.466778 journal@recovery F·1
+21:17:35.485771 journal@recovery recovering @1
+21:17:35.502479 version@stat F·[] S·0B[] Sc·[]
+21:17:35.526567 db@janitor F·2 G·0
+21:17:35.526633 db@open done T·59.898991ms

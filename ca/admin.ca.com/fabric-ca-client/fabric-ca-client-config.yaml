@@ -99,7 +99,7 @@ tls:
 #
 #############################################################################
 csr:
-  cn: admin.ca.com
+  cn: admin
   keyrequest:
     algo: ecdsa
     size: 256
@@ -111,7 +111,8 @@ csr:
       O: SMU
       OU: Proofit
   hosts:
-    - dd59be9523cb
+    - 925182ab0bfe
+
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server
@@ -125,10 +126,10 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: admin.language.com
-  secret: language
+  name: admin.qualify.com
+  secret: qualify
   type: client
-  affiliation: language
+  affiliation: qualify
   maxenrollments: 0
   attributes:
    - name: hf.Registrar.Roles
