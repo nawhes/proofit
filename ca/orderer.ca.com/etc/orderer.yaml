@@ -135,7 +135,7 @@ General:
             # Location of key store. If this is unset, a location will be
             # chosen using: 'LocalMSPDir'/keystore
             FileKeyStore:
-                KeyStore: ./msp/keystore
+                KeyStore: 
 
     # Authentication contains configuration parameters related to authenticating
     # client messages
