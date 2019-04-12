@@ -170,7 +170,7 @@ services:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
-    command: /bin/bash # peer node start
+    command: peer node start
     tty: true
     ports:
       - 7051:7051
@@ -216,7 +216,7 @@ services:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
-    command: /bin/bash # peer node start
+    command: peer node start
     tty: true
     ports:
       - 8051:7051
@@ -279,7 +279,7 @@ services:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
-    command: /bin/bash # peer node start
+    command: peer node start
     tty: true
     ports:
       - 9051:7051
@@ -342,7 +342,7 @@ services:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
-    command: /bin/bash # peer node start
+    command: peer node start
     tty: true
     ports:
       - 10051:7051
@@ -405,7 +405,7 @@ services:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
-    command: /bin/bash # peer node start
+    command: peer node start
     tty: true
     ports:
       - 11051:7051

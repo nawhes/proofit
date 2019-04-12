@@ -17,7 +17,7 @@ Organizations:
     - &ca
         Name: ca
         ID: ca
-        MSPDir: ./ca/msp/
+        MSPDir: ./ca/msp
         Policies: &caPolicies
             Readers:
                 Type: Signature
@@ -32,7 +32,7 @@ Organizations:
     - &app
         Name: app
         ID: app
-        MSPDir: ./app/msp/
+        MSPDir: ./app/msp
         Policies: &appPolicies
             Readers:
                 Type: Signature
@@ -50,7 +50,7 @@ Organizations:
     - &language
         Name: language
         ID: language
-        MSPDir: ./language/msp/
+        MSPDir: ./language/msp
         Policies: &languagePolicies
             Readers:
                 Type: Signature
@@ -68,7 +68,7 @@ Organizations:
     - &qualify
         Name: qualify
         ID: qualify
-        MSPDir: ./qualify/msp/
+        MSPDir: ./qualify/msp
         Policies: &qualifyPolicies
             Readers:
                 Type: Signature
