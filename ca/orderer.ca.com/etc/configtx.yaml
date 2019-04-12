@@ -27,7 +27,7 @@ Organizations:
                 Rule: "OR('ca.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('ca.admin')"
+                Rule: "OR('ca.member')"
 
     - &app
         Name: app
@@ -42,7 +42,7 @@ Organizations:
                 Rule: "OR('app.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('app.admin')"
+                Rule: "OR('app.member')"
         AnchorPeers:
             - Host: app.app.com
               Port: 7051
@@ -60,7 +60,7 @@ Organizations:
                 Rule: "OR('language.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('language.admin')"
+                Rule: "OR('language.member')"
         AnchorPeers:
             - Host: toeic.language.com
               Port: 7051
@@ -78,7 +78,7 @@ Organizations:
                 Rule: "OR('qualify.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('qualify.admin')"
+                Rule: "OR('qualify.member')"
         AnchorPeers:
             - Host: qnet.qualify.com
               Port: 7051
@@ -96,7 +96,7 @@ Organizations:
                 Rule: "OR('univ.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('univ.admin')"
+                Rule: "OR('univ.member')"
         AnchorPeers:
             - Host: smu.univ.com
               Port: 7051
@@ -418,45 +418,55 @@ Profiles:
         <<: *ChannelDefaults
         Orderer: 
             <<: *OrdererDefaults
+            Policies:
+                <<: *caPolicies
         Application: 
-            <<: *ApplicationDefaults
+            <<: *ApplicationDefaults        
         Consortiums:
             Proofit:
                 Organizations:
-                    - *ca
-                    - *app
-                    - *language
-                    - *qualify
-                    - *univ
+                    - <<: *ca
+                    - <<: *app
+                    - <<: *language
+                    - <<: *qualify
+                    - <<: *univ
 
     AccountChannel:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
+            Policies:
+                <<: *appPolicies
 
     UnivChannel:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
+            Policies:
+                <<: *appPolicies
             Organizations:
-                - *ca
-                - *app
-                - *univ
+                - <<: *ca
+                - <<: *app
+                - <<: *univ
 
     LanguageChannel:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
+            Policies:
+                <<: *appPolicies
             Organizations:
-                - *ca
-                - *app
-                - *language
+                - <<: *ca
+                - <<: *app
+                - <<: *language
 
     QualifyChannel:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
+            Policies:
+                <<: *appPolicies
             Organizations:
-                - *ca
-                - *app
-                - *qualify
+                - <<: *ca
+                - <<: *app
+                - <<: *qualify
