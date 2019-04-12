@@ -209,18 +209,18 @@ peer:
         clientAuthRequired: false
         # X.509 certificate used for TLS server
         cert:
-            file: tls/cert.pem # tls/server.crt
+            file: /etc/hyperledger/fabric/tls/server.crt
         # Private key used for TLS server (and client if clientAuthEnabled
         # is set to true
         key:
-            file: tls/59ef7e858d390e63106fad25bbafe5114a02d3f5e280c33dde7ab66a4f5ca48e_sk # tls/server.key
+            file: /etc/hyperledger/fabric/tls/server.key
         # Trusted root certificate chain for tls.cert
         rootcert:
-            file: tls/server-ca-com-7054.pem # tls/ca.crt
+            file: /etc/hyperledger/fabric/tls/ca.crt
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
-              - tls/server-ca-com-7054.pem # tls/ca.crt
+              - /etc/hyperledger/fabric/tls/ca.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:
@@ -256,7 +256,7 @@ peer:
             # Location of Key Store
             FileKeyStore:
                 # If "", defaults to 'mspConfigPath'/keystore
-                KeyStore: ./msp/keystore
+                KeyStore: 
         # Settings for the PKCS#11 crypto provider (i.e. when DEFAULT: PKCS11)
         PKCS11:
             # Location of the PKCS11 module library
@@ -271,7 +271,7 @@ peer:
                 KeyStore:
 
     # Path on the file system where peer will find MSP local configurations
-    mspConfigPath: msp
+    mspConfigPath: /etc/hyperledger/fabric/msp
 
     # Identifier of the local MSP
     # ----!!!!IMPORTANT!!!-!!!IMPORTANT!!!-!!!IMPORTANT!!!!----
