@@ -149,12 +149,14 @@ services:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: peer node start
     volumes:
+      - /var/run/:/host/var/run/
       - ./app/admin.app.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
       - ./app/admin.app.com/production/:/var/hyperledger/production/
       - ./y_binaries/:/usr/local/bin/
@@ -258,12 +260,14 @@ services:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: peer node start
     volumes:
+      - /var/run/:/host/var/run/
       - ./language/admin.language.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
       - ./language/admin.language.com/production/:/var/hyperledger/production/
       - ./y_binaries/:/usr/local/bin/   
@@ -324,12 +328,14 @@ services:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: peer node start
     volumes:
+      - /var/run/:/host/var/run/
       - ./qualify/admin.qualify.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
       - ./qualify/admin.qualify.com/production/:/var/hyperledger/production/
       - ./y_binaries/:/usr/local/bin/   
@@ -388,12 +394,14 @@ services:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: peer node start
     volumes:
+      - /var/run/:/host/var/run/
       - ./univ/admin.univ.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
       - ./univ/admin.univ.com/production/:/var/hyperledger/production/
       - ./y_binaries/:/usr/local/bin/ 
