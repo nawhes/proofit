@@ -260,7 +260,7 @@ services:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
-   working_dir: /etc/hyperledger/fabric-ca-client/
+    working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: peer node start
     volumes:
@@ -390,7 +390,7 @@ services:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
-   working_dir: /etc/hyperledger/fabric-ca-client/
+    working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
     command: peer node start
     volumes:
