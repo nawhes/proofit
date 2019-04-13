@@ -209,7 +209,6 @@ services:
       - 5984:5984
     networks:
       appdb:
-        # ipv4_address: 172.172.1.2
         aliases:
           - appdb
 
@@ -255,7 +254,6 @@ services:
       - 6984:5984
     networks:
       recruitdb:
-        # ipv4_address: 172.172.1.34
         aliases:
           - recruitdb
 
@@ -305,11 +303,9 @@ services:
       - toeicdb
     networks:
       proofit:
-        # ipv4_address: 172.172.0.5
         aliases:
           - toeic.language.com
       toeicdb:
-        # ipv4_address: 172.172.1.17
         aliases:
           - toeic
 
@@ -325,7 +321,6 @@ services:
       - 7984:5984
     networks:
       toeicdb:
-        # ipv4_address: 172.172.1.18
         aliases:
           - toeicdb
 
@@ -348,7 +343,6 @@ services:
     container_name: admin.qualify.com
     networks:
       proofit:
-        # ipv4_address: 172.172.0.2
         aliases:
           - admin.qualify.com
 
@@ -416,7 +410,6 @@ services:
     container_name: admin.univ.com
     networks:
       proofit:
-        # ipv4_address: 172.172.0.2
         aliases:
           - admin.univ.com
 
@@ -444,11 +437,9 @@ services:
       - smudb
     networks:
       proofit:
-        # ipv4_address: 172.172.0.8
         aliases:
           - smu.univ.com
       smudb:
-        # ipv4_address: 172.172.1.65
         aliases:
           - smu
 
@@ -464,6 +455,5 @@ services:
       - 9984:5984
     networks:
       smudb:
-        # ipv4_address: 172.172.1.66
         aliases:
           - smudb
