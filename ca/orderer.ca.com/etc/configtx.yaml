@@ -438,7 +438,7 @@ Profiles:
                 - *qualify
                 - *language
 
-     Univ:
+    Univ:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
@@ -446,7 +446,7 @@ Profiles:
                 - *ca
                 - *app
                 - *univ
-     Qualify:
+    Qualify:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
@@ -454,7 +454,7 @@ Profiles:
                 - *ca
                 - *app
                 - *qualify
-     Language:
+    Language:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
