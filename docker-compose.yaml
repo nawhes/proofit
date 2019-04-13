@@ -58,13 +58,12 @@ services:
     tty: true
     ports:
       - 7054:7054
-    command: /bin/bash #fabric-ca-server start
+    command: fabric-ca-server start
     volumes:
       - ./ca/server.ca.com/fabric-ca-server/:/etc/hyperledger/fabric-ca-server/
     container_name: server.ca.com
     networks:
       proofit:
-        # ipv4_address: 172.172.0.1
         aliases:
           - server.ca.com
 
@@ -81,7 +80,6 @@ services:
     container_name: admin.ca.com
     networks:
       proofit:
-        # ipv4_address: 172.172.0.2
         aliases:
           - admin.ca.com
     depends_on:
@@ -91,7 +89,7 @@ services:
     image: hyperledger/fabric-orderer
     environment:
       - GODEBUG=netdns=go
-      - FABRIC_LOGGIN_SPEC=INFO
+      - FABRIC_LOGGIN_SPEC=DEBUG
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LOGLEVEL=debug
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
@@ -103,10 +101,10 @@ services:
         - ./ca/orderer.ca.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
         - ./ca/orderer.ca.com/production/:/var/hyperledger/production/orderer/
         - ./ca/orderer.ca.com/etc/:/etc/hyperledger/fabric/
+        - ./binaries/:/usr/local/bin/
     container_name: orderer.ca.com
     networks:
       proofit:
-        # ipv4_address: 172.172.0.3
         aliases:
           - orderer.ca.com
     depends_on:
@@ -152,15 +150,17 @@ services:
     environment:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
-    command: /bin/bash
+    command: peer node start
     volumes:
       - ./app/admin.app.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./app/admin.app.com/production/:/var/hyperledger/production/
+      - ./binaries/:/usr/local/bin/
     container_name: admin.app.com
     networks:
       proofit:
-        # ipv4_address: 172.172.0.2
         aliases:
           - admin.app.com
 
@@ -181,16 +181,15 @@ services:
         - ./app/app.app.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
         - ./app/app.app.com/etc/:/etc/hyperledger/fabric/
         - ./app/app.app.com/production/:/var/hyperledger/production/
+        - ./binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
       - appdb
     networks:
       proofit:
-        # ipv4_address: 172.172.0.4
         aliases:
           - app.app.com
       appdb:
-        # ipv4_address: 172.172.1.1
         aliases:
           - app
 
@@ -227,16 +226,15 @@ services:
         - ./app/recruit.app.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
         - ./app/recruit.app.com/etc/:/etc/hyperledger/fabric/
         - ./app/recruit.app.com/production/:/var/hyperledger/production/
+        - ./binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
       - recruitdb
     networks:
       proofit:
-        # ipv4_address: 172.172.0.7
         aliases:
           - recruit.app.com
       recruitdb:
-        # ipv4_address: 172.172.1.33
         aliases:
           - recruit
 
@@ -261,15 +259,17 @@ services:
     environment:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
-    working_dir: /etc/hyperledger/fabric-ca-client/
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
+   working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
-    command: /bin/bash
+    command: peer node start
     volumes:
       - ./language/admin.language.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./language/admin.language.com/production/:/var/hyperledger/production/
+      - ./binaries/:/usr/local/bin/   
     container_name: admin.language.com
     networks:
       proofit:
-        # ipv4_address: 172.172.0.2
         aliases:
           - admin.language.com
 
@@ -290,6 +290,7 @@ services:
         - ./language/toeic.language.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
         - ./language/toeic.language.com/etc/:/etc/hyperledger/fabric/
         - ./language/toeic.language.com/production/:/var/hyperledger/production/
+        - ./binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
       - toeicdb
@@ -324,11 +325,14 @@ services:
     environment:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
     working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
-    command: /bin/bash
+    command: peer node start
     volumes:
       - ./qualify/admin.qualify.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./qualify/admin.qualify.com/production/:/var/hyperledger/production/
+      - ./binaries/:/usr/local/bin/   
     container_name: admin.qualify.com
     networks:
       proofit:
@@ -353,16 +357,15 @@ services:
         - ./qualify/qnet.qualify.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
         - ./qualify/qnet.qualify.com/etc/:/etc/hyperledger/fabric/
         - ./qualify/qnet.qualify.com/production/:/var/hyperledger/production/
+        - ./binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
       - qnetdb
     networks:
       proofit:
-        # ipv4_address: 172.172.0.6
         aliases:
           - qnet.qualify.com
       qnetdb:
-        # ipv4_address: 172.172.1.33
         aliases:
           - qnet 
 
@@ -378,7 +381,6 @@ services:
       - 8984:5984
     networks:
       qnetdb:
-        # ipv4_address: 172.172.1.34
         aliases:
           - qnetdb
 
@@ -387,11 +389,14 @@ services:
     environment:
       - GODEBUG=netdns=go
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
-    working_dir: /etc/hyperledger/fabric-ca-client/
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
+   working_dir: /etc/hyperledger/fabric-ca-client/
     tty: true
-    command: /bin/bash
+    command: peer node start
     volumes:
       - ./univ/admin.univ.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./univ/admin.univ.com/production/:/var/hyperledger/production/
+      - ./binaries/:/usr/local/bin/ 
     container_name: admin.univ.com
     networks:
       proofit:
@@ -416,6 +421,7 @@ services:
         - ./univ/smu.univ.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
         - ./univ/smu.univ.com/etc/:/etc/hyperledger/fabric/
         - ./univ/smu.univ.com/production/:/var/hyperledger/production/
+        - ./binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
       - smudb

@@ -22,7 +22,7 @@ General:
     LedgerType: file
 
     # Listen address: The IP on which to bind to listen.
-    ListenAddress: 127.0.0.1
+    ListenAddress: orderer.ca.com
 
     # Listen port: The port on which to bind to listen.
     ListenPort: 7050
@@ -236,7 +236,7 @@ Kafka:
     # Kafka.Version is v0.10.1.0 or higher
     Topic:
         # The number of Kafka brokers across which to replicate the topic
-        ReplicationFactor: 3
+        ReplicationFactor: 1
     # Verbose: Enable logging for interactions with the Kafka cluster.
     Verbose: false
 

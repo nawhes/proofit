@@ -14,47 +14,20 @@
 ################################################################################
 Organizations:
 
-    # SampleOrg defines an MSP using the sampleconfig. It should never be used
-    # in production but may be used as a template for other definitions.
     - &ca
-        # Name is the key by which this org will be referenced in channel
-        # configuration transactions.
-        # Name can include alphanumeric characters as well as dots and dashes.
         Name: ca
-
-        # ID is the key by which this org's MSP definition will be referenced.
-        # ID can include alphanumeric characters as well as dots and dashes.
         ID: ca
-
-        # MSPDir is the filesystem path which contains the MSP configuration.
         MSPDir: crypto-config/ca
-
-        # Policies defines the set of policies at this level of the config tree
-        # For organization policies, their canonical path is usually
-        #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
         Policies: &caPolicies
             Readers:
                 Type: Signature
                 Rule: "OR('ca.member')"
-                # If your MSP is configured with the new NodeOUs, you might
-                # want to use a more specific rule like the following:
-                # Rule: "OR('SampleOrg.admin', 'SampleOrg.peer', 'SampleOrg.client')"
             Writers:
                 Type: Signature
                 Rule: "OR('ca.member')"
-                # If your MSP is configured with the new NodeOUs, you might
-                # want to use a more specific rule like the following:
-                # Rule: "OR('SampleOrg.admin', 'SampleOrg.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('ca.admin')"
-
-        # AnchorPeers defines the location of peers which can be used for
-        # cross-org gossip communication. Note, this value is only encoded in
-        # the genesis block in the Application section context.
-        AnchorPeers:
-            - Host: 127.0.0.1
-              Port: 7051
+                Rule: "OR('ca.member')"
 
     - &app
         Name: app
@@ -69,9 +42,63 @@ Organizations:
                 Rule: "OR('app.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('app.admin')"
+                Rule: "OR('app.member')"
         AnchorPeers:
-            - Host: 127.0.0.1
+            - Host: admin.app.com
+              Port: 7051
+
+    - &univ
+        Name: univ
+        ID: univ
+        MSPDir: crypto-config/univ
+        Policies: &univPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('univ.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('univ.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('univ.member')"
+        AnchorPeers:
+            - Host: admin.univ.com
+              Port: 7051
+
+    - &qualify
+        Name: qualify
+        ID: qualify
+        MSPDir: crypto-config/qualify
+        Policies: &qualifyPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('qualify.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('qualify.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('qualify.member')"
+        AnchorPeers:
+            - Host: admin.qualify.com
+              Port: 7051
+
+    - &language
+        Name: language
+        ID: language
+        MSPDir: crypto-config/univ
+        Policies: &languagePolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('language.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('language.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('language.member')"
+        AnchorPeers:
+            - Host: admin.language.com
               Port: 7051
 
 ################################################################################
@@ -226,7 +253,7 @@ Application: &ApplicationDefaults
             Rule: "ANY Writers"
         Admins:
             Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
+            Rule: "ANY Admins"
 
     # Capabilities describes the application level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
@@ -246,7 +273,7 @@ Orderer: &OrdererDefaults
 
     # Orderer Type: The orderer implementation to start.
     # Available types are "solo" and "kafka".
-    OrdererType: solo
+    OrdererType: kafka
 
     # Addresses here is a nonexhaustive list of orderers the peers and clients can
     # connect to. Adding/removing nodes from this list has no impact on their
@@ -306,6 +333,7 @@ Orderer: &OrdererDefaults
     # Organizations lists the orgs participating on the orderer side of the
     # network.
     Organizations:
+            - *ca
 
     # Policies defines the set of policies at this level of the config tree
     # For Orderer policies, their canonical path is
@@ -319,7 +347,7 @@ Orderer: &OrdererDefaults
             Rule: "ANY Writers"
         Admins:
             Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
+            Rule: "ANY Admins"
         # BlockValidation specifies what signatures must be included in the block
         # from the orderer for the peer to validate it.
         BlockValidation:
@@ -356,7 +384,7 @@ Channel: &ChannelDefaults
         # By default, who may modify elements at this config level
         Admins:
             Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
+            Rule: "ANY Admins"
 
 
     # Capabilities describes the channel level capabilities, see the
@@ -378,145 +406,59 @@ Channel: &ChannelDefaults
 #
 ################################################################################
 Profiles:
-    # SampleSingleMSPSolo defines a configuration which uses the Solo orderer,
-    # and contains a single MSP definition (the MSP sampleconfig).
-    # The Consortium SampleConsortium has only a single member, SampleOrg.
-    SampleSingleMSPSolo:
+    Genesis:
         <<: *ChannelDefaults
         Orderer:
             <<: *OrdererDefaults
-            Organizations:
-                - *ca
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - *ca
-
-    # SampleSingleMSPKafka defines a configuration that differs from the
-    # SampleSingleMSPSolo one only in that it uses the Kafka-based orderer.
-    SampleSingleMSPKafka:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            OrdererType: kafka
-            Organizations:
-                - *ca
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - *ca
-
-    # SampleInsecureSolo defines a configuration which uses the Solo orderer,
-    # contains no MSP definitions, and allows all transactions and channel
-    # creation requests for the consortium SampleConsortium.
-    SampleInsecureSolo:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-
-    # SampleInsecureKafka defines a configuration that differs from the
-    # SampleInsecureSolo one only in that it uses the Kafka-based orderer.
-    SampleInsecureKafka:
-        <<: *ChannelDefaults
-        Orderer:
-            OrdererType: kafka
-            <<: *OrdererDefaults
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-
-    # SampleDevModeSolo defines a configuration which uses the Solo orderer,
-    # contains the sample MSP as both orderer and consortium member, and
-    # requires only basic membership for admin privileges. It also defines
-    # an Application on the ordering system channel, which should usually
-    # be avoided.
-    SampleDevModeSolo:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            Organizations:
-                - <<: *ca
-                  Policies:
-                      <<: *caPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('ca.member')"
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - <<: *ca
-                  Policies:
-                      <<: *caPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('ca.member')"
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - <<: *ca
-                      Policies:
-                          <<: *caPolicies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('ca.member')"
-
-    # SampleDevModeKafka defines a configuration that differs from the
-    # SampleDevModeSolo one only in that it uses the Kafka-based orderer.
-    SampleDevModeKafka:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            Organizations:
-                - <<: *ca
-                  Policies:
-                      <<: *caPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('ca.member')"
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - <<: *ca
-                  Policies:
-                      <<: *caPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('ca.member')"
-                - <<: *app
-                  Policies:
-                      <<: *appPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('app.member')"
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - <<: *ca
-                      Policies:
-                          <<: *caPolicies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('ca.member')"
-                    - <<: *app
-                      Policies:
-                          <<: *appPolicies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('app.member')"
-
-    # SampleSingleMSPChannel defines a channel with only the sample org as a
-    # member. It is designed to be used in conjunction with SampleSingleMSPSolo
-    # and SampleSingleMSPKafka orderer profiles.   Note, for channel creation
-    # profiles, only the 'Application' section and consortium # name are
-    # considered.
-    Sample:
-        Consortium: SampleConsortium
         Application:
             <<: *ApplicationDefaults
             Organizations:
                 - *ca
                 - *app
+                - *univ
+                - *qualify
+                - *language
+        Consortiums:
+            Proofit:
+                Organizations:
+                    - *ca
+                    - *app
+                    - *univ
+                    - *qualify
+                    - *language
 
+    Account:
+        Consortium: Proofit
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *ca
+                - *app
+                - *univ
+                - *qualify
+                - *language
+
+     Univ:
+        Consortium: Proofit
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *ca
+                - *app
+                - *univ
+     Qualify:
+        Consortium: Proofit
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *ca
+                - *app
+                - *qualify
+     Language:
+        Consortium: Proofit
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *ca
+                - *app
+                - *language
