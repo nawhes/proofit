@@ -37,16 +37,17 @@ async function getRecordKey(gateway) {
     // issue commercial paper
     console.log('Submit queryKey transaction.');
     // const Response = await contract.evaluateTransaction('queryKey', 'nawhes@naver.com', '1079329', 'account');
-    const Response = await contract.evaluateTransaction('queryKey', 'nawhes@naver.com', '1079329');
+    var temp = await contract.evaluateTransaction('queryKey', 'nawhes@naver.com', '123','univ');
 
+    let response = JSON.parse(temp);
+    
     // process response
     console.log('Process transaction response.');
 
-    console.log(`queryKey : ${Response.payload}`);
+    console.log(response);
     console.log('Transaction complete.');
 
-    return Response.payload;
-
+    return response.payload;
 }
 
 async function input(gateway, recordKey, career) {
@@ -57,19 +58,19 @@ async function input(gateway, recordKey, career) {
 
     // Get addressability to commercial paper contract
     console.log('Use account smart contract.');
-    const contract = await network.getContract('career', 'career');
+    const contract = await network.getContract('univ', 'univ');
 
     // issue commercial paper
     console.log('Submit input transaction.');
 
-    const Response = await contract.submitTransaction('input', recordKey, JSON.stringify(career));
+    let response = await contract.submitTransaction('input', recordKey, JSON.stringify(career));
 
     // process response
     console.log('Process transaction response'+Response);
 
     console.log('Transaction complete.');
 
-    return Response.payload;
+    return response.payload;
 
 }
 
@@ -82,16 +83,16 @@ async function main() {
   const gateway = new Gateway();
 
 
-    const credPath = path.join('/app/app.app.com/etc/msp');
-    cert = fs.readFileSync(path.join(credPath, '/signcerts/cert.pem')).toString();
-    key = fs.readFileSync(path.join(credPath, '/keystore/0b985589529eb0b2ae28dfcbd940e92c88963d48e2662fa8409b29d20a71eb41_sk')).toString();
+    const credPath = path.join('./app/app.app.com/etc/msp');
+    let cert = fs.readFileSync(path.join(credPath, '/signcerts/cert.pem')).toString();
+    let key = fs.readFileSync(path.join(credPath, '/keystore/0b985589529eb0b2ae28dfcbd940e92c88963d48e2662fa8409b29d20a71eb41_sk')).toString();
 
     const identityLabel = 'app.app.com';
     const identity = {
         type:'X509',
         mspId: 'app',
-        certificate = cert,
-        privateKey = key,
+        certificate: cert,
+        privateKey: key,
     }
     await wallet.import(identityLabel, identity);
 
@@ -119,10 +120,10 @@ async function main() {
     let recordKey = await getRecordKey(gateway);
 
     let career = {
-        issueby = 'smu'
+        issueby: 'smu'
     }
 
-    input(recordKey, career);
+    await input(gateway, recordKey, career);
   } catch (error) {
 
     console.log(`Error processing transaction. ${error}`);

@@ -8,4 +8,4 @@ docker-compose -f docker-compose.yaml down
 echo "Proofit network up with 5 organizations and blah"
 docker-compose -f docker-compose.yaml up -d server.ca.com admin.ca.com zookeeper.ca.com orderer.ca.com kafka.ca.com appdb recruitdb toeicdb qnetdb smudb
 
-docker-compose -f docker-compose.yaml up -d admin.app.com app.app.com recruit.app.com admin.univ.com smu.univ.com admin.qualify.com qnet.qualify.com admin.language.com toeic.language.com
+docker-compose -f docker-compose.yaml up -d admin.app.com app.app.com recruit.app.com admin.univ.com smu.univ.com admin.license.com qnet.license.com admin.language.com toeic.language.com

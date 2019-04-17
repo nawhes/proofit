@@ -59,10 +59,10 @@ docker exec -e "CORE_PEER_ADDRESS=admin.license.com:7051" admin.license.com peer
 
 
 echo "###[admin.license.com] install account chaincode to qnet.license.com"
-docker exec -e "CORE_PEER_ADDRESS=qnet.license.com:7051" qnet.license.com peer chaincode install -n account -v beta0 -l node -p /etc/hyperledger/chaincode/account
+docker exec -e "CORE_PEER_ADDRESS=qnet.license.com:7051" admin.license.com peer chaincode install -n account -v beta0 -l node -p /etc/hyperledger/chaincode/account
 
 echo "###[admin.license.com] install license chaincode to qnet.license.com"
-docker exec -e "CORE_PEER_ADDRESS=qnet.license.com:7051" qnet.license.com peer chaincode install -n license -v beta0 -l node -p /etc/hyperledger/chaincode/license
+docker exec -e "CORE_PEER_ADDRESS=qnet.license.com:7051" admin.license.com peer chaincode install -n license -v beta0 -l node -p /etc/hyperledger/chaincode/license
 
 
 echo "###[admin.language.com] install account chaincode to admin.language.com"
@@ -73,7 +73,7 @@ docker exec -e "CORE_PEER_ADDRESS=admin.language.com:7051" admin.language.com pe
 
 
 echo "###[admin.language.com] install account chaincode to smu.language.com"
-docker exec -e "CORE_PEER_ADDRESS=smu.language.com:7051" qnet.language.com peer chaincode install -n account -v beta0 -l node -p /etc/hyperledger/chaincode/account
+docker exec -e "CORE_PEER_ADDRESS=toeic.language.com:7051" admin.language.com peer chaincode install -n account -v beta0 -l node -p /etc/hyperledger/chaincode/account
 
 echo "###[admin.language.com] install language chaincode to smu.language.com"
-docker exec -e "CORE_PEER_ADDRESS=smu.language.com:7051" qnet.language.com peer chaincode install -n language -v beta0 -l node -p /etc/hyperledger/chaincode/language
+docker exec -e "CORE_PEER_ADDRESS=toeic.language.com:7051" admin.language.com peer chaincode install -n language -v beta0 -l node -p /etc/hyperledger/chaincode/language
