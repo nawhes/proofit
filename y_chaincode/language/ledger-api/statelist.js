@@ -21,11 +21,13 @@ class StateList {
     async getState(key) {
         let ledgerKey = this.ctx.stub.createCompositeKey(this.name, [prefix, key]);
         let data = await this.ctx.stub.getState(ledgerKey);
-        if(!data){
+        if( data == "" || data == null || data == undefined || ( data != null && typeof data == "object" && !Object.keys(data).length ) ) {
+        //data == null
             return false;
+        } else { //data != null
+            return JSON.parse(data.toString());
         }
         // let state = State.deserialize(data, this.supportedClasses);
-        return JSON.parse(state.toString());
     }
 
     async updateState(state) {

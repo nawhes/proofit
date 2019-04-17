@@ -57,9 +57,13 @@ class CareerContract extends Contract {
         // let authority = new ClientIdentity(stub);
         // let issuer = authority.getAttributeValue(attrName);
         let issuer = "test";
-        if (!issuer) { //check permission
 
-            testIssuer = {
+        if ( issuer == "" || issuer == null || issuer == undefined || ( issuer != null && typeof issuer == "object" && !Object.keys(issuer).length ) ) {
+            //check permission
+            return shim.console.error("Authorization failed");
+        }
+        else {
+            var testIssuer = {
                 issuer: "test"
             }
             //preparation
@@ -68,19 +72,20 @@ class CareerContract extends Contract {
             // record_JSON.issueby = issuer;
 
             let career = await ctx.careerList.getCareer(recordKey);
-            if (!career) {
+            if ( career == "" || career == null || career == undefined || ( career != null && typeof career == "object" && !Object.keys(career).length ) ) {
+
                 career = Career.createInstance(recordKey);
                 career[issuer] = [];
+                career[issuer].push(record_JSON);
                 await ctx.careerList.addCareer(career);
+  
+            } else { // career != null
+                career[issuer].push(record_JSON);
+                await ctx.careerList.updateCareer(career);  
             }
 
-            career[issuer].push(record_JSON);
-            await ctx.careerList.updateCareer(career);
             return shim.success(Buffer.from(JSON.stringify(career)).toString('ascii'));
 
-        }
-        else {
-            shim.console.error("Authorization failed");
         }
     }
 
@@ -103,7 +108,7 @@ class CareerContract extends Contract {
 
         }
         else {
-            shim.console.error("Authorization failed");
+            return shim.console.error("Authorization failed");
         }
     }
 }
