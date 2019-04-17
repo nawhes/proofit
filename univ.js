@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 const fs = require('fs');
 const yaml = require('js-yaml');
 const { FileSystemWallet, Gateway } = require('fabric-network');
+const path = require('path');
 
 // A wallet stores a collection of identities for use
 //const wallet = new FileSystemWallet('../user/isabella/wallet');
@@ -83,14 +84,14 @@ async function main() {
   const gateway = new Gateway();
 
 
-    const credPath = path.join('./app/app.app.com/etc/msp');
+    const credPath = path.join('./univ/smu.univ.com/etc/msp');
     let cert = fs.readFileSync(path.join(credPath, '/signcerts/cert.pem')).toString();
-    let key = fs.readFileSync(path.join(credPath, '/keystore/0b985589529eb0b2ae28dfcbd940e92c88963d48e2662fa8409b29d20a71eb41_sk')).toString();
+    let key = fs.readFileSync(path.join(credPath, '/keystore/d479b75848d9ef1a779ff85c480aeb3e48b2406b2f4fee87731e9df6033ab385_sk')).toString();
 
-    const identityLabel = 'app.app.com';
+    const identityLabel = 'smu.univ.com';
     const identity = {
         type:'X509',
-        mspId: 'app',
+        mspId: 'univ',
         certificate: cert,
         privateKey: key,
     }
