@@ -459,7 +459,7 @@ Profiles:
                 - *ca
                 - *app
                 - *univ
-    license:
+    License:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
