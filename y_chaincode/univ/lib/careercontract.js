@@ -57,7 +57,7 @@ class CareerContract extends Contract {
         // let authority = new ClientIdentity(stub);
         // let issuer = authority.getAttributeValue(attrName);
 	let issuer = "test";
-        if (issuer !== NULL){ //check permission
+        if (issuer !== null){ //check permission
             
 	    //preparation
             let record_JSON = JSON.parse(record);
@@ -85,7 +85,7 @@ class CareerContract extends Contract {
         // let authority = new ClientIdentity(stub);
         // let issuer = authority.getAttributeValue(attrName);
 	let issuer = "test";
-        if (issuer !== NULL){ //check permission
+        if (issuer !== null){ //check permission
             let career = await CareerList.getCareer(ctx, recordKey);
 
 	    // preparation

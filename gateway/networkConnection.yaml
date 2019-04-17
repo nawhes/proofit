@@ -217,39 +217,13 @@ channels:
 # list of participating organizations in this network
 #
 organizations:
-  app:
-    mspid: app
-
-    peers:
-      - admin.app.com
-      - app.app.com
-      - recruit.app.com
-
-    # [Optional]. Certificate Authorities issue certificates for identification purposes in a Fabric based
-    # network. Typically certificates provisioning is done in a separate process outside of the
-    # runtime network. Fabric-CA is a special certificate authority that provides a REST APIs for
-    # dynamic certificatee management (nroll, revoke, re-enroll). The following section is only for
-    # Fabric-CA servers.
-    certificateAuthorities:
-      - server.ca.com
-
   univ:
     mspid: univ
     peers:
       - admin.univ.com
       - smu.univ.com
-
-  qualify:
-    mspid: qualify
-    peers:
-      - admin.qualify.com
-      - qnet.qualify.com
-
-  language:
-    mspid: language
-    peers:
-      - admin.language.com
-      - smu.language.com
+    certificateAuthorities:
+      - server.ca.com
 
 #
 # List of orderers to send transaction and channel create/update requests to. For the time
@@ -270,52 +244,12 @@ orderers:
 # and event listener registration.
 #
 peers:
-  admin.app.com:
-    # this URL is used to send endorsement and query requests
-    # url: grpc://localhost:7051
-
-    # grpcOptions:
-    #   ssl-target-name-override: admin.app.com
-    #   request-timeout: 120001
-
-  app.app.com:
-    # this URL is used to send endorsement and query requests
-    url: grpc://localhost:7051
-
-    grpcOptions:
-      ssl-target-name-override: app.app.com
-      request-timeout: 120001
-
-  recruit.app.com:
-    # this URL is used to send endorsement and query requests
-    url: grpc://localhost:8051
-
-    grpcOptions:
-      ssl-target-name-override: recruit.app.com
-      request-timeout: 120001
-
   smu.univ.com:
     # this URL is used to send endorsement and query requests
     url: grpc://localhost:9051
 
     grpcOptions:
       ssl-target-name-override: smu.univ.com
-      request-timeout: 120001
-
-  qnet.qualify.com:
-    # this URL is used to send endorsement and query requests
-    url: grpc://localhost:9051
-
-    grpcOptions:
-      ssl-target-name-override: qnet.qualify.com
-      request-timeout: 120001
-
-  toeic.language.com:
-    # this URL is used to send endorsement and query requests
-    url: grpc://localhost:10051
-
-    grpcOptions:
-      ssl-target-name-override: toeic.language.com
       request-timeout: 120001
 
 # Fabric-CA is a special kind of Certificate Authority provided by Hyperledger Fabric which allows
