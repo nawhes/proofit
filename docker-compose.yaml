@@ -161,6 +161,7 @@ services:
       - ./app/admin.app.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
       - ./app/admin.app.com/production/:/var/hyperledger/production/
       - ./y_binaries/:/usr/local/bin/
+      - ./y_chaincode/:/etc/hyperledger/chaincode/
     container_name: admin.app.com
     networks:
       proofit:
@@ -272,7 +273,8 @@ services:
       - /var/run/:/host/var/run/
       - ./language/admin.language.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
       - ./language/admin.language.com/production/:/var/hyperledger/production/
-      - ./y_binaries/:/usr/local/bin/   
+      - ./y_binaries/:/usr/local/bin/
+      - ./y_chaincode/:/etc/hyperledger/chaincode/
     container_name: admin.language.com
     networks:
       proofit:
@@ -339,7 +341,8 @@ services:
       - /var/run/:/host/var/run/
       - ./license/admin.license.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
       - ./license/admin.license.com/production/:/var/hyperledger/production/
-      - ./y_binaries/:/usr/local/bin/   
+      - ./y_binaries/:/usr/local/bin/
+      - ./y_chaincode/:/etc/hyperledger/chaincode/
     container_name: admin.license.com
     networks:
       proofit:
@@ -406,7 +409,8 @@ services:
       - /var/run/:/host/var/run/
       - ./univ/admin.univ.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
       - ./univ/admin.univ.com/production/:/var/hyperledger/production/
-      - ./y_binaries/:/usr/local/bin/ 
+      - ./y_binaries/:/usr/local/bin/
+      - ./y_chaincode/:/etc/hyperledger/chaincode/
     container_name: admin.univ.com
     networks:
       proofit:
