@@ -126,10 +126,10 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: admin.qualify.com
-  secret: qualify
+  name: admin.license.com
+  secret: license
   type: client
-  affiliation: qualify
+  affiliation: license
   maxenrollments: 0
   attributes:
    - name: hf.Registrar.Roles

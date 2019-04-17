@@ -74,24 +74,24 @@ Organizations:
               Port: 7051
 
 
-    - &qualify
-        Name: qualify
-        ID: qualify
-        MSPDir: crypto-config/qualify
-        Policies: &qualifyPolicies
+    - &license
+        Name: license
+        ID: license
+        MSPDir: crypto-config/license
+        Policies: &licensePolicies
             Readers:
                 Type: Signature
-                Rule: "OR('qualify.member')"
+                Rule: "OR('license.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('qualify.member')"
+                Rule: "OR('license.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('qualify.member')"
+                Rule: "OR('license.member')"
         AnchorPeers:
-            - Host: admin.qualify.com
+            - Host: admin.license.com
               Port: 7051
-            - Host: qnet.qualify.com
+            - Host: qnet.license.com
               Port: 7051
 
     - &language
@@ -429,7 +429,7 @@ Profiles:
                 - *ca
                 - *app
                 - *univ
-                - *qualify
+                - *license
                 - *language
         Consortiums:
             Proofit:
@@ -437,7 +437,7 @@ Profiles:
                     - *ca
                     - *app
                     - *univ
-                    - *qualify
+                    - *license
                     - *language
 
     Account:
@@ -448,7 +448,7 @@ Profiles:
                 - *ca
                 - *app
                 - *univ
-                - *qualify
+                - *license
                 - *language
 
     Univ:
@@ -459,14 +459,15 @@ Profiles:
                 - *ca
                 - *app
                 - *univ
-    Qualify:
+    license:
         Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
             Organizations:
                 - *ca
                 - *app
-                - *qualify
+                - *license
+
     Language:
         Consortium: Proofit
         Application:

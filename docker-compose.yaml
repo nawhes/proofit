@@ -324,7 +324,7 @@ services:
         aliases:
           - toeicdb
 
-  admin.qualify.com:
+  admin.license.com:
     image: hyperledger/fabric-ca
     environment:
       - GODEBUG=netdns=go
@@ -337,17 +337,17 @@ services:
     command: peer node start
     volumes:
       - /var/run/:/host/var/run/
-      - ./qualify/admin.qualify.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./qualify/admin.qualify.com/production/:/var/hyperledger/production/
+      - ./license/admin.license.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./license/admin.license.com/production/:/var/hyperledger/production/
       - ./y_binaries/:/usr/local/bin/   
-    container_name: admin.qualify.com
+    container_name: admin.license.com
     networks:
       proofit:
         aliases:
-          - admin.qualify.com
+          - admin.license.com
 
-  qnet.qualify.com:
-    container_name: qnet.qualify.com
+  qnet.license.com:
+    container_name: qnet.license.com
     image: hyperledger/fabric-peer
     environment:
       - GODEBUG=netdns=go
@@ -361,9 +361,9 @@ services:
       - 10052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./qualify/qnet.qualify.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
-        - ./qualify/qnet.qualify.com/etc/:/etc/hyperledger/fabric/
-        - ./qualify/qnet.qualify.com/production/:/var/hyperledger/production/
+        - ./license/qnet.license.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./license/qnet.license.com/etc/:/etc/hyperledger/fabric/
+        - ./license/qnet.license.com/production/:/var/hyperledger/production/
         - ./y_binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
@@ -371,7 +371,7 @@ services:
     networks:
       proofit:
         aliases:
-          - qnet.qualify.com
+          - qnet.license.com
       qnetdb:
         aliases:
           - qnet 
