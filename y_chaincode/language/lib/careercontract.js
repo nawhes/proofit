@@ -49,48 +49,51 @@ class CareerContract extends Contract {
     }
 
     async queryByIssuer(ctx, recordKey, issuer) {
-	let career = await ctx.careerList.getCareer(recordKey);
-	return shim.success(Buffer.from(career[issuer].toBuffer()).toString('ascii'));
+        let career = await ctx.careerList.getCareer(recordKey);
+        return shim.success(Buffer.from(career[issuer].toBuffer()).toString('ascii'));
     }
 
     async input(ctx, recordKey, record) {
         // let authority = new ClientIdentity(stub);
         // let issuer = authority.getAttributeValue(attrName);
-	let issuer = "test";
-        if (issuer !== null){ //check permission
-            
-	    //preparation
+        let issuer = "test";
+        if (issuer !== null) { //check permission
+
+            testIssuer = {
+                issuer: "test"
+            }
+            //preparation
             let record_JSON = JSON.parse(record);
-	    Object.assign(record_JSON, {issueby: issuer})
+            Object.assign(record_JSON,testIssuer);
             // record_JSON.issueby = issuer;
 
-            var career = await CareerList.getCareer(ctx, recordKey);
-            if (career === null){
+            let career = await ctx.careerList.getCareer(ctx, recordKey);
+            if (career === null) {
                 let career = Career.createInstance(recordKey);
-		career[issuer] = [];
-		await ctx.careerList.addCareer(career);
+                career[issuer] = [];
+                await ctx.careerList.addCareer(career);
             }
-            
+
             career[issuer].push(record_JSON);
             await ctx.careerList.updateCareer(career);
             return shim.success(Buffer.from(career.toBuffer()).toString('ascii'));
-            
+
         }
         else {
             shim.console.error("Authorization failed");
         }
     }
-    
+
     async update(ctx, recordKey, record) {
         // let authority = new ClientIdentity(stub);
         // let issuer = authority.getAttributeValue(attrName);
-	let issuer = "test";
-        if (issuer !== null){ //check permission
-            let career = await CareerList.getCareer(ctx, recordKey);
+        let issuer = "test";
+        if (issuer !== null) { //check permission
+            let career = await careerList.getCareer(ctx, recordKey);
 
-	    // preparation
+            // preparation
             let record_JSON = JSON.parse(record);
-            Object.assign(record_JSON, {issueby: issuer});
+            Object.assign(record_JSON, { issueby: issuer });
 
             let index = career.findIndex(temp => temp.issueby === issuer);
 
