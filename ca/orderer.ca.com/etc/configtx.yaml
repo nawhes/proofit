@@ -46,6 +46,12 @@ Organizations:
         AnchorPeers:
             - Host: admin.app.com
               Port: 7051
+            - Host: app.app.com
+              Port: 7051
+            - Host: recruit.app.com
+              Port: 7051
+
+
 
     - &univ
         Name: univ
@@ -64,6 +70,9 @@ Organizations:
         AnchorPeers:
             - Host: admin.univ.com
               Port: 7051
+            - Host: smu.univ.com
+              Port: 7051
+
 
     - &qualify
         Name: qualify
@@ -82,6 +91,8 @@ Organizations:
         AnchorPeers:
             - Host: admin.qualify.com
               Port: 7051
+            - Host: qnet.qualify.com
+              Port: 7051
 
     - &language
         Name: language
@@ -99,6 +110,8 @@ Organizations:
                 Rule: "OR('language.member')"
         AnchorPeers:
             - Host: admin.language.com
+              Port: 7051
+            - Host: toeic.language.com
               Port: 7051
 
 ################################################################################
