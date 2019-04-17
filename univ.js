@@ -138,6 +138,7 @@ async function main() {
     console.log(response);
     console.log('Transaction complete.');
 
+    gateway.disconnect();
 
     let career = {
         issueby: 'smu'
