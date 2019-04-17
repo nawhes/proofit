@@ -99,7 +99,7 @@ tls:
 #
 #############################################################################
 csr:
-  cn: qnet.qualify.com
+  cn: qnet.license.com
   keyrequest:
     algo: ecdsa
     size: 256

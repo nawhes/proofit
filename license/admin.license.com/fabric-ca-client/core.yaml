@@ -11,7 +11,7 @@
 peer:
 
     # The Peer id is used for identifying this Peer instance.
-    id: admin.qualify.com
+    id: admin.license.com
 
     # The networkId allows for logical seperation of networks
     networkId: proofit
@@ -35,7 +35,7 @@ peer:
     # in the same organization. For peers in other organization, see
     # gossip.externalEndpoint for more info.
     # When used as CLI config, this means the peer's endpoint to interact with
-    address: admin.qualify.com:7051
+    address: admin.license.com:7051
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
@@ -79,7 +79,7 @@ peer:
         # Important: The endpoints here have to be endpoints of peers in the same
         # organization, because the peer would refuse connecting to these endpoints
         # unless they are in the same organization as the peer.
-        bootstrap: qnet.qualify.com:7051
+        bootstrap: qnet.license.com:7051
 
         # NOTE: orgLeader and useLeaderElection parameters are mutual exclusive.
         # Setting both to true would result in the termination of the peer
@@ -105,7 +105,7 @@ peer:
         # Overrides the endpoint that the peer publishes to peers
         # in its organization. For peers in foreign organizations
         # see 'externalEndpoint'
-        endpoint: admin.qualify.com:7051
+        endpoint: admin.license.com:7051
         # Maximum count of blocks stored in memory
         maxBlockCountToStore: 100
         # Max time between consecutive message pushes(unit: millisecond)
@@ -155,7 +155,7 @@ peer:
         reconnectInterval: 25s
         # This is an endpoint that is published to peers outside of the organization.
         # If this isn't set, the peer will not be known to other organizations.
-        externalEndpoint: admin.qualify.com:7051
+        externalEndpoint: admin.license.com:7051
         # Leader election service configuration
         election:
             # Longest time peer waits for stable membership during leader election startup (unit: second)
@@ -280,7 +280,7 @@ peer:
     # to match the name of one of the MSPs in each of the channel
     # that this peer is a member of. Otherwise this peer's messages
     # will not be identified as valid by other nodes.
-    localMspId: qualify
+    localMspId: license
 
     # CLI common client config options
     client:
