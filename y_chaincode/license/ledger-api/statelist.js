@@ -21,8 +21,11 @@ class StateList {
     async getState(key) {
         let ledgerKey = this.ctx.stub.createCompositeKey(this.name, [prefix, key]);
         let data = await this.ctx.stub.getState(ledgerKey);
-        let state = State.deserialize(data, this.supportedClasses);
-        return state;
+        if(!data){
+            return false;
+        }
+        // let state = State.deserialize(data, this.supportedClasses);
+        return JSON.parse(state.toString());
     }
 
     async updateState(state) {

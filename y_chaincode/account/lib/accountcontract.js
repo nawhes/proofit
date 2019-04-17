@@ -65,7 +65,7 @@ class AccountContract extends Contract {
         await ctx.accountList.addAccount(account);
 
         // Must return a serialized paper to caller of smart contract
-        return shim.success(Buffer.from(account.toBuffer()).toString('ascii'));
+        return shim.success(Buffer.from(JSON.stringify(account)).toString('ascii'));
         // return account.toBuffer();
     }
 

@@ -20,13 +20,14 @@ class State {
 
   static deserialize(data, supportedClasses) {
     let json = JSON.parse(data.toString());
-    let objClass = supportedClasses[json.class];
-    if (!objClass) {
-      throw new Error(`Unknown class of ${json.class}`);
-    }
-    let object = new objClass(json);
+    // let objClass = supportedClasses[json.class];
+    // if (!objClass) {
+      // throw new Error(`Unknown class of ${json.class}`);
+    // }
+    // let object = new objClass(json);
 
-    return object;
+    // return object;
+    return json;
   }
 
   static deserializeClass(data, objClass) {

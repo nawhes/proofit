@@ -57,7 +57,7 @@ class CareerContract extends Contract {
         // let authority = new ClientIdentity(stub);
         // let issuer = authority.getAttributeValue(attrName);
         let issuer = "test";
-        if (issuer !== null) { //check permission
+        if (!issuer) { //check permission
 
             testIssuer = {
                 issuer: "test"
@@ -67,16 +67,16 @@ class CareerContract extends Contract {
             Object.assign(record_JSON,testIssuer);
             // record_JSON.issueby = issuer;
 
-            let career = await ctx.careerList.getCareer(ctx, recordKey);
-            if (career === null) {
-                let career = Career.createInstance(recordKey);
+            let career = await ctx.careerList.getCareer(recordKey);
+            if (!career) {
+                career = Career.createInstance(recordKey);
                 career[issuer] = [];
                 await ctx.careerList.addCareer(career);
             }
 
             career[issuer].push(record_JSON);
             await ctx.careerList.updateCareer(career);
-            return shim.success(Buffer.from(career.toBuffer()).toString('ascii'));
+            return shim.success(Buffer.from(JSON.stringify(career)).toString('ascii'));
 
         }
         else {
