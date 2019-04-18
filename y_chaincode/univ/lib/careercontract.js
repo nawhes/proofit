@@ -95,7 +95,7 @@ class CareerContract extends Contract {
         // let issuer = authority.getAttributeValue(attrName);
         let issuer = "test";
         if (issuer !== null) { //check permission
-            let career = await ctx.careerList.getCareer(ctx, recordKey);
+            let career = await ctx.careerList.getCareer(recordKey);
 
             // preparation
             let record_JSON = JSON.parse(record);

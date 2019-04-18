@@ -158,7 +158,7 @@ async function main() {
     let response2 = await contract2.submitTransaction('input', response.payload, JSON.stringify(career));
 
     // process response
-    console.log('Process transaction response'+Response);
+    console.log('Process transaction response');
     console.log(response2);
 
     console.log('Transaction complete.');

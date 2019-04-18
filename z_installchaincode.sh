@@ -72,8 +72,8 @@ echo "###[admin.language.com] install language chaincode to admin.language.com"
 docker exec -e "CORE_PEER_ADDRESS=admin.language.com:7051" admin.language.com peer chaincode install -n language -v beta0 -l node -p /etc/hyperledger/chaincode/language
 
 
-echo "###[admin.language.com] install account chaincode to smu.language.com"
+echo "###[admin.language.com] install account chaincode to toeic.language.com"
 docker exec -e "CORE_PEER_ADDRESS=toeic.language.com:7051" admin.language.com peer chaincode install -n account -v beta0 -l node -p /etc/hyperledger/chaincode/account
 
-echo "###[admin.language.com] install language chaincode to smu.language.com"
+echo "###[admin.language.com] install language chaincode to toeic.language.com"
 docker exec -e "CORE_PEER_ADDRESS=toeic.language.com:7051" admin.language.com peer chaincode install -n language -v beta0 -l node -p /etc/hyperledger/chaincode/language
