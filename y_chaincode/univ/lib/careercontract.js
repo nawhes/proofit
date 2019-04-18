@@ -61,7 +61,7 @@ class CareerContract extends Contract {
         if ( issuer == "" || issuer == null || issuer == undefined || ( issuer != null && typeof issuer == "object" && !Object.keys(issuer).length ) ) {
             //check permission
             //return shim.console.error("Authorization failed");
-	    return "failed";
+	      return "failed";
         }
         else {
             var testIssuer = {
