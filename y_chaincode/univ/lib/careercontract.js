@@ -58,7 +58,7 @@ class CareerContract extends Contract {
         // let issuer = authority.getAttributeValue(attrName);
         let issuer = "test";
 
-        if ( issuer == "" || issuer == null || issuer == undefined || ( issuer != null && typeof issuer == "object" && !Object.keys(issuer).length ) ) {
+        if ( issuer == "" || issuer == null || typeof issuer == "undefined") {
             //check permission
             //return shim.console.error("Authorization failed");
 	      return "failed";
@@ -73,12 +73,13 @@ class CareerContract extends Contract {
             // record_JSON.issueby = issuer;
 
             let career = await ctx.careerList.getCareer(recordKey);
-            if ( career == "" || career == null || career == undefined || ( career != null && typeof career == "object" && !Object.keys(career).length ) ) {
-
+            if ( career == "" || career == null || typeof career == "undefined") {
+		console.log("init career");
                 career = Career.createInstance(recordKey);
                 career[issuer] = [];
                 career[issuer].push(record_JSON);
                 await ctx.careerList.addCareer(career);
+		console.log("addCareer done");
   
             } else { // career != null
                 career[issuer].push(record_JSON);

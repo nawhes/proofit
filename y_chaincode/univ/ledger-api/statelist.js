@@ -20,10 +20,12 @@ class StateList {
 
     async getState(key) {
         let ledgerKey = this.ctx.stub.createCompositeKey(this.name, [prefix, key]);
+	    console.log("before getState");
         let data = await this.ctx.stub.getState(ledgerKey);
-        if( data == "" || data == null || data == undefined || ( data != null && typeof data == "object" && !Object.keys(data).length ) ) {
+        if (data == "" || data == null || typeof data == "undefined") {
         //data == null
-            return false;
+	    console.log("getState is null");
+            return null;
         } else { //data != null
             return JSON.parse(data.toString());
         }
