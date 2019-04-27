@@ -69,5 +69,3 @@ echo "###[admin.language.com] is joining toeic.language.com to account channel"
 
 echo "###[admin.language.com] is joining toeic.language.com to language channel"
 #docker exec -e "CORE_PEER_ADDRESS=toeic.language.com:7051" admin.language.com peer channel join -b language.block -o orderer.ca.com:7050 #--certfile PATH --cafile PATH --tls
-
-
