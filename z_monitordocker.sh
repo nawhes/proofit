@@ -13,7 +13,7 @@ docker rm logspout 2> /dev/null 1>&2 || true
 
 docker run -d --name="logspout" \
 	--volume=/var/run/docker.sock:/var/run/docker.sock \
-	--publish=127.0.0.1::80 \
+	--publish=127.0.0.1:8000:80 \
 	--network proofit_proofit \
 	gliderlabs/logspout
 sleep 3
