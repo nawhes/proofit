@@ -43,17 +43,15 @@ class CareerContract extends Contract {
         console.log("#################");
         console.log(temp);
 
-        console.log("#################");
-        console.log(temp.payload);
-
         temp = temp.payload;
         console.log("#################");
         console.log(temp);
 
+        temp = temp.buffer;
         console.log("#################");
-        console.log(temp.buffer);
+        console.log(temp);
 
-        let temp2 = Buffer.from(temp.buffer);
+        let temp2 = Buffer.from(temp);
         console.log("#################");
         console.log(typeof temp2);
         console.log(temp2);
