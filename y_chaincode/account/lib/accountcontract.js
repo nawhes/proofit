@@ -65,7 +65,7 @@ class AccountContract extends Contract {
         if (length == 2){
             return shim.success(Account.serialize(account).toString('ascii'));
         } else if (Account.validationPin(account.digest, account.salt_record, pin)){
-            let temp = await ChaincodeStub.invokeChaincode(channel, new Array("query", email, pin), channel);
+            let temp = await stub.invokeChaincode(channel, new Array("query", email, pin), channel);
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
