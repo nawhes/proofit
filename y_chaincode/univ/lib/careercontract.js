@@ -90,7 +90,9 @@ class CareerContract extends Contract {
                 return shim.error("err: Hmm..");
             }
         }
-        let response = Career.deserialize(temp);
+
+        let response = JSON.parse(temp);
+        // let response = Career.deserialize(temp);
         console.log("#################");
         console.log(typeof response);
         console.log(response.toString());
