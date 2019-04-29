@@ -44,7 +44,7 @@ class CareerContract extends Contract {
         console.log(typeof temp);
         console.log(JSON.stringify(temp));
 
-        let response = JSON.stringify(temp.payload.buffer.data).toString('ascii')    
+        let response = JSON.stringify(temp.payload.buffer.data).toString('ascii');
         console.log("#################");
         console.log(typeof response);
         console.log(response);
