@@ -42,13 +42,9 @@ class CareerContract extends Contract {
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
-        console.log(temp.values().toString());
-        if (typeof temp == "String"){
-            if (temp.substring(0,2) == "err"){
-                return shim.error("err: Hmm..");
-            }
-        }
-        let response = Career.deserialize(temp.values());
+        console.log(JSON.stringify(temp));
+
+        let response = Career.deserialize(temp);
         console.log("#################");
         console.log(typeof response);
         console.log(response.values().toString());
