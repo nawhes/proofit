@@ -27,6 +27,10 @@ class AccountList extends StateList {
   async updateAccount(account) {
     return this.updateState(account);
   }
+
+  async deleteAccount(account) {
+    return this.deleteState(account);
+  }
 }
 
 module.exports = AccountList;

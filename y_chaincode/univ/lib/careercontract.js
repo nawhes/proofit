@@ -10,13 +10,10 @@ const CareerList = require('./careerlist.js');
 const channelName = "univ";
 
 class CareerContext extends Context {
-
     constructor() {
         super();
-
         this.careerList = new CareerList(this);
     }
-
 }
 
 class CareerContract extends Contract {
@@ -26,10 +23,8 @@ class CareerContract extends Contract {
         super(channelName);
     }
 
-    /**
-     * Define a custom context for commercial paper
-    */
     createContext() {
+        //Define a custom context
         return new CareerContext();
     }
 
@@ -38,81 +33,191 @@ class CareerContract extends Contract {
      * @param {Context} ctx the transaction context
      */
     async instantiate(ctx) {
-        // No implementation required with this example
         // It could be where data migration is performed, if necessary
         console.log('Instantiate the contract');
     }
 
-    async query(ctx, recordKey) {
-        let career = await ctx.careerList.getCareer(recordKey);
-        return shim.success(Buffer.from(career.toBuffer()).toString('ascii'));
-    }
-
-    async queryByIssuer(ctx, recordKey, issuer) {
-        let career = await ctx.careerList.getCareer(recordKey);
-        return shim.success(Buffer.from(career[issuer].toBuffer()).toString('ascii'));
-    }
-
-    async input(ctx, recordKey, record) {
-        // let authority = new ClientIdentity(stub);
-        // let issuer = authority.getAttributeValue(attrName);
-        let issuer = "test";
-
-        if ( issuer == "" || issuer == null || typeof issuer == "undefined") {
-            //check permission
-            //return shim.console.error("Authorization failed");
-	      return "failed";
-        }
-        else {
-            var testIssuer = {
-                issuer: "test"
+    async input(ctx, email, pin, record) {
+        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        console.log("#################");
+        console.log(typeof temp);
+        console.log(temp.toString());
+        if (typeof temp == "String"){
+            if (temp.substring(0,2) == "err"){
+                return "err: Hmm.."
             }
-            //preparation
-            let record_JSON = JSON.parse(record);
-            Object.assign(record_JSON,testIssuer);
-            // record_JSON.issueby = issuer;
+        }
+        let response = State.deserialize(temp);
+        console.log("#################");
+        console.log(typeof response);
+        console.log(response.toString());
+        
+        let recordKey = response.payload;
 
-            let career = await ctx.careerList.getCareer(recordKey);
-            if ( career == "" || career == null || typeof career == "undefined") {
-		console.log("init career");
-                career = Career.createInstance(recordKey);
+        let authority = new ClientIdentity(stub);
+        let issuer = authority.getID();
+
+        //preparation
+        let postRecord = State.deserialize(record);
+        Object.assign(postRecord, {issueby: issuer});
+
+        let career = await ctx.careerList.getCareer(recordKey);
+        if (career == null) {
+            career = Career.createInstance(recordKey);
+            career[issuer] = [];
+            career[issuer].push(postRecord);
+            await ctx.careerList.addCareer(career);
+        } else {
+            if (career[issuer]) {
+                career[issuer].push(postRecord);
+            } else {
                 career[issuer] = [];
-                career[issuer].push(record_JSON);
-                await ctx.careerList.addCareer(career);
-		console.log("addCareer done");
-  
-            } else { // career != null
-                career[issuer].push(record_JSON);
-                await ctx.careerList.updateCareer(career);  
+                career[issuer].push(postRecord);
             }
-
-            return shim.success(Buffer.from(JSON.stringify(career)).toString('ascii'));
-
+            await ctx.careerList.updateCareer(career);  
         }
+        return shim.success(State.serialize(career).toString('ascii'));
     }
 
-    async update(ctx, recordKey, record) {
-        // let authority = new ClientIdentity(stub);
-        // let issuer = authority.getAttributeValue(attrName);
-        let issuer = "test";
-        if (issuer !== null) { //check permission
-            let career = await ctx.careerList.getCareer(recordKey);
-
-            // preparation
-            let record_JSON = JSON.parse(record);
-            Object.assign(record_JSON, { issueby: issuer });
-
-            let index = career.findIndex(temp => temp.issueby === issuer);
-
-            career[index] = career_JSON;
-            await ctx.careerList.updateCareer(career);
-            return shim.success(Buffer.from(career.toBuffer()).toString('ascii'));
-
+    async query(ctx, email, pin) {
+        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        console.log("#################");
+        console.log(typeof temp);
+        console.log(temp.toString());
+        if (typeof temp == "String"){
+            if (temp.substring(0,2) == "err"){
+                return "err: Hmm.."
+            }
         }
-        else {
-	    return "failed";
-            //return shim.console.error("Authorization failed");
+        let response = State.deserialize(temp);
+        console.log("#################");
+        console.log(typeof response);
+        console.log(response.toString());
+        
+        let recordKey = response.payload;
+
+        let career = await ctx.careerList.getCareer(recordKey);
+        if (career == null){
+            return "err: This career does not exist.";
         }
+        return shim.success(State.serialize(career).toString('ascii'));
+    }
+
+    async queryByIssuer(ctx, email, pin) {
+        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        console.log("#################");
+        console.log(typeof temp);
+        console.log(temp.toString());
+        if (typeof temp == "String"){
+            if (temp.substring(0,2) == "err"){
+                return "err: Hmm.."
+            }
+        }
+        let response = State.deserialize(temp);
+        console.log("#################");
+        console.log(typeof response);
+        console.log(response.toString());
+        
+        let recordKey = response.payload;
+
+        let authority = new ClientIdentity(stub);
+        let issuer = authority.getID();
+
+        let career = await ctx.careerList.getCareer(recordKey);
+        if (career == null){
+            return "err: This career does not exist.";
+        }
+        return shim.success(State.serialize(career[issuer]).toString('ascii'));
+    }
+
+    async update(ctx, email, pin, record) {
+        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        console.log("#################");
+        console.log(typeof temp);
+        console.log(temp.toString());
+        if (typeof temp == "String"){
+            if (temp.substring(0,2) == "err"){
+                return "err: Hmm.."
+            }
+        }
+        let response = State.deserialize(temp);
+        console.log("#################");
+        console.log(typeof response);
+        console.log(response.toString());
+        
+        let recordKey = response.payload;
+
+        let authority = new ClientIdentity(stub);
+        let issuer = authority.getID();
+
+        let career = await ctx.careerList.getCareer(recordKey);
+        if (career == null){
+            return "err: This career does not exist.";
+        }
+
+        // preparation
+        let postRecord = State.deserialize(record);
+        Object.assign(postRecord, {issueby: issuer});
+
+        let index = career[issuer].findIndex(temp => temp.name === postRecord.name);
+        if (index == -1){
+            return "err: This record does not exist in this career.";
+        }
+        career[issuer][index] = postRecord;
+
+        await ctx.careerList.updateCareer(career);
+        return shim.success(State.serialize(career).toString('ascii'));
+    }
+
+    async delete(ctx, email, pin){
+        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        console.log("#################");
+        console.log(typeof temp);
+        console.log(temp.toString());
+        if (typeof temp == "String"){
+            if (temp.substring(0,2) == "err"){
+                return "err: Hmm.."
+            }
+        }
+        let response = State.deserialize(temp);
+        console.log("#################");
+        console.log(typeof response);
+        console.log(response.toString());
+        
+        let recordKey = response.payload;
+
+        let career = await ctx.careerList.getCareer(recordKey);
+        if (career == null){
+            return "err: This career does not exist.";
+        }
+        ctx.careerList.deleteCareer(career);
+    }
+
+    async deleteByIssuer(ctx, email, pin) {
+        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        console.log("#################");
+        console.log(typeof temp);
+        console.log(temp.toString());
+        if (typeof temp == "String"){
+            if (temp.substring(0,2) == "err"){
+                return "err: Hmm.."
+            }
+        }
+        let response = State.deserialize(temp);
+        console.log("#################");
+        console.log(typeof response);
+        console.log(response.toString());
+        
+        let recordKey = response.payload;
+
+        let authority = new ClientIdentity(stub);
+        let issuer = authority.getID();
+
+        let career = await ctx.careerList.getCareer(recordKey);
+        if (career == null){
+            return "err: This career does not exist.";
+        }
+        delete career[issuer];
     }
 }
 

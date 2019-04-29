@@ -27,6 +27,10 @@ class CareerList extends StateList {
   async updateCareer(career) {
     return this.updateState(career);
   }
+
+  async deleteCareer(career) {
+    return this.deleteState(career);
+  }
 }
 
 module.exports = CareerList;
