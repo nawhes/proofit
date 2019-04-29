@@ -58,7 +58,7 @@ class AccountContract extends Contract {
     async query(ctx, email, pin, channel){
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
-            return shim.error("err: This account does not exist.");
+            return shim.error("err: This account does not exist.").toString('ascii');
         }
         let length = arguments.length;
         if (length == 2){
