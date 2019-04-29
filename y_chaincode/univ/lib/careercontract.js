@@ -38,6 +38,9 @@ class CareerContract extends Contract {
     }
 
     async input(ctx, email, pin, record) {
+        if (arguments.length != 3){
+            return shim.error("err: Three parameters are required.");
+        }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -47,7 +50,7 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500.");
+            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
 
         let recordKey = response.payload;
@@ -77,7 +80,11 @@ class CareerContract extends Contract {
         return shim.success(Career.serialize(career).toString('ascii'));
     }
 
+    /*
     async query(ctx, email, pin) {
+        if (arguments.length != 2){
+            return shim.error("err: Two parameters are required.");
+        }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -87,7 +94,7 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500.");
+            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
         
         let recordKey = response.payload;
@@ -98,8 +105,23 @@ class CareerContract extends Contract {
         }
         return shim.success(Career.serialize(career).toString('ascii'));
     }
+    */
+
+    async queryByKey(ctx, recordKey) {
+        if (arguments.length != 1){
+            return shim.error("err: A parameter is required.");
+        }
+        let career = await ctx.careerList.getCareer(recordKey);
+        if (career == null){
+            return shim.error("err: This career does not exist.");
+        }
+        return shim.success(Career.serialize(career).toString('ascii'));
+    }
 
     async queryByIssuer(ctx, email, pin) {
+        if (arguments.length != 2){
+            return shim.error("err: Two parameters are required.");
+        }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -109,7 +131,7 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500.");
+            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
 
         let recordKey = response.payload;
@@ -124,7 +146,10 @@ class CareerContract extends Contract {
         return shim.success(Career.serialize(career[issuer]).toString('ascii'));
     }
 
-    async update(ctx, email, pin, record) {
+    async update(ctx, email, pin, record, recordId) {
+        if (arguments.length != 4){
+            return shim.error("err: Four parameters are required.");
+        }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -134,7 +159,7 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500.");
+            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
         
         let recordKey = response.payload;
@@ -151,9 +176,9 @@ class CareerContract extends Contract {
         let postRecord = Career.deserialize(record);
         Object.assign(postRecord, {issueby: issuer});
 
-        let index = career[issuer].findIndex(temp => temp.name === postRecord.name);
+        let index = career[issuer].findIndex(temp => temp[recordId] === postRecord[recordId]);
         if (index == -1){
-            return shim.error("err: This record does not exist in this career.");
+            return shim.error("err: This recordId does not exist in this career.");
         }
         career[issuer][index] = postRecord;
 
@@ -162,6 +187,9 @@ class CareerContract extends Contract {
     }
 
     async delete(ctx, email, pin){
+        if (arguments.length != 2){
+            return shim.error("err: Two parameters are required.");
+        }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -171,7 +199,7 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500.");
+            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
         
         let recordKey = response.payload;
@@ -183,7 +211,14 @@ class CareerContract extends Contract {
         ctx.careerList.deleteCareer(career);
     }
 
-    async deleteByIssuer(ctx, email, pin) {
+    /**
+     * (email, pin) > 해당 이력 중 현재 트랜잭션을 제안한 피어로부터 작성된 이력 삭제
+     * (email, pin, recordId, recordValue) > 해당 이력 중 현재 트랜잭션을 제안한 피어가 특정하는 이력 삭제
+     */
+    async deleteByIssuer(ctx, email, pin, recordId, recordValue) {
+        if (arguments.length != 2 && arguments.length != 4){
+            return shim.error("err: Two or four parameters are required.");
+        }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -193,19 +228,31 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500.");
+            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
         
         let recordKey = response.payload;
 
         let authority = new ClientIdentity(ctx.stub);
-        let issuer = authority.getID();
+        let issuer = authority.getID(); //이게 트랜잭션을 제안한 사람의 ID인가 Invoke당하는 사람의 ID인가..
 
         let career = await ctx.careerList.getCareer(recordKey);
         if (career == null){
             return shim.error("err: This career does not exist.");
         }
-        delete career[issuer];
+        if (arguments.length == 2){
+            career[issuer] = [];
+            await ctx.careerList.updateCareer(career);
+            return shim.success(Career.serialize(career).toString('ascii'));
+        } else if (arguments.length == 3){
+            let index = career[issuer].findIndex(temp => temp[recordId] === recordValue);
+            if (index == -1){
+                return shim.error("err: This recordId does not exist in this career.");
+            }
+            career[issuer][index] = undefined;
+            await ctx.careerList.updateCareer(career);
+            return shim.success(Career.serialize(career).toString('ascii'));
+        }
     }
 }
 

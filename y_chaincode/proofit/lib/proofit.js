@@ -23,7 +23,17 @@ class Proofit extends State {
     static getClass() {
         return channelName;
     }
-
+    
+    static async validationPin(preDigest, salt_validate, postPin) {
+        let temp = hash.sha256().update(postPin).digest('hex');
+        let postDigest = await hash.sha256().update(temp).update(salt_validate).digest('hex');
+        if (preDigest === postDigest) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 module.exports = Proofit;

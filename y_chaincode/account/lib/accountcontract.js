@@ -42,28 +42,39 @@ class AccountContract extends Contract {
         console.log('Instantiate the contract');
     }
 
-    async create(ctx, email, pin, date) {
+    /**
+     * 계정생성 > return 계정정보
+     */
+    async create(ctx, email, pin) {
         let account = await ctx.accountList.getAccount(email);
-        console.log("###########");
-        console.log(account);
+        if (arguments.length != 2){
+            return shim.error("err: Two parameters are required.");
+        }
         if (account == null){
-            account = await Account.createInstance(email, pin, date);
+            account = await Account.createInstance(email, pin, Date());
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
         }
         return shim.error("err: This account was previously created.");
     }
 
+    /**
+     * (email, pin) > return 계정정보
+     * (email, pin, channel) > return 이력정보
+     */
     async query(ctx, email, pin, channel){
+        if (arguments.length < 2){
+            return shim.error("At least two parameters are required.");
+        }
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
             return shim.error("err: This account does not exist.");
         }
-        let length = arguments.length;
-        if (length == 2){
+        if (arguments.length == 2){
             return shim.success(Account.serialize(account).toString('ascii'));
-        } else if (Account.validationPin(account.digest, account.salt_record, pin)){
-            let temp = await ctx.stub.invokeChaincode(channel, new Array("query", email, pin), channel);
+        } else if (Account.validationPin(account.digest, account.salt_validate, pin)){
+            let recordKey = Account.getRecordKey(account.salt_record, channel, pin);
+            let temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
             temp = temp.payload;
             let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
             console.log("#################");
@@ -72,7 +83,7 @@ class AccountContract extends Contract {
         
             response = JSON.parse(response);
             if (response.status == 500){
-                return shim.error("InvokeChaincode was returned 500.");
+                return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
             }
 
             return shim.success(Account.serialize(response.payload).toString('ascii'));
@@ -81,13 +92,19 @@ class AccountContract extends Contract {
         }
     }
 
+    /**
+     * 각 채널에서 이력입력을 위해 사용하는 함수
+     */
     async queryKey(ctx, email, pin, channel) {
+        if (arguments.length != 3){
+            return shim.error("err: Three parameters are required.");
+        }
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
-        if (Account.validationPin(account.digest, account.salt_record, pin)){
+        if (Account.validationPin(account.digest, account.salt_validate, pin)){
             recordKey = await Account.getRecordKey(account.salt_record, channel, pin);
         } else {
             return shim.error("err: This pin is invalid");
@@ -101,7 +118,7 @@ class AccountContract extends Contract {
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
-        if (Account.validationPin(account.digest, account.salt_record, pin)){
+        if (Account.validationPin(account.digest, account.salt_validate, pin)){
             recordKey = await Account.getRecordKey(account.salt_record, channel, pin);
         } else {
             return shim.error("err: This pin is invalid.");
