@@ -41,7 +41,12 @@ class CareerContract extends Contract {
     async input(ctx, email, pin, record) {
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
 
-        let response = Buffer.from(temp.payload.buffer.data).toString('ascii');
+        let temp2 = JSON.stringify(temp.payload.buffer.data)
+        console.log("#################");
+        console.log(typeof temp2);
+        console.log(temp2);
+
+        let response = Buffer.from(temp2).toString('ascii');
         console.log("#################");
         console.log(typeof response);
         console.log(response);
