@@ -44,12 +44,12 @@ class CareerContract extends Contract {
         console.log(typeof temp);
         console.log(JSON.stringify(temp));
 
-        let response = Career.deserialize(temp);
+        let response = temp.payload.buffer.data.toString('ascii')    
         console.log("#################");
         console.log(typeof response);
-        console.log(response.values().toString());
-        
-        let recordKey = response.payload.values();
+        console.log(response);
+    
+        let recordKey = response;
 
         let authority = new ClientIdentity(stub);
         let issuer = authority.getID();
