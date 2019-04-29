@@ -47,7 +47,7 @@ class AccountContract extends Contract {
         if (account == null){
             account = await Account.createInstance(email, pin, date);
             await ctx.accountList.addAccount(account);
-            return shim.success(State.serialize(account).toString('ascii'));
+            return shim.success(Account.serialize(account).toString('ascii'));
         }
         return "err: This account was previously created.";
     }
@@ -59,7 +59,7 @@ class AccountContract extends Contract {
         }
         let length = arguments.length;
         if (length == 2){
-            return shim.success(State.serialize(account).toString('ascii'));
+            return shim.success(Account.serialize(account).toString('ascii'));
         } else if (Account.validationPin(account.digest, account.salt_record, pin)){
             let temp = await invokeChaincode(channel, new Array("query", email, pin), channel);
             console.log("#################");
@@ -70,12 +70,12 @@ class AccountContract extends Contract {
                     return "err: Hmm.."
                 }
             }
-            let response = State.deserialize(temp);
+            let response = Account.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
 
-            return shim.success(State.serialize(response.payload).toString('ascii'));
+            return shim.success(Account.serialize(response.payload).toString('ascii'));
         } else {
             return "err: This pin is invalid.";
         }

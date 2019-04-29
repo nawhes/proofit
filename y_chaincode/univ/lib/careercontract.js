@@ -47,7 +47,7 @@ class CareerContract extends Contract {
                 return "err: Hmm.."
             }
         }
-        let response = State.deserialize(temp);
+        let response = Career.deserialize(temp);
         console.log("#################");
         console.log(typeof response);
         console.log(response.toString());
@@ -58,7 +58,7 @@ class CareerContract extends Contract {
         let issuer = authority.getID();
 
         //preparation
-        let postRecord = State.deserialize(record);
+        let postRecord = Career.deserialize(record);
         Object.assign(postRecord, {issueby: issuer});
 
         let career = await ctx.careerList.getCareer(recordKey);
@@ -76,7 +76,7 @@ class CareerContract extends Contract {
             }
             await ctx.careerList.updateCareer(career);  
         }
-        return shim.success(State.serialize(career).toString('ascii'));
+        return shim.success(Career.serialize(career).toString('ascii'));
     }
 
     async query(ctx, email, pin) {
@@ -89,7 +89,7 @@ class CareerContract extends Contract {
                 return "err: Hmm.."
             }
         }
-        let response = State.deserialize(temp);
+        let response = Career.deserialize(temp);
         console.log("#################");
         console.log(typeof response);
         console.log(response.toString());
@@ -100,7 +100,7 @@ class CareerContract extends Contract {
         if (career == null){
             return "err: This career does not exist.";
         }
-        return shim.success(State.serialize(career).toString('ascii'));
+        return shim.success(Career.serialize(career).toString('ascii'));
     }
 
     async queryByIssuer(ctx, email, pin) {
@@ -113,7 +113,7 @@ class CareerContract extends Contract {
                 return "err: Hmm.."
             }
         }
-        let response = State.deserialize(temp);
+        let response = Career.deserialize(temp);
         console.log("#################");
         console.log(typeof response);
         console.log(response.toString());
@@ -127,7 +127,7 @@ class CareerContract extends Contract {
         if (career == null){
             return "err: This career does not exist.";
         }
-        return shim.success(State.serialize(career[issuer]).toString('ascii'));
+        return shim.success(Career.serialize(career[issuer]).toString('ascii'));
     }
 
     async update(ctx, email, pin, record) {
@@ -140,7 +140,7 @@ class CareerContract extends Contract {
                 return "err: Hmm.."
             }
         }
-        let response = State.deserialize(temp);
+        let response = Career.deserialize(temp);
         console.log("#################");
         console.log(typeof response);
         console.log(response.toString());
@@ -156,7 +156,7 @@ class CareerContract extends Contract {
         }
 
         // preparation
-        let postRecord = State.deserialize(record);
+        let postRecord = Career.deserialize(record);
         Object.assign(postRecord, {issueby: issuer});
 
         let index = career[issuer].findIndex(temp => temp.name === postRecord.name);
@@ -166,7 +166,7 @@ class CareerContract extends Contract {
         career[issuer][index] = postRecord;
 
         await ctx.careerList.updateCareer(career);
-        return shim.success(State.serialize(career).toString('ascii'));
+        return shim.success(Career.serialize(career).toString('ascii'));
     }
 
     async delete(ctx, email, pin){
@@ -179,7 +179,7 @@ class CareerContract extends Contract {
                 return "err: Hmm.."
             }
         }
-        let response = State.deserialize(temp);
+        let response = Career.deserialize(temp);
         console.log("#################");
         console.log(typeof response);
         console.log(response.toString());
@@ -203,7 +203,7 @@ class CareerContract extends Contract {
                 return "err: Hmm.."
             }
         }
-        let response = State.deserialize(temp);
+        let response = Career.deserialize(temp);
         console.log("#################");
         console.log(typeof response);
         console.log(response.toString());

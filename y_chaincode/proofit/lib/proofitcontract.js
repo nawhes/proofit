@@ -52,7 +52,7 @@ class ProofitContract extends Contract {
                     return "err: Hmm.."
                 }
             }
-            response = State.deserialize(temp);
+            response = Proofit.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
@@ -68,7 +68,7 @@ class ProofitContract extends Contract {
                     return "err: Hmm.."
                 }
             }
-            response = State.deserialize(temp);
+            response = Proofit.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
@@ -84,7 +84,7 @@ class ProofitContract extends Contract {
                     return "err: Hmm.."
                 }
             }
-            response = State.deserialize(temp);
+            response = Proofit.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
@@ -100,7 +100,7 @@ class ProofitContract extends Contract {
                     return "err: Hmm.."
                 }
             }
-            response = State.deserialize(temp);
+            response = Proofit.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
@@ -108,7 +108,7 @@ class ProofitContract extends Contract {
             proofit.language = response.payload;
 
             await ctx.proofitList.addProofit(proofit);
-            return shim.success(State.serialize(proofit).toString('ascii'));
+            return shim.success(Proofit.serialize(proofit).toString('ascii'));
         }
         return "err: This account was previously created.";
     }
@@ -118,7 +118,7 @@ class ProofitContract extends Contract {
         if (proofit == null){
             return "err: This proofit does not exist.";
         }
-        return shim.success(State.serialize(proofit).toString('ascii'));
+        return shim.success(Proofit.serialize(proofit).toString('ascii'));
     }
 
     async delete(ctx, email, pin){
