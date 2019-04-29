@@ -7,7 +7,6 @@ SPDX-License-Identifier: Apache-2.0
 const { Contract, Context } = require('fabric-contract-api');
 const shim = require('fabric-shim');
 const ClientIdentity = require('fabric-shim').ClientIdentity;
-const ChaincodeStub = require('fabric-shim').ChaincodeStub;
 
 const Account = require('./account.js');
 const AccountList = require('./accountlist.js');

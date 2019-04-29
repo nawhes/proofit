@@ -3,7 +3,6 @@
 const { Contract, Context } = require('fabric-contract-api');
 const shim = require('fabric-shim');
 const ClientIdentity = require('fabric-shim').ClientIdentity;
-const ChaincodeStub = require('fabric-shim').ChaincodeStub;
 
 const Proofit = require('./proofit.js');
 const ProofitList = require('./proofitlist.js/index.js');
