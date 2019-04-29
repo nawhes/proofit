@@ -44,7 +44,7 @@ class ProofitContract extends Contract {
             let temp, response;
             let proofit = Proofit.createInstance(email);
 
-            temp = await ChaincodeStub.invokeChaincode("account", new Array("query", email), "account");
+            temp = await ctx.stub.invokeChaincode("account", new Array("query", email), "account");
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
@@ -53,14 +53,14 @@ class ProofitContract extends Contract {
                     return shim.error("err: Hmm..");
                 }
             }
-            response = Proofit.deserialize(temp);
+            response = await Proofit.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
 
             Object.assign(proofit, response.payload);
 
-            temp = await ChaincodeStub.invokeChaincode("account", new Array("query", email, pin, "univ"), "account");
+            temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin, "univ"), "account");
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
@@ -69,14 +69,14 @@ class ProofitContract extends Contract {
                     return shim.error("err: Hmm..");
                 }
             }
-            response = Proofit.deserialize(temp);
+            response = await Proofit.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
 
             proofit.univ = response.payload;
 
-            temp = await ChaincodeStub.invokeChaincode("account", new Array("query", email, pin, "license"), "account");
+            temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin, "license"), "account");
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
@@ -85,14 +85,14 @@ class ProofitContract extends Contract {
                     return shim.error("err: Hmm..");
                 }
             }
-            response = Proofit.deserialize(temp);
+            response = await Proofit.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
 
             proofit.license = response.payload;
 
-            temp = await ChaincodeStub.invokeChaincode("account", new Array("query", email, pin, "language"), "account");
+            temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin, "language"), "account");
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
@@ -101,7 +101,7 @@ class ProofitContract extends Contract {
                     return shim.error("err: Hmm..");
                 }
             }
-            response = Proofit.deserialize(temp);
+            response = await Proofit.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());

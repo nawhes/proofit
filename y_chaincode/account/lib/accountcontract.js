@@ -45,9 +45,8 @@ class AccountContract extends Contract {
 
     async create(ctx, email, pin, date) {
         let account = await ctx.accountList.getAccount(email);
-        console.log("logtest");
-        console.info("infotest");
-        console.debug("debugtest");
+        console.log("###########");
+        console.log(account);
         if (account == null){
             account = await Account.createInstance(email, pin, date);
             await ctx.accountList.addAccount(account);
@@ -65,7 +64,7 @@ class AccountContract extends Contract {
         if (length == 2){
             return shim.success(Account.serialize(account).toString('ascii'));
         } else if (Account.validationPin(account.digest, account.salt_record, pin)){
-            let temp = await stub.invokeChaincode(channel, new Array("query", email, pin), channel);
+            let temp = await ctx.stub.invokeChaincode(channel, new Array("query", email, pin), channel);
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
@@ -74,7 +73,7 @@ class AccountContract extends Contract {
                     return shim.error("err: Hmm..");
                 }
             }
-            let response = Account.deserialize(temp);
+            let response = await Account.deserialize(temp);
             console.log("#################");
             console.log(typeof response);
             console.log(response.toString());
@@ -92,7 +91,7 @@ class AccountContract extends Contract {
         }
         let recordKey;
         if (Account.validationPin(account.digest, account.salt_record, pin)){
-            recordKey = Account.getRecordKey(account.salt_record, channel, pin);
+            recordKey = await Account.getRecordKey(account.salt_record, channel, pin);
         } else {
             return shim.error("err: This pin is invalid");
         }
@@ -106,7 +105,7 @@ class AccountContract extends Contract {
         }
         let recordKey;
         if (Account.validationPin(account.digest, account.salt_record, pin)){
-            recordKey = Account.getRecordKey(account.salt_record, channel, pin);
+            recordKey = await Account.getRecordKey(account.salt_record, channel, pin);
         } else {
             return shim.error("err: This pin is invalid.");
         }

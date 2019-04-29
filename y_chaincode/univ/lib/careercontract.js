@@ -39,7 +39,7 @@ class CareerContract extends Contract {
     }
 
     async input(ctx, email, pin, record) {
-        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
@@ -81,7 +81,7 @@ class CareerContract extends Contract {
     }
 
     async query(ctx, email, pin) {
-        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
@@ -105,7 +105,7 @@ class CareerContract extends Contract {
     }
 
     async queryByIssuer(ctx, email, pin) {
-        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
@@ -132,7 +132,7 @@ class CareerContract extends Contract {
     }
 
     async update(ctx, email, pin, record) {
-        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
@@ -171,7 +171,7 @@ class CareerContract extends Contract {
     }
 
     async delete(ctx, email, pin){
-        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
@@ -195,7 +195,7 @@ class CareerContract extends Contract {
     }
 
     async deleteByIssuer(ctx, email, pin) {
-        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
