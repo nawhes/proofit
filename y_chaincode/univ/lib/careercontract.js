@@ -52,9 +52,8 @@ class CareerContract extends Contract {
 
         console.log("#################");
         console.log(temp.buffer);
-        console.log(temp.ByteBuffer.buffer);
 
-        let temp2 = Buffer.from(temp.payload);
+        let temp2 = Buffer.from(temp.buffer);
         console.log("#################");
         console.log(typeof temp2);
         console.log(temp2);
