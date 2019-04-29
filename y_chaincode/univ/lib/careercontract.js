@@ -3,7 +3,6 @@
 const { Contract, Context } = require('fabric-contract-api');
 const shim = require('fabric-shim');
 const ClientIdentity = require('fabric-shim').ClientIdentity;
-const ChaincodeStub = require('fabric-shim').ChaincodeStub;
 
 const Career = require('./career.js');
 const CareerList = require('./careerlist.js');
@@ -40,33 +39,20 @@ class CareerContract extends Contract {
 
     async input(ctx, email, pin, record) {
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
-
         temp = temp.payload;
-        console.log("#################");
-        console.log(temp);
-
-        // temp = temp.buffer;
-        // console.log("#################");
-        // console.log(temp);
-
-        let response = temp.buffer.toString('ascii', temp.offset);
+        let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
         console.log("#################");
         console.log(typeof response);
         console.log(response);
+    
+        response = JSON.parse(response);
+        if (response.status == 500){
+            return shim.error("InvokeChaincode was returned 500.");
+        }
 
-        // let response2 = response.toString('ascii');
-        // console.log("#################");
-        // console.log(typeof response2);
-        // console.log(response2);
+        let recordKey = response.payload;
 
-        // let response3 = JSON.parse(response2)
-        // console.log("#################");
-        // console.log(typeof response3);
-        // console.log(response3);
-
-        let recordKey = response;
-
-        let authority = new ClientIdentity(stub);
+        let authority = new ClientIdentity(ctx.stub);
         let issuer = authority.getID();
 
         //preparation
@@ -93,20 +79,16 @@ class CareerContract extends Contract {
 
     async query(ctx, email, pin) {
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
-        console.log("#################");
-        console.log(typeof temp);
-        console.log(temp.toString());
-        if (typeof temp == "String"){
-            if (temp.substring(0,2) == "err"){
-                return shim.error("err: Hmm..");
-            }
-        }
-
-        let response = JSON.parse(temp);
-        // let response = Career.deserialize(temp);
+        temp = temp.payload;
+        let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
         console.log("#################");
         console.log(typeof response);
-        console.log(response.toString());
+        console.log(response);
+    
+        response = JSON.parse(response);
+        if (response.status == 500){
+            return shim.error("InvokeChaincode was returned 500.");
+        }
         
         let recordKey = response.payload;
 
@@ -119,22 +101,20 @@ class CareerContract extends Contract {
 
     async queryByIssuer(ctx, email, pin) {
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
-        console.log("#################");
-        console.log(typeof temp);
-        console.log(temp.toString());
-        if (typeof temp == "String"){
-            if (temp.substring(0,2) == "err"){
-                return shim.error("err: Hmm..");
-            }
-        }
-        let response = Career.deserialize(temp);
+        temp = temp.payload;
+        let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
         console.log("#################");
         console.log(typeof response);
-        console.log(response.toString());
-        
+        console.log(response);
+    
+        response = JSON.parse(response);
+        if (response.status == 500){
+            return shim.error("InvokeChaincode was returned 500.");
+        }
+
         let recordKey = response.payload;
 
-        let authority = new ClientIdentity(stub);
+        let authority = new ClientIdentity(ctx.stub);
         let issuer = authority.getID();
 
         let career = await ctx.careerList.getCareer(recordKey);
@@ -146,22 +126,20 @@ class CareerContract extends Contract {
 
     async update(ctx, email, pin, record) {
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
-        console.log("#################");
-        console.log(typeof temp);
-        console.log(temp.toString());
-        if (typeof temp == "String"){
-            if (temp.substring(0,2) == "err"){
-                return shim.error("err: Hmm..");
-            }
-        }
-        let response = Career.deserialize(temp);
+        temp = temp.payload;
+        let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
         console.log("#################");
         console.log(typeof response);
-        console.log(response.toString());
+        console.log(response);
+    
+        response = JSON.parse(response);
+        if (response.status == 500){
+            return shim.error("InvokeChaincode was returned 500.");
+        }
         
         let recordKey = response.payload;
 
-        let authority = new ClientIdentity(stub);
+        let authority = new ClientIdentity(ctx.stub);
         let issuer = authority.getID();
 
         let career = await ctx.careerList.getCareer(recordKey);
@@ -185,18 +163,16 @@ class CareerContract extends Contract {
 
     async delete(ctx, email, pin){
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
-        console.log("#################");
-        console.log(typeof temp);
-        console.log(temp.toString());
-        if (typeof temp == "String"){
-            if (temp.substring(0,2) == "err"){
-                return shim.error("err: Hmm..");
-            }
-        }
-        let response = Career.deserialize(temp);
+        temp = temp.payload;
+        let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
         console.log("#################");
         console.log(typeof response);
-        console.log(response.toString());
+        console.log(response);
+    
+        response = JSON.parse(response);
+        if (response.status == 500){
+            return shim.error("InvokeChaincode was returned 500.");
+        }
         
         let recordKey = response.payload;
 
@@ -209,18 +185,16 @@ class CareerContract extends Contract {
 
     async deleteByIssuer(ctx, email, pin) {
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
-        console.log("#################");
-        console.log(typeof temp);
-        console.log(temp.toString());
-        if (typeof temp == "String"){
-            if (temp.substring(0,2) == "err"){
-                return shim.error("err: Hmm..");
-            }
-        }
-        let response = Career.deserialize(temp);
+        temp = temp.payload;
+        let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
         console.log("#################");
         console.log(typeof response);
-        console.log(response.toString());
+        console.log(response);
+    
+        response = JSON.parse(response);
+        if (response.status == 500){
+            return shim.error("InvokeChaincode was returned 500.");
+        }
         
         let recordKey = response.payload;
 

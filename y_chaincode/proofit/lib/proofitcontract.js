@@ -45,66 +45,58 @@ class ProofitContract extends Contract {
             let proofit = Proofit.createInstance(email);
 
             temp = await ctx.stub.invokeChaincode("account", new Array("query", email), "account");
-            console.log("#################");
-            console.log(typeof temp);
-            console.log(temp.toString());
-            if (typeof temp == "String") {
-                if (temp.substring(0, 2) == "err") {
-                    return shim.error("err: Hmm..");
-                }
-            }
-            response = await Proofit.deserialize(temp);
+            temp = temp.payload;
+            response = temp.buffer.toString('ascii', temp.offset, temp.limit);
             console.log("#################");
             console.log(typeof response);
-            console.log(response.toString());
+            console.log(response);
+        
+            response = JSON.parse(response);
+            if (response.status == 500){
+                return shim.error("InvokeChaincode was returned 500.");
+            }
 
             Object.assign(proofit, response.payload);
 
             temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin, "univ"), "account");
-            console.log("#################");
-            console.log(typeof temp);
-            console.log(temp.toString());
-            if (typeof temp == "String") {
-                if (temp.substring(0, 2) == "err") {
-                    return shim.error("err: Hmm..");
-                }
-            }
-            response = await Proofit.deserialize(temp);
+            temp = temp.payload;
+            response = temp.buffer.toString('ascii', temp.offset, temp.limit);
             console.log("#################");
             console.log(typeof response);
-            console.log(response.toString());
+            console.log(response);
+        
+            response = JSON.parse(response);
+            if (response.status == 500){
+                return shim.error("InvokeChaincode was returned 500.");
+            }
 
             proofit.univ = response.payload;
 
             temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin, "license"), "account");
-            console.log("#################");
-            console.log(typeof temp);
-            console.log(temp.toString());
-            if (typeof temp == "String") {
-                if (temp.substring(0, 2) == "err") {
-                    return shim.error("err: Hmm..");
-                }
-            }
-            response = await Proofit.deserialize(temp);
+            temp = temp.payload;
+            response = temp.buffer.toString('ascii', temp.offset, temp.limit);
             console.log("#################");
             console.log(typeof response);
-            console.log(response.toString());
+            console.log(response);
+        
+            response = JSON.parse(response);
+            if (response.status == 500){
+                return shim.error("InvokeChaincode was returned 500.");
+            }
 
             proofit.license = response.payload;
 
             temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin, "language"), "account");
-            console.log("#################");
-            console.log(typeof temp);
-            console.log(temp.toString());
-            if (typeof temp == "String") {
-                if (temp.substring(0, 2) == "err") {
-                    return shim.error("err: Hmm..");
-                }
-            }
-            response = await Proofit.deserialize(temp);
+            temp = temp.payload;
+            response = temp.buffer.toString('ascii', temp.offset, temp.limit);
             console.log("#################");
             console.log(typeof response);
-            console.log(response.toString());
+            console.log(response);
+        
+            response = JSON.parse(response);
+            if (response.status == 500){
+                return shim.error("InvokeChaincode was returned 500.");
+            }
 
             proofit.language = response.payload;
 

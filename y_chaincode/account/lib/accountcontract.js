@@ -65,18 +65,16 @@ class AccountContract extends Contract {
             return shim.success(Account.serialize(account).toString('ascii'));
         } else if (Account.validationPin(account.digest, account.salt_record, pin)){
             let temp = await ctx.stub.invokeChaincode(channel, new Array("query", email, pin), channel);
-            console.log("#################");
-            console.log(typeof temp);
-            console.log(temp.toString());
-            if (typeof temp == "String"){
-                if (temp.substring(0,2) == "err"){
-                    return shim.error("err: Hmm..");
-                }
-            }
-            let response = await Account.deserialize(temp);
+            temp = temp.payload;
+            let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
             console.log("#################");
             console.log(typeof response);
-            console.log(response.toString());
+            console.log(response);
+        
+            response = JSON.parse(response);
+            if (response.status == 500){
+                return shim.error("InvokeChaincode was returned 500.");
+            }
 
             return shim.success(Account.serialize(response.payload).toString('ascii'));
         } else {
