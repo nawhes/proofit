@@ -5,8 +5,9 @@ SPDX-License-Identifier: Apache-2.0
 'use strict';
 
 const { Contract, Context } = require('fabric-contract-api');
-const ClientIdentity = require('fabric-shim').ClientIdentity;
 const shim = require('fabric-shim');
+const ClientIdentity = require('fabric-shim').ClientIdentity;
+const ChaincodeStub = require('fabric-shim').ChaincodeStub;
 
 const Account = require('./account.js');
 const AccountList = require('./accountlist.js');
@@ -44,30 +45,33 @@ class AccountContract extends Contract {
 
     async create(ctx, email, pin, date) {
         let account = await ctx.accountList.getAccount(email);
+        console.log("logtest");
+        console.info("infotest");
+        console.debug("debugtest");
         if (account == null){
             account = await Account.createInstance(email, pin, date);
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
         }
-        return "err: This account was previously created.";
+        return shim.error("err: This account was previously created.");
     }
 
     async query(ctx, email, pin, channel){
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
-            return "err: This account does not exist.";
+            return shim.error("err: This account does not exist.");
         }
         let length = arguments.length;
         if (length == 2){
             return shim.success(Account.serialize(account).toString('ascii'));
         } else if (Account.validationPin(account.digest, account.salt_record, pin)){
-            let temp = await invokeChaincode(channel, new Array("query", email, pin), channel);
+            let temp = await ChaincodeStub.invokeChaincode(channel, new Array("query", email, pin), channel);
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
             if (typeof temp == "String"){
                 if (temp.substring(0,2) == "err"){
-                    return "err: Hmm.."
+                    return shim.error("err: Hmm..");
                 }
             }
             let response = Account.deserialize(temp);
@@ -77,20 +81,20 @@ class AccountContract extends Contract {
 
             return shim.success(Account.serialize(response.payload).toString('ascii'));
         } else {
-            return "err: This pin is invalid.";
+            return shim.error("err: This pin is invalid.");
         }
     }
 
     async queryKey(ctx, email, pin, channel) {
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
-            return "err: This account does not exist.";
+            return shim.error("err: This account does not exist.");
         }
         let recordKey;
         if (Account.validationPin(account.digest, account.salt_record, pin)){
             recordKey = Account.getRecordKey(account.salt_record, channel, pin);
         } else {
-            return "err: This pin is invalid";
+            return shim.error("err: This pin is invalid");
         }
         return shim.success(Buffer.from(recordKey.toString()).toString('ascii'));
     }
@@ -98,13 +102,13 @@ class AccountContract extends Contract {
     async delete(ctx, email, pin, channel) {//미완성
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
-            return "err: This account does not exist.";
+            return shim.error("err: This account does not exist.");
         }
         let recordKey;
         if (Account.validationPin(account.digest, account.salt_record, pin)){
             recordKey = Account.getRecordKey(account.salt_record, channel, pin);
         } else {
-            return "err: This pin is invalid.";
+            return shim.error("err: This pin is invalid.");
         }
         //request to delete career
         ctx.accountList.deleteAccount(account);

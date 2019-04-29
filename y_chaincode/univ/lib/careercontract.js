@@ -1,8 +1,9 @@
 'use strict';
 
 const { Contract, Context } = require('fabric-contract-api');
-const ClientIdentity = require('fabric-shim').ClientIdentity;
 const shim = require('fabric-shim');
+const ClientIdentity = require('fabric-shim').ClientIdentity;
+const ChaincodeStub = require('fabric-shim').ChaincodeStub;
 
 const Career = require('./career.js');
 const CareerList = require('./careerlist.js');
@@ -38,13 +39,13 @@ class CareerContract extends Contract {
     }
 
     async input(ctx, email, pin, record) {
-        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
         if (typeof temp == "String"){
             if (temp.substring(0,2) == "err"){
-                return "err: Hmm.."
+                return shim.error("err: Hmm..");
             }
         }
         let response = Career.deserialize(temp);
@@ -80,13 +81,13 @@ class CareerContract extends Contract {
     }
 
     async query(ctx, email, pin) {
-        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
         if (typeof temp == "String"){
             if (temp.substring(0,2) == "err"){
-                return "err: Hmm.."
+                return shim.error("err: Hmm..");
             }
         }
         let response = Career.deserialize(temp);
@@ -98,19 +99,19 @@ class CareerContract extends Contract {
 
         let career = await ctx.careerList.getCareer(recordKey);
         if (career == null){
-            return "err: This career does not exist.";
+            return shim.error("err: This career does not exist.");
         }
         return shim.success(Career.serialize(career).toString('ascii'));
     }
 
     async queryByIssuer(ctx, email, pin) {
-        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
         if (typeof temp == "String"){
             if (temp.substring(0,2) == "err"){
-                return "err: Hmm.."
+                return shim.error("err: Hmm..");
             }
         }
         let response = Career.deserialize(temp);
@@ -125,19 +126,19 @@ class CareerContract extends Contract {
 
         let career = await ctx.careerList.getCareer(recordKey);
         if (career == null){
-            return "err: This career does not exist.";
+            return shim.error("err: This career does not exist.");
         }
         return shim.success(Career.serialize(career[issuer]).toString('ascii'));
     }
 
     async update(ctx, email, pin, record) {
-        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
         if (typeof temp == "String"){
             if (temp.substring(0,2) == "err"){
-                return "err: Hmm.."
+                return shim.error("err: Hmm..");
             }
         }
         let response = Career.deserialize(temp);
@@ -152,7 +153,7 @@ class CareerContract extends Contract {
 
         let career = await ctx.careerList.getCareer(recordKey);
         if (career == null){
-            return "err: This career does not exist.";
+            return shim.error("err: This career does not exist.");
         }
 
         // preparation
@@ -161,7 +162,7 @@ class CareerContract extends Contract {
 
         let index = career[issuer].findIndex(temp => temp.name === postRecord.name);
         if (index == -1){
-            return "err: This record does not exist in this career.";
+            return shim.error("err: This record does not exist in this career.");
         }
         career[issuer][index] = postRecord;
 
@@ -170,13 +171,13 @@ class CareerContract extends Contract {
     }
 
     async delete(ctx, email, pin){
-        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
         if (typeof temp == "String"){
             if (temp.substring(0,2) == "err"){
-                return "err: Hmm.."
+                return shim.error("err: Hmm..");
             }
         }
         let response = Career.deserialize(temp);
@@ -188,19 +189,19 @@ class CareerContract extends Contract {
 
         let career = await ctx.careerList.getCareer(recordKey);
         if (career == null){
-            return "err: This career does not exist.";
+            return shim.error("err: This career does not exist.");
         }
         ctx.careerList.deleteCareer(career);
     }
 
     async deleteByIssuer(ctx, email, pin) {
-        let temp = await invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ChaincodeStub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
         console.log("#################");
         console.log(typeof temp);
         console.log(temp.toString());
         if (typeof temp == "String"){
             if (temp.substring(0,2) == "err"){
-                return "err: Hmm.."
+                return shim.error("err: Hmm..");
             }
         }
         let response = Career.deserialize(temp);
@@ -215,7 +216,7 @@ class CareerContract extends Contract {
 
         let career = await ctx.careerList.getCareer(recordKey);
         if (career == null){
-            return "err: This career does not exist.";
+            return shim.error("err: This career does not exist.");
         }
         delete career[issuer];
     }

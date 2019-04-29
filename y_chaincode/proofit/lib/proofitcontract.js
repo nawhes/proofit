@@ -1,8 +1,9 @@
 'use strict';
 
 const { Contract, Context } = require('fabric-contract-api');
-const ClientIdentity = require('fabric-shim').ClientIdentity;
 const shim = require('fabric-shim');
+const ClientIdentity = require('fabric-shim').ClientIdentity;
+const ChaincodeStub = require('fabric-shim').ChaincodeStub;
 
 const Proofit = require('./proofit.js');
 const ProofitList = require('./proofitlist.js/index.js');
@@ -43,13 +44,13 @@ class ProofitContract extends Contract {
             let temp, response;
             let proofit = Proofit.createInstance(email);
 
-            temp = await invokeChaincode("account", new Array("query", email), "account");
+            temp = await ChaincodeStub.invokeChaincode("account", new Array("query", email), "account");
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
             if (typeof temp == "String") {
                 if (temp.substring(0, 2) == "err") {
-                    return "err: Hmm.."
+                    return shim.error("err: Hmm..");
                 }
             }
             response = Proofit.deserialize(temp);
@@ -59,13 +60,13 @@ class ProofitContract extends Contract {
 
             Object.assign(proofit, response.payload);
 
-            temp = await invokeChaincode("account", new Array("query", email, pin, "univ"), "account");
+            temp = await ChaincodeStub.invokeChaincode("account", new Array("query", email, pin, "univ"), "account");
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
             if (typeof temp == "String") {
                 if (temp.substring(0, 2) == "err") {
-                    return "err: Hmm.."
+                    return shim.error("err: Hmm..");
                 }
             }
             response = Proofit.deserialize(temp);
@@ -75,13 +76,13 @@ class ProofitContract extends Contract {
 
             proofit.univ = response.payload;
 
-            temp = await invokeChaincode("account", new Array("query", email, pin, "license"), "account");
+            temp = await ChaincodeStub.invokeChaincode("account", new Array("query", email, pin, "license"), "account");
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
             if (typeof temp == "String") {
                 if (temp.substring(0, 2) == "err") {
-                    return "err: Hmm.."
+                    return shim.error("err: Hmm..");
                 }
             }
             response = Proofit.deserialize(temp);
@@ -91,13 +92,13 @@ class ProofitContract extends Contract {
 
             proofit.license = response.payload;
 
-            temp = await invokeChaincode("account", new Array("query", email, pin, "language"), "account");
+            temp = await ChaincodeStub.invokeChaincode("account", new Array("query", email, pin, "language"), "account");
             console.log("#################");
             console.log(typeof temp);
             console.log(temp.toString());
             if (typeof temp == "String") {
                 if (temp.substring(0, 2) == "err") {
-                    return "err: Hmm.."
+                    return shim.error("err: Hmm..");
                 }
             }
             response = Proofit.deserialize(temp);
@@ -110,13 +111,13 @@ class ProofitContract extends Contract {
             await ctx.proofitList.addProofit(proofit);
             return shim.success(Proofit.serialize(proofit).toString('ascii'));
         }
-        return "err: This account was previously created.";
+        return shim.error("err: This account was previously created.");
     }
 
     async read(ctx, email) {
         let proofit = await ctx.proofitList.getProofit(email);
         if (proofit == null){
-            return "err: This proofit does not exist.";
+            return shim.error("err: This proofit does not exist.");
         }
         return shim.success(Proofit.serialize(proofit).toString('ascii'));
     }
@@ -124,13 +125,13 @@ class ProofitContract extends Contract {
     async delete(ctx, email, pin){
         let proofit = await ctx.proofitList.getProofit(email);
         if (proofit == null){
-            return "err: This proofit does not exist.";
+            return shim.error("err: This proofit does not exist.");
         }
 
         if (true){//validationPin
             ctx.proofitList.deleteProofit(proofit);
         } else {
-            return "err: This pin is invalid."
+            return shim.error("err: This pin is invalid.");
         }
     }
 }
