@@ -72,8 +72,8 @@ class AccountContract extends Contract {
         }
         if (arguments.length == 2){
             return shim.success(Account.serialize(account).toString('ascii'));
-        } else if (Account.validationPin(account.digest, account.salt_validate, pin)){
-            let recordKey = Account.getRecordKey(account.salt_record, channel, pin);
+        } else if (Account.validationPin(account.digest, account.salt, pin)){
+            let recordKey = Account.getRecordKey(issuer, pin);
             let temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
             temp = temp.payload;
             let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -87,16 +87,15 @@ class AccountContract extends Contract {
             }
 
             return shim.success(Account.serialize(response.payload).toString('ascii'));
-        } else {
-            return shim.error("err: This pin is invalid.");
         }
+        return shim.error("err: This pin is invalid.");
     }
 
     /**
      * 각 채널에서 이력입력을 위해 사용하는 함수
      */
-    async queryKey(ctx, email, pin, channel) {
-        if (arguments.length != 3){
+    async queryKey(ctx, email, pin, issuer) {
+        if (arguments.length != 4){
             return shim.error("err: Three parameters are required.");
         }
         let account = await ctx.accountList.getAccount(email);
@@ -104,22 +103,36 @@ class AccountContract extends Contract {
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
-        if (Account.validationPin(account.digest, account.salt_validate, pin)){
-            recordKey = await Account.getRecordKey(account.salt_record, channel, pin);
-        } else {
-            return shim.error("err: This pin is invalid");
+        if (Account.validationPin(account.digest, account.salt, pin)){
+            recordKey = await Account.getRecordKey(issuer, pin);
+            return shim.success(Buffer.from(recordKey.toString()).toString('ascii'));
         }
-        return shim.success(Buffer.from(recordKey.toString()).toString('ascii'));
+        return shim.error("err: This pin is invalid");
     }
 
-    async delete(ctx, email, pin, channel) {//미완성
+    async update(ctx, email, pin, channel, issuer){
+        let account = await ctx.accountList.getAccount(email);
+        if (account == null){
+            return shim.error("err: This account does not exist.");
+        } else if (Account.validationPin(account.digest, account.salt, pin)){
+            if (!account[channel]){
+                account[channel] = [];
+            }
+            account[channel].push(issuer);
+            await ctx.accountList.addAccount(account);
+            return shim.success(Account.serialize(account).toString('ascii'));
+        }
+        return 
+    }
+
+    async delete(ctx, email, pin, issuer) {//미완성
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
-        if (Account.validationPin(account.digest, account.salt_validate, pin)){
-            recordKey = await Account.getRecordKey(account.salt_record, channel, pin);
+        if (Account.validationPin(account.digest, account.salt, pin)){
+            recordKey = await Account.getRecordKey(issuer, pin);
         } else {
             return shim.error("err: This pin is invalid.");
         }

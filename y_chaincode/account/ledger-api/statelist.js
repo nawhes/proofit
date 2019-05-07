@@ -4,7 +4,7 @@ SPDX-License-Identifier: Apache-2.0
 
 'use strict';
 const State = require('./state.js');
-const prefix = "-";
+
 /**
  * StateList provides a named virtual container for a set of ledger states.
  * Each state has a unique key which associates it with the container, rather
@@ -27,7 +27,7 @@ class StateList {
      * State object is serialized before writing.
      */
     async addState(state) {
-        let key = this.ctx.stub.createCompositeKey(this.name, [prefix, state.email]);
+        let key = this.ctx.stub.createCompositeKey(this.name, state.email);
         let data = State.serialize(state);
         await this.ctx.stub.putState(key, data);
     }
@@ -38,7 +38,7 @@ class StateList {
      * into JSON object before being returned.
      */
     async getState(key) {
-        let ledgerKey = this.ctx.stub.createCompositeKey(this.name, [prefix, key]);
+        let ledgerKey = this.ctx.stub.createCompositeKey(this.name, key);
         let data = await this.ctx.stub.getState(ledgerKey);
         if (data == "" || data == null || typeof data == "undefined"){
             return null;
@@ -53,13 +53,13 @@ class StateList {
      * addState() but kept separate because it is semantically distinct.
      */
     async updateState(state) {
-        let key = this.ctx.stub.createCompositeKey(this.name, [prefix, state.email]);
+        let key = this.ctx.stub.createCompositeKey(this.name, state.email);
         let data = State.serialize(state);
         await this.ctx.stub.putState(key, data);
     }
 
     async deleteState(state) {
-        let key = this.ctx.stub.createCompositeKey(this.name, [prefix, state.email]);
+        let key = this.ctx.stub.createCompositeKey(this.name, state.email);
         await this.ctx.stub.deleteState(key);
     }
 

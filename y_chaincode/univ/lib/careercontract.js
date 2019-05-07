@@ -37,60 +37,43 @@ class CareerContract extends Contract {
         console.log('Instantiate the contract');
     }
 
-    async input(ctx, email, pin, record) {
+    async input(ctx, email, pin, issuer, record) {
         if (arguments.length != 3){
             return shim.error("err: Three parameters are required.");
         }
-        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
-        console.log("#################");
-        console.log(typeof response);
-        console.log(response);
     
         response = JSON.parse(response);
         if (response.status == 500){
             return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
-
         let recordKey = response.payload;
-
-        let authority = new ClientIdentity(ctx.stub);
-        let issuer = authority.getID();
 
         //preparation
         let postRecord = Career.deserialize(record);
-        Object.assign(postRecord, {issueby: issuer});
 
         let career = await ctx.careerList.getCareer(recordKey);
-        if (career == null) {
+        if (!career) {
             career = Career.createInstance(recordKey);
-            career[issuer] = [];
-            career[issuer].push(postRecord);
+            Object.assign(career, postRecord);
             await ctx.careerList.addCareer(career);
         } else {
-            if (career[issuer]) {
-                career[issuer].push(postRecord);
-            } else {
-                career[issuer] = [];
-                career[issuer].push(postRecord);
-            }
+            Object.assign(career, postRecord);
             await ctx.careerList.updateCareer(career);  
         }
         return shim.success(Career.serialize(career).toString('ascii'));
     }
 
-    /*
-    async query(ctx, email, pin) {
-        if (arguments.length != 2){
-            return shim.error("err: Two parameters are required.");
+ 
+    async query(ctx, email, pin, issuer) {
+        if (arguments.length != 3){
+            return shim.error("err: Three parameters are required.");
         }
-        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
-        console.log("#################");
-        console.log(typeof response);
-        console.log(response);
     
         response = JSON.parse(response);
         if (response.status == 500){
@@ -105,7 +88,7 @@ class CareerContract extends Contract {
         }
         return shim.success(Career.serialize(career).toString('ascii'));
     }
-    */
+    
 
     async queryByKey(ctx, recordKey) {
         if (arguments.length != 1){
@@ -118,6 +101,7 @@ class CareerContract extends Contract {
         return shim.success(Career.serialize(career).toString('ascii'));
     }
 
+    /*
     async queryByIssuer(ctx, email, pin) {
         if (arguments.length != 2){
             return shim.error("err: Two parameters are required.");
@@ -145,6 +129,7 @@ class CareerContract extends Contract {
         }
         return shim.success(Career.serialize(career[issuer]).toString('ascii'));
     }
+    
 
     async update(ctx, email, pin, record, recordId) {
         if (arguments.length != 4){
@@ -185,17 +170,16 @@ class CareerContract extends Contract {
         await ctx.careerList.updateCareer(career);
         return shim.success(Career.serialize(career).toString('ascii'));
     }
+    */
 
-    async delete(ctx, email, pin){
+
+    async delete(ctx, email, pin, issuer){
         if (arguments.length != 2){
             return shim.error("err: Two parameters are required.");
         }
-        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, "univ"), "account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
-        console.log("#################");
-        console.log(typeof response);
-        console.log(response);
     
         response = JSON.parse(response);
         if (response.status == 500){
@@ -211,10 +195,12 @@ class CareerContract extends Contract {
         ctx.careerList.deleteCareer(career);
     }
 
+    
     /**
      * (email, pin) > 해당 이력 중 현재 트랜잭션을 제안한 피어로부터 작성된 이력 삭제
      * (email, pin, recordId, recordValue) > 해당 이력 중 현재 트랜잭션을 제안한 피어가 특정하는 이력 삭제
      */
+    /*
     async deleteByIssuer(ctx, email, pin, recordId, recordValue) {
         if (arguments.length != 2 && arguments.length != 4){
             return shim.error("err: Two or four parameters are required.");
@@ -254,6 +240,7 @@ class CareerContract extends Contract {
             return shim.success(Career.serialize(career).toString('ascii'));
         }
     }
+    */
 }
 
 module.exports = CareerContract;

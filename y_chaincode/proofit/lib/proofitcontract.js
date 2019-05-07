@@ -2,10 +2,9 @@
 
 const { Contract, Context } = require('fabric-contract-api');
 const shim = require('fabric-shim');
-const ClientIdentity = require('fabric-shim').ClientIdentity;
 
 const Proofit = require('./proofit.js');
-const ProofitList = require('./proofitlist.js/index.js');
+const ProofitList = require('./proofitlist.js');
 
 const channelName = "proofit";
 
@@ -37,18 +36,15 @@ class ProofitContract extends Contract {
         console.log('Instantiate the contract');
     }
 
-    async append(ctx, email, pin, channel) {
+    async append(ctx, email, pin, channel, issuer) {
         let proofit = await ctx.proofitList.getProofit(email);
         let temp, response;
         if (proofit == null) {
             proofit = Proofit.createInstance(email);
-            temp = await ctx.stub.invokeChaincode("account", new Array("query", email), "account");
+            temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin), "account");
             temp = temp.payload;
             response = temp.buffer.toString('ascii', temp.offset, temp.limit);
-            console.log("#################");
-            console.log(typeof response);
-            console.log(response);
-        
+
             response = JSON.parse(response);
             if (response.status == 500){
                 return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
@@ -56,12 +52,9 @@ class ProofitContract extends Contract {
     
             Object.assign(proofit, response.payload);    
         }
-        temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, channel),"account");
+        temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer),"account");
         temp = temp.payload;
         response = temp.buffer.toString('ascii', temp.offset, temp.limit);
-        console.log("#################");
-        console.log(typeof response);
-        console.log(response);
     
         response = JSON.parse(response);
         if (response.status == 500){
@@ -72,16 +65,16 @@ class ProofitContract extends Contract {
         temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
         temp = temp.payload;
         response = temp.buffer.toString('ascii', temp.offset, temp.limit);
-        console.log("#################");
-        console.log(typeof response);
-        console.log(response);
     
         response = JSON.parse(response);
         if (response.status == 500){
             return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
 
-        proofit[channel] = response.payload;
+        if (!proofit[channel]){
+            account[channel] = [];
+        }
+        proofit[channel].push(response.payload);
 
         await ctx.proofitList.addProofit(proofit);
         return shim.success(Proofit.serialize(proofit).toString('ascii'));
@@ -101,7 +94,7 @@ class ProofitContract extends Contract {
             return shim.error("err: This proofit does not exist.");
         }
 
-        if (Proofit.validationPin(proofit.digest, proofit.salt_validate, pin)){
+        if (Proofit.validationPin(proofit.digest, proofit.salt, pin)){
             ctx.proofitList.deleteProofit(proofit);
         } else {
             return shim.error("err: This pin is invalid.");
