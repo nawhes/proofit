@@ -95,7 +95,7 @@ class CareerContract extends Contract {
             return shim.error("err: A parameter is required.");
         }
         let career = await ctx.careerList.getCareer(recordKey);
-        if (career == null){
+        if (!career){
             return shim.error("err: This career does not exist.");
         }
         return shim.success(Career.serialize(career).toString('ascii'));
@@ -193,6 +193,7 @@ class CareerContract extends Contract {
             return shim.error("err: This career does not exist.");
         }
         ctx.careerList.deleteCareer(career);
+        return shim.success("deleted");
     }
 
     
@@ -219,8 +220,6 @@ class CareerContract extends Contract {
         
         let recordKey = response.payload;
 
-        let authority = new ClientIdentity(ctx.stub);
-        let issuer = authority.getID(); //이게 트랜잭션을 제안한 사람의 ID인가 Invoke당하는 사람의 ID인가..
 
         let career = await ctx.careerList.getCareer(recordKey);
         if (career == null){

@@ -32,8 +32,8 @@ class Account extends State {
         return channelName;
     }
 
-    static async validationPin(preDigest, salt, postPin) {
-        let temp = hash.sha256().update(postPin).digest('hex');
+    static async validationPin(preDigest, salt, pin) {
+        let temp = hash.sha256().update(pin).digest('hex');
         let postDigest = await hash.sha256().update(temp).update(salt).digest('hex');
         if (preDigest === postDigest) {
             return true;

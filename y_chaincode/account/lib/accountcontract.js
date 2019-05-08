@@ -45,13 +45,13 @@ class AccountContract extends Contract {
     /**
      * 계정생성 > return 계정정보
      */
-    async create(ctx, email, pin) {
+    async create(ctx, email, pin, salt) {
         let account = await ctx.accountList.getAccount(email);
-        if (arguments.length != 2){
-            return shim.error("err: Two parameters are required.");
+        if (arguments.length != 3){
+            return shim.error("err: Three parameters are required.");
         }
         if (account == null){
-            account = await Account.createInstance(email, pin, Date());
+            account = await Account.createInstance(email, pin, Date(), salt);
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
         }
@@ -60,9 +60,9 @@ class AccountContract extends Contract {
 
     /**
      * (email, pin) > return 계정정보
-     * (email, pin, channel) > return 이력정보
+     * (email, pin, channel, issuer) > return 이력정보
      */
-    async query(ctx, email, pin, channel){
+    async query(ctx, email, pin, channel, issuer){
         if (arguments.length < 2){
             return shim.error("At least two parameters are required.");
         }
@@ -70,16 +70,15 @@ class AccountContract extends Contract {
         if (account == null){
             return shim.error("err: This account does not exist.");
         }
-        if (arguments.length == 2){
-            return shim.success(Account.serialize(account).toString('ascii'));
-        } else if (Account.validationPin(account.digest, account.salt, pin)){
+        if (Account.validationPin(account.digest, account.salt, pin)){
+            if (arguments.length == 2){
+                return shim.success(Account.serialize(account).toString('ascii'));
+            }
+
             let recordKey = Account.getRecordKey(issuer, pin);
             let temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
             temp = temp.payload;
             let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
-            console.log("#################");
-            console.log(typeof response);
-            console.log(response);
         
             response = JSON.parse(response);
             if (response.status == 500){
@@ -95,7 +94,7 @@ class AccountContract extends Contract {
      * 각 채널에서 이력입력을 위해 사용하는 함수
      */
     async queryKey(ctx, email, pin, issuer) {
-        if (arguments.length != 4){
+        if (arguments.length != 3){
             return shim.error("err: Three parameters are required.");
         }
         let account = await ctx.accountList.getAccount(email);
@@ -122,7 +121,7 @@ class AccountContract extends Contract {
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
         }
-        return 
+        return shim.error("err: This pin is invalid");
     }
 
     async delete(ctx, email, pin, issuer) {//미완성

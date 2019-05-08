@@ -38,12 +38,11 @@ class ProofitContract extends Contract {
 
     async append(ctx, email, pin, channel, issuer) {
         let proofit = await ctx.proofitList.getProofit(email);
-        let temp, response;
         if (proofit == null) {
             proofit = Proofit.createInstance(email);
-            temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin), "account");
+            let temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin), "account");
             temp = temp.payload;
-            response = temp.buffer.toString('ascii', temp.offset, temp.limit);
+            let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
 
             response = JSON.parse(response);
             if (response.status == 500){
@@ -52,9 +51,9 @@ class ProofitContract extends Contract {
     
             Object.assign(proofit, response.payload);    
         }
-        temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer),"account");
+        let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer),"account");
         temp = temp.payload;
-        response = temp.buffer.toString('ascii', temp.offset, temp.limit);
+        let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
     
         response = JSON.parse(response);
         if (response.status == 500){
@@ -92,10 +91,9 @@ class ProofitContract extends Contract {
         let proofit = await ctx.proofitList.getProofit(email);
         if (proofit == null){
             return shim.error("err: This proofit does not exist.");
-        }
-
-        if (Proofit.validationPin(proofit.digest, proofit.salt, pin)){
+        } else if (Proofit.validationPin(proofit.digest, proofit.salt, pin)){
             ctx.proofitList.deleteProofit(proofit);
+            return shim.success("deleted.");
         } else {
             return shim.error("err: This pin is invalid.");
         }
