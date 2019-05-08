@@ -52,7 +52,7 @@ Organizations:
     - &recruit
         Name: recruit
         ID: recruit
-        MSPDir: crypto-config/app
+        MSPDir: crypto-config/recruit
         Policies: &appPolicies
             Readers:
                 Type: Signature
@@ -470,7 +470,7 @@ Profiles:
                 - *language
 
     Proofit:
-        Consortiul: Proofit
+        Consortium: Proofit
         Application:
             <<: *ApplicationDefaults
             Organizations:

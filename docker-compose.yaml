@@ -248,8 +248,8 @@ services:
     command: peer node start
     tty: true
     ports:
-      - 7051:7051
-      - 7052:7052
+      - 8051:7051
+      - 8052:7052
     volumes:
         - /var/run/:/host/var/run/
         - ./recruit/sk.recruit.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/

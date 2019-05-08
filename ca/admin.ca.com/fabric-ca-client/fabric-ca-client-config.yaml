@@ -126,10 +126,10 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: admin.license.com
-  secret: license
+  name: admin.recruit.com
+  secret: recruit
   type: client
-  affiliation: license
+  affiliation: recruit
   maxenrollments: 0
   attributes:
    - name: hf.Registrar.Roles
