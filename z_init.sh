@@ -11,10 +11,11 @@ then
    	sudo rm -rf ./app/admin.app.com/production/ledgersData/   
 	sudo rm -rf ./app/admin.app.com/production/transientStore/
 
-	sudo rm -rf ./app/app.app.com/production/chaincodes ./app/app.app.com/production/ledgersData ./app/app.app.com/production/transientStore
+	sudo rm -rf ./recruit/admin.recruit.com/production/ ./recruit/sk.recruit.com/production
+	sudo mkdir -p ./recruit/admin.recruit.com/production
+	sudo mkdir -p ./recruit/sk.recruit.com/production
 
-	sudo rm -rf ./app/recruit.app.com/production
-	sudo mkdir -p ./app/recruit.app.com/production
+	sudo rm -rf ./app/app.app.com/production/chaincodes ./app/app.app.com/production/ledgersData ./app/app.app.com/production/transientStore
 
 	sudo rm -rf ./univ/admin.univ.com/production ./univ/smu.univ.com/production
 	sudo mkdir -p ./univ/admin.univ.com/production
