@@ -12,7 +12,7 @@ const channelName = "proofit";
 
 class ProofitList extends StateList {
   constructor(ctx) {
-    super(ctx, channelName+"list");
+    super(ctx, channelName+"list-");
     this.use(Proofit);
   }
 

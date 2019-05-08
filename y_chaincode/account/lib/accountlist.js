@@ -12,7 +12,7 @@ const channelName = "account";
 
 class AccountList extends StateList {
   constructor(ctx) {
-    super(ctx, channelName+"list");
+    super(ctx, channelName+"list-");
     this.use(Account);
   }
 

@@ -47,8 +47,8 @@ class AccountContract extends Contract {
      */
     async create(ctx, email, pin, salt) {
         let account = await ctx.accountList.getAccount(email);
-        if (arguments.length != 3){
-            return shim.error("err: Three parameters are required.");
+        if (arguments.length != 4){
+            return shim.error("err: Four parameters are required.");
         }
         if (account == null){
             account = await Account.createInstance(email, pin, Date(), salt);
@@ -63,15 +63,15 @@ class AccountContract extends Contract {
      * (email, pin, channel, issuer) > return 이력정보
      */
     async query(ctx, email, pin, channel, issuer){
-        if (arguments.length < 2){
-            return shim.error("At least two parameters are required.");
+        if (arguments.length < 3){
+            return shim.error("At least three parameters are required.");
         }
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
             return shim.error("err: This account does not exist.");
         }
         if (Account.validationPin(account.digest, account.salt, pin)){
-            if (arguments.length == 2){
+            if (arguments.length == 3){
                 return shim.success(Account.serialize(account).toString('ascii'));
             }
 
@@ -94,8 +94,8 @@ class AccountContract extends Contract {
      * 각 채널에서 이력입력을 위해 사용하는 함수
      */
     async queryKey(ctx, email, pin, issuer) {
-        if (arguments.length != 3){
-            return shim.error("err: Three parameters are required.");
+        if (arguments.length != 4){
+            return shim.error("err: Four parameters are required.");
         }
         let account = await ctx.accountList.getAccount(email);
         if (account == null){
