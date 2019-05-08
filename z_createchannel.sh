@@ -9,6 +9,13 @@ then
 #	cp ./app/admin.app.com/fabric-ca-client/account.block ./license/admin.license.com/fabric-ca-client/
 #	cp ./app/admin.app.com/fabric-ca-client/account.block ./language/admin.language.com/fabric-ca-client/
 
+	echo "###[admin.app.com] create proofit channel"
+	docker exec admin.app.com peer channel create -o orderer.ca.com:7050 -c proofit -f proofit.tx #--certfile PATH --cafile PATH --tls
+	cp ./app/admin.app.com/fabric-ca-client/proofit.block ./recruit/admin.recruit.com/fabric-ca-client/
+	cp ./app/admin.app.com/fabric-ca-client/proofit.block ./univ/admin.univ.com/fabric-ca-client/
+#	cp ./app/admin.app.com/fabric-ca-client/proofit.block ./license/admin.license.com/fabric-ca-client/
+#	cp ./app/admin.app.com/fabric-ca-client/proofit.block ./language/admin.language.com/fabric-ca-client/
+
 	echo "###[admin.univ.com] create univ channel"
 	docker exec admin.univ.com peer channel create -o orderer.ca.com:7050 -c univ -f univ.tx #--certfile PATH --cafile PATH --tls
 	cp ./univ/admin.univ.com/fabric-ca-client/univ.block ./app/admin.app.com/fabric-ca-client/

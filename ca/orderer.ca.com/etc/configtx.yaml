@@ -48,10 +48,26 @@ Organizations:
               Port: 7051
             - Host: app.app.com
               Port: 7051
-            - Host: recruit.app.com
+
+    - &recruit
+        Name: recruit
+        ID: recruit
+        MSPDir: crypto-config/app
+        Policies: &appPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('recruit.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('recruit.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('recruit.member')"
+        AnchorPeers:
+            - Host: admin.recruit.com
               Port: 7051
-
-
+            - Host: sk.recruit.com
+              Port: 7051
 
     - &univ
         Name: univ
@@ -428,6 +444,7 @@ Profiles:
             Organizations:
                 - *ca
                 - *app
+                - *recruit
                 - *univ
                 - *license
                 - *language
@@ -436,6 +453,7 @@ Profiles:
                 Organizations:
                     - *ca
                     - *app
+                    - *recruit
                     - *univ
                     - *license
                     - *language
@@ -450,6 +468,19 @@ Profiles:
                 - *univ
                 - *license
                 - *language
+
+    Proofit:
+        Consortiul: Proofit
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *ca
+                - *app
+                - *recruit
+                - *univ
+                - *license
+                - *language
+
 
     Univ:
         Consortium: Proofit

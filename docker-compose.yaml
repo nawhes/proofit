@@ -34,7 +34,7 @@ networks:
       config:
       - subnet: 172.172.1.32/28
 
-  recruitdb:
+  skdb:
     driver: bridge
     ipam:
       driver: default
@@ -213,8 +213,32 @@ services:
         aliases:
           - appdb
 
-  recruit.app.com:
-    container_name: recruit.app.com
+
+  admin.recruit.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - GODEBUG=netdns=go
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client/
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric-ca-client/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=proofit_proofit
+    working_dir: /etc/hyperledger/fabric-ca-client/
+    tty: true
+    command: peer node start
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./recruit/admin.recruit.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./recruit/admin.recruit.com/production/:/var/hyperledger/production/
+      - ./y_binaries/:/usr/local/bin/
+      - ./y_chaincode/:/etc/hyperledger/chaincode/
+    container_name: admin.recruit.com
+    networks:
+      proofit:
+        aliases:
+          - admin.recruit.com
+
+  sk.recruit.com:
+    container_name: sk.recruit.com
     image: hyperledger/fabric-peer
     environment:
       - GODEBUG=netdns=go
@@ -224,39 +248,39 @@ services:
     command: peer node start
     tty: true
     ports:
-      - 8051:7051
-      - 8052:7052
+      - 7051:7051
+      - 7052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./app/recruit.app.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
-        - ./app/recruit.app.com/etc/:/etc/hyperledger/fabric/
-        - ./app/recruit.app.com/production/:/var/hyperledger/production/
+        - ./recruit/sk.recruit.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./recruit/sk.recruit.com/etc/:/etc/hyperledger/fabric/
+        - ./recruit/sk.recruit.com/production/:/var/hyperledger/production/
         - ./y_binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
-      - recruitdb
+      - skdb
     networks:
       proofit:
         aliases:
-          - recruit.app.com
-      recruitdb:
+          - sk.recruit.com
+      skdb:
         aliases:
-          - recruit
+          - sk
 
-  recruitdb:
-    container_name: recruitdb
+  skdb:
+    container_name: skdb
     image: hyperledger/fabric-couchdb
     # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
     # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
     environment:
-      - COUCHDB_USER=recruitdb
-      - COUCHDB_PASSWORD=recruitdb
+      - COUCHDB_USER=skdb
+      - COUCHDB_PASSWORD=skdb
     ports:
       - 6984:5984
     networks:
-      recruitdb:
+      skdb:
         aliases:
-          - recruitdb
+          - skdb
 
   admin.language.com:
     image: hyperledger/fabric-ca
