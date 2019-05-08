@@ -39,7 +39,6 @@ class ProofitContract extends Contract {
     async append(ctx, email, pin, channel, issuer) {
         let proofit = await ctx.proofitList.getProofit(email);
         if (proofit == null) {
-            proofit = Proofit.createInstance(email);
             let temp = await ctx.stub.invokeChaincode("account", new Array("query", email, pin), "account");
             temp = temp.payload;
             let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -48,8 +47,9 @@ class ProofitContract extends Contract {
             if (response.status == 500){
                 return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
             }
-    
-            Object.assign(proofit, response.payload);    
+	    temp = Proofit.deserialize(response.payload);
+		
+	    proofit = Proofit.createInstance(email, temp.digest);
         }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer),"account");
         temp = temp.payload;
@@ -59,8 +59,7 @@ class ProofitContract extends Contract {
         if (response.status == 500){
             return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
-        let recordKey = response.payload;
-
+        let recordKey = await response.payload;
         temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
         temp = temp.payload;
         response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -70,10 +69,12 @@ class ProofitContract extends Contract {
             return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
         }
 
+	let record = Proofit.deserialize(response.payload);
+
         if (!proofit[channel]){
-            account[channel] = [];
+            proofit[channel] = [];
         }
-        proofit[channel].push(response.payload);
+        await proofit[channel].push(record);
 
         await ctx.proofitList.addProofit(proofit);
         return shim.success(Proofit.serialize(proofit).toString('ascii'));
@@ -91,7 +92,7 @@ class ProofitContract extends Contract {
         let proofit = await ctx.proofitList.getProofit(email);
         if (proofit == null){
             return shim.error("err: This proofit does not exist.");
-        } else if (Proofit.validationPin(proofit.digest, proofit.salt, pin)){
+        } else if (true){
             ctx.proofitList.deleteProofit(proofit);
             return shim.success("deleted.");
         } else {

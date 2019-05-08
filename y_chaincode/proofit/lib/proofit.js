@@ -7,17 +7,17 @@ const channelName = "proofit";
 
 class Proofit extends State {
 
-    constructor(email) {
+    constructor(obj) {
         super(Proofit.getClass());
-	    this.email = email;
+	Object.assign(this,obj);
     }
 
     static fromBuffer(buffer) {
         return State.deserialize(buffer);
     }
 
-    static createInstance(email) {
-        return new Proofit(email);
+    static createInstance(email, digest) {
+        return new Proofit({email, digest});
     }
 
     static getClass() {
