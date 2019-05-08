@@ -38,8 +38,8 @@ class CareerContract extends Contract {
     }
 
     async input(ctx, email, pin, issuer, record) {
-        if (arguments.length != 3){
-            return shim.error("err: Three parameters are required.");
+        if (arguments.length != 5){
+            return shim.error("err: Five parameters are required.");
         }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer), "account");
         temp = temp.payload;
@@ -68,8 +68,8 @@ class CareerContract extends Contract {
 
  
     async query(ctx, email, pin, issuer) {
-        if (arguments.length != 3){
-            return shim.error("err: Three parameters are required.");
+        if (arguments.length != 4){
+            return shim.error("err: Four parameters are required.");
         }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer), "account");
         temp = temp.payload;
@@ -91,8 +91,8 @@ class CareerContract extends Contract {
     
 
     async queryByKey(ctx, recordKey) {
-        if (arguments.length != 1){
-            return shim.error("err: A parameter is required.");
+        if (arguments.length != 2){
+            return shim.error("err: Two parameters are required.");
         }
         let career = await ctx.careerList.getCareer(recordKey);
         if (!career){
@@ -174,8 +174,8 @@ class CareerContract extends Contract {
 
 
     async delete(ctx, email, pin, issuer){
-        if (arguments.length != 2){
-            return shim.error("err: Two parameters are required.");
+        if (arguments.length != 4){
+            return shim.error("err: Four parameters are required.");
         }
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer), "account");
         temp = temp.payload;
