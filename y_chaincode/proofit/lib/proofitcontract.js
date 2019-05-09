@@ -75,7 +75,10 @@ class ProofitContract extends Contract {
         if (!proofit[channel]) {
             proofit[channel] = [];
         }
-        await proofit[channel].push(record);
+        if (!proofit[channel][issuer]) {
+            proofit[channel][issuer] = [];
+        }
+        await proofit[channel][issuer].push(record);
 
         await ctx.proofitList.addProofit(proofit);
         return shim.success(Proofit.serialize(proofit).toString('ascii'));
