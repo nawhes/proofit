@@ -1,0 +1,89 @@
+name: "Network"
+version: "1.0"
+
+channels:
+    account:
+        orderers:
+          - orderer.example.com
+    peers:
+        app.app.com:
+            endorsingPeer: true
+            chaincodeQuery: true
+            ledgerQuery: true
+            eventSource: true
+        sk.recruit.com:
+            endorsingPeer: true
+            chaincodeQuery: true
+            ledgerQuery: true
+            eventSource: true
+        smu.univ.com:
+            endorsingPeer: true
+            chaincodeQuery: true
+            ledgerQuery: true
+            eventSource: true
+    chaincodes: 
+      - account:beta0
+
+organizations:
+    app:
+        mspid: app
+        peers:
+          - app.app.com
+        certificateAuthorities:
+          - server.ca.com
+        adminPrivateKey:
+            path: /home/nawhes/proofit/app/admin.app.com/fabric-ca-client/msp/keystore/caafb583c8036f7e04b76ef8578822cc14a056bc87aaea08ab96a5c2762e1f07_sk
+        signedCert:
+            path: /home/nawhes/proofit/app/admin.app.com/fabric-ca-client/msp/signcerts/cert.pem
+
+    recruit:
+        mspid: recruit
+        peers:
+          - sk.recruit.com
+        certificateAuthorities:
+          - server.ca.com
+        adminPrivateKey:
+            path: /home/nawhes/proofit/app/admin.app.com/fabric-ca-client/msp/keystore/keystore/93959b913d52e54654da9cc69b2a54f6f4d1cbd006422c85b1f846553b405d7b_sk
+        signedCert:
+            path: /home/nawhes/proofit/recruit/admin.recruit.com/fabric-ca-client/msp/signcerts/cert.pem
+
+orderers:
+    orderer.example.com:
+        url: grpc://localhost:7050
+        grpcOptions:
+            ssl-target-name-override: orderer.ca.com
+            grpc-max-send-message-length: -1
+        tlsCACerts:
+            path: /home/nawhes/proofit/ca/server.ca.com/fabric-ca-server/tlscacerts/ca-cert.pem
+
+peers:
+    app.app.com:
+        url: grpc://localhost:7051
+        eventUrl: grpc://localhost:7053
+        grpcOptions:
+            ssl-target-name-override: app.app.com
+            grpc.keepalive_time_ms: 600000
+            request-timeout: 120001
+        tlsCACerts:
+            path: /home/nawhes/proofit/ca/server.ca.com/fabric-ca-server/tlscacerts/ca-cert.pem
+
+    sk.recruit.com:
+        url: grpc://localhost:8051
+        eventUrl: grpc://localhost:8053
+        grpcOptions:
+            ssl-target-name-override: sk.recruit.com
+        tlsCACerts:
+            path: /home/nawhes/proofit/ca/server.ca.com/fabric-ca-server/tlscacerts/ca-cert.pem
+
+certificateAuthorities:
+    server.ca.com:
+       url: https://localhost:7054
+       httpOptions:
+           verify: false
+       tlsCACerts:
+           path: /home/nawhes/proofit/ca/server.ca.com/fabric-ca-server/tlscacerts/ca-cert.pem
+       registrar:
+         - enrollId: admin
+           enrollSecret: adminpw
+       caName: server.ca.com
+
