@@ -12,7 +12,7 @@ const channelName = "license";
 
 class CareerList extends StateList {
   constructor(ctx) {
-    super(ctx, channelName+"list");
+    super(ctx, channelName+"list-");
     this.use(Career);
   }
 
@@ -26,6 +26,10 @@ class CareerList extends StateList {
 
   async updateCareer(career) {
     return this.updateState(career);
+  }
+
+  async deleteCareer(career) {
+    return this.deleteState(career);
   }
 }
 

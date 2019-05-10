@@ -9,7 +9,7 @@ class Proofit extends State {
 
     constructor(obj) {
         super(Proofit.getClass());
-	Object.assign(this,obj);
+        Object.assign(this, obj);
     }
 
     static fromBuffer(buffer) {
@@ -24,16 +24,6 @@ class Proofit extends State {
         return channelName;
     }
     
-    static async validationPin(preDigest, salt, postPin) {
-        let temp = hash.sha256().update(postPin).digest('hex');
-        let postDigest = await hash.sha256().update(temp).update(salt).digest('hex');
-        if (preDigest === postDigest) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 }
 
 module.exports = Proofit;

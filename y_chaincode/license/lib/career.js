@@ -9,19 +9,11 @@ class Career extends State {
 
     constructor(recordKey) {
         super(Career.getClass());
-	this.recordKey = recordKey;
+	    this.recordKey = recordKey;
     }
 
     static fromBuffer(buffer) {
-        return Career.deserialize(Buffer.from(JSON.parse(buffer)));
-    }
-
-    toBuffer() {
-        return Buffer.from(JSON.stringify(this));
-    }
-
-    static deserialize(data) {
-        return State.deserializeClass(data, Career);
+        return State.deserialize(buffer);
     }
 
     static createInstance(recordKey) {

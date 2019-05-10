@@ -2,7 +2,6 @@
 
 const { Contract, Context } = require('fabric-contract-api');
 const shim = require('fabric-shim');
-const ClientIdentity = require('fabric-shim').ClientIdentity;
 
 const Career = require('./career.js');
 const CareerList = require('./careerlist.js');
@@ -47,7 +46,7 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
+            return shim.error("InvokeChaincode was returned 500. >> "+response.message);
         }
         let recordKey = response.payload;
 
@@ -77,7 +76,7 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
+            return shim.error("InvokeChaincode was returned 500. >> "+response.message);
         }
         
         let recordKey = response.payload;
@@ -183,7 +182,7 @@ class CareerContract extends Contract {
     
         response = JSON.parse(response);
         if (response.status == 500){
-            return shim.error("InvokeChaincode was returned 500. >> "+response.payload);
+            return shim.error("InvokeChaincode was returned 500. >> "+response.message);
         }
         
         let recordKey = response.payload;
