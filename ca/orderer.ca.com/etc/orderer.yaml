@@ -36,7 +36,7 @@ General:
         Certificate: /etc/hyperledger/fabric/tls/server.crt
         RootCAs:
           - /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
-        ClientAuthRequired: true
+        ClientAuthRequired: false
         ClientRootCAs: /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
     # Keepalive settings for the GRPC server.
     Keepalive:
