@@ -29,7 +29,7 @@ General:
 
     # TLS: TLS settings for the GRPC server.
     TLS:
-        Enabled: true
+        Enabled: false
         # PrivateKey governs the file location of the private key of the TLS certificate.
         PrivateKey: /etc/hyperledger/fabric/tls/server.key
         # Certificate governs the file location of the server TLS certificate.
@@ -66,7 +66,7 @@ General:
         # RootCAs governs the file locations of certificates of the Certificate Authorities
         # which authorize connections to remote ordering service nodes.
         RootCAs:
-          - tls/ca.crt
+          - tls/server-ca-com-7054.crt
         # ReplicationBuffersSize is the maximum number of bytes that can be allocated
         # for each in-memory buffer used for block replication from other cluster nodes.
         # Each channel has its own memory buffer.
