@@ -29,14 +29,14 @@ General:
 
     # TLS: TLS settings for the GRPC server.
     TLS:
-        Enabled: false
+        Enabled: true
         # PrivateKey governs the file location of the private key of the TLS certificate.
         PrivateKey: /etc/hyperledger/fabric/tls/server.key
         # Certificate governs the file location of the server TLS certificate.
         Certificate: /etc/hyperledger/fabric/tls/server.crt
         RootCAs:
           - /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
-        ClientAuthRequired: false
+        ClientAuthRequired: true
         ClientRootCAs: /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
     # Keepalive settings for the GRPC server.
     Keepalive:

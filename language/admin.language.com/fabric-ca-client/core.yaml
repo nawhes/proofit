@@ -35,7 +35,7 @@ peer:
     # in the same organization. For peers in other organization, see
     # gossip.externalEndpoint for more info.
     # When used as CLI config, this means the peer's endpoint to interact with
-    address: 
+    address: admin.language.com:7051
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
@@ -202,11 +202,11 @@ peer:
     # not mutual TLS auth. See comments on chaincodeListenAddress for more info
     tls:
         # Require server-side TLS
-        enabled: false
+        enabled: true
         # Require client certificates / mutual TLS.
         # Note that clients that are not configured to use a certificate will
         # fail to connect to the peer.
-        clientAuthRequired: false
+        clientAuthRequired: true
         # X.509 certificate used for TLS server
         cert:
             file: /etc/hyperledger/fabric-ca-client/tls/server.crt
