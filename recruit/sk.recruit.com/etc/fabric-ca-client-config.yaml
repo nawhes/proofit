@@ -111,7 +111,7 @@ csr:
       O: Hyperledger
       OU: Fabric
   hosts:
-    - 2a42881f9da6
+    - sk.recruit.com
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server

@@ -111,7 +111,7 @@ csr:
       O: Hyperledger
       OU: Fabric
   hosts:
-    - ba06e5d43d95
+    - smu.univ.com
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server

@@ -111,7 +111,7 @@ csr:
       O: Hyperledger
       OU: Fabric
   hosts:
-    - b02535f66d55
+    - toeic.language.com
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server
