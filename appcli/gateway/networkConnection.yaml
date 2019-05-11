@@ -31,8 +31,8 @@ organizations:
           - app.app.com
         certificateAuthorities:
           - server.ca.com
-        adminPrivateKey:
-            path: /home/nawhes/proofit/app/admin.app.com/fabric-ca-client/msp/keystore/caafb583c8036f7e04b76ef8578822cc14a056bc87aaea08ab96a5c2762e1f07_sk
+        adminPrivateKey: 
+            path: /home/nawhes/proofit/app/admin.app.com/fabric-ca-client/msp/keystore/3072431f753b09bde0795340b96f836d98a5c8d45b5ec79d8d138e8e7ee838ff_sk
         signedCert:
             path: /home/nawhes/proofit/app/admin.app.com/fabric-ca-client/msp/signcerts/cert.pem
 
@@ -43,7 +43,7 @@ organizations:
         certificateAuthorities:
           - server.ca.com
         adminPrivateKey:
-            path: /home/nawhes/proofit/app/admin.app.com/fabric-ca-client/msp/keystore/keystore/93959b913d52e54654da9cc69b2a54f6f4d1cbd006422c85b1f846553b405d7b_sk
+            path: /home/nawhes/proofit/recruit/admin.recruit.com/fabric-ca-client/msp/keystore/6b28651d0765cc6596dc325488a95f64395ef1870587b2d704d2c6f81ae244d8_sk
         signedCert:
             path: /home/nawhes/proofit/recruit/admin.recruit.com/fabric-ca-client/msp/signcerts/cert.pem
 

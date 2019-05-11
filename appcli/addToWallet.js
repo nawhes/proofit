@@ -14,7 +14,7 @@ async function main() {
         // Identity to credentials to be stored in the wallet
         const credPath = path.join(Fixtures, '/app/app.app.com/etc');
         const cert = fs.readFileSync(path.join(credPath, '/msp/signcerts/cert.pem')).toString();
-        const key = fs.readFileSync(path.join(credPath, '/msp/keystore/dd5270f9fa162441375fd91a1e2781af0046d82730dbfc02f330fff47a1f7a5c_sk')).toString();
+        const key = fs.readFileSync(path.join(credPath, '/msp/keystore/f700b39a38526c0940588e3a8b4dcbde12d73b470e4f5f80bb845679d9cbc56c_sk')).toString();
 
         // Load credentials into wallet
         const identityLabel = 'app.app.com';
