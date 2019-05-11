@@ -155,7 +155,7 @@ peer:
         reconnectInterval: 25s
         # This is an endpoint that is published to peers outside of the organization.
         # If this isn't set, the peer will not be known to other organizations.
-        externalEndpoint: 0.0.0.0:7051
+        externalEndpoint: admin.app.com:7051
         # Leader election service configuration
         election:
             # Longest time peer waits for stable membership during leader election startup (unit: second)
@@ -224,11 +224,11 @@ peer:
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:
-            file:
+            file: /etc/hyperledger/fabric-ca-client/tls/server.key
         # X.509 certificate used for TLS when making client connections.
         # If not set, peer.tls.cert.file will be used instead
         clientCert:
-            file:
+            file: /etc/hyperledger/fabric-ca-client/tls/server.crt
 
     # Authentication contains configuration parameters related to authenticating
     # client messages

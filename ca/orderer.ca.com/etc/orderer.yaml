@@ -54,9 +54,9 @@ General:
     Cluster:
         # ClientCertificate governs the file location of the client TLS certificate
         # used to establish mutual TLS connections with other ordering service nodes.
-        ClientCertificate:
+        ClientCertificate: /etc/hyperledger/fabric/tls/server.crt
         # ClientPrivateKey governs the file location of the private key of the client TLS certificate.
-        ClientPrivateKey:
+        ClientPrivateKey: /etc/hyperledger/fabric/tls/server.key
         # DialTimeout governs the maximum duration of time after which connection
         # attempts are considered as failed.
         DialTimeout: 5s
@@ -66,11 +66,11 @@ General:
         # RootCAs governs the file locations of certificates of the Certificate Authorities
         # which authorize connections to remote ordering service nodes.
         RootCAs:
-          - tls/server-ca-com-7054.crt
+          - /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
         # ReplicationBuffersSize is the maximum number of bytes that can be allocated
         # for each in-memory buffer used for block replication from other cluster nodes.
         # Each channel has its own memory buffer.
-        ReplicationBufferSize: 20971520 # 20MB
+        ReplicationBufferSize: 777777777 # 20971520 # 20MB
         # PullTimeout is the maximum duration the ordering node will wait for a block
         # to be received before it aborts.
         ReplicationPullTimeout: 5s
