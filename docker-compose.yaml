@@ -11,42 +11,7 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.172.0.1/24
-
-  appdb:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.172.1.0/28
-
-  toeicdb:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.172.1.16/28
-
-  qnetdb:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.172.1.32/28
-
-  skdb:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.172.1.48/28
-
-  smudb:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.172.1.64/28
+      - subnet: 172.172.0.1/20
 
 services:
   server.ca.com:
@@ -89,7 +54,7 @@ services:
     image: hyperledger/fabric-orderer
     environment:
       - GODEBUG=netdns=go
-      - FABRIC_LOGGING_SPEC=DEBUG
+        # - FABRIC_LOGGING_SPEC=DEBUG
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LOGLEVEL=debug
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
@@ -196,9 +161,6 @@ services:
       proofit:
         aliases:
           - app.app.com
-      appdb:
-        aliases:
-          - app
 
   appdb:
     container_name: appdb
@@ -211,7 +173,7 @@ services:
     ports:
       - 5984:5984
     networks:
-      appdb:
+      proofit:
         aliases:
           - appdb
 
@@ -265,9 +227,6 @@ services:
       proofit:
         aliases:
           - sk.recruit.com
-      skdb:
-        aliases:
-          - sk
 
   skdb:
     container_name: skdb
@@ -280,7 +239,7 @@ services:
     ports:
       - 6984:5984
     networks:
-      skdb:
+      proofit:
         aliases:
           - skdb
 
@@ -333,9 +292,6 @@ services:
       proofit:
         aliases:
           - toeic.language.com
-      toeicdb:
-        aliases:
-          - toeic
 
   toeicdb:
     container_name: toeicdb
@@ -348,7 +304,7 @@ services:
     ports:
       - 7984:5984
     networks:
-      toeicdb:
+      proofit:
         aliases:
           - toeicdb
 
@@ -401,9 +357,6 @@ services:
       proofit:
         aliases:
           - qnet.license.com
-      qnetdb:
-        aliases:
-          - qnet 
 
   qnetdb:
     container_name: qnetdb
@@ -416,7 +369,7 @@ services:
     ports:
       - 8984:5984
     networks:
-      qnetdb:
+      proofit:
         aliases:
           - qnetdb
 
@@ -469,9 +422,6 @@ services:
       proofit:
         aliases:
           - smu.univ.com
-      smudb:
-        aliases:
-          - smu
 
   smudb:
     container_name: smudb
@@ -484,6 +434,6 @@ services:
     ports:
       - 9984:5984
     networks:
-      smudb:
+      proofit:
         aliases:
           - smudb
