@@ -221,7 +221,6 @@ peer:
         clientRootCAs:
             files:
               - /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
-              - /etc/hyperledger/fabric/tls/admin-app-com-7051.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:
