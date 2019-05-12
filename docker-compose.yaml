@@ -171,7 +171,7 @@ services:
       - COUCHDB_USER=appdb
       - COUCHDB_PASSWORD=appdb
     ports:
-      - 5984:5984
+      - 7984:5984
     networks:
       proofit:
         aliases:
@@ -237,13 +237,13 @@ services:
       - COUCHDB_USER=skdb
       - COUCHDB_PASSWORD=skdb
     ports:
-      - 6984:5984
+      - 8984:5984
     networks:
       proofit:
         aliases:
           - skdb
 
-  admin.language.com:
+  admin.univ.com:
     image: hyperledger/fabric-ca:1.4.1 
     environment:
       - GODEBUG=netdns=go
@@ -256,18 +256,18 @@ services:
     command: peer node start
     volumes:
       - /var/run/:/host/var/run/
-      - ./language/admin.language.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./language/admin.language.com/production/:/var/hyperledger/production/
+      - ./univ/admin.univ.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./univ/admin.univ.com/production/:/var/hyperledger/production/
       - ./y_binaries/:/usr/local/bin/
       - ./y_chaincode/:/etc/hyperledger/chaincode/
-    container_name: admin.language.com
+    container_name: admin.univ.com
     networks:
       proofit:
         aliases:
-          - admin.language.com
+          - admin.univ.com
 
-  toeic.language.com:
-    container_name: toeic.language.com
+  smu.univ.com:
+    container_name: smu.univ.com
     image: hyperledger/fabric-peer:1.4.1 
     environment:
       - GODEBUG=netdns=go
@@ -281,32 +281,32 @@ services:
       - 9052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./language/toeic.language.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
-        - ./language/toeic.language.com/etc/:/etc/hyperledger/fabric/
-        - ./language/toeic.language.com/production/:/var/hyperledger/production/
+        - ./univ/smu.univ.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./univ/smu.univ.com/etc/:/etc/hyperledger/fabric/
+        - ./univ/smu.univ.com/production/:/var/hyperledger/production/
         - ./y_binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
-      - toeicdb
+      - smudb
     networks:
       proofit:
         aliases:
-          - toeic.language.com
+          - smu.univ.com
 
-  toeicdb:
-    container_name: toeicdb
-    image: hyperledger/fabric-couchdb:0.4.15 
+  smudb:
+    container_name: smudb
+    image: hyperledger/fabric-couchdb:0.4.15
     # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
     # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
     environment:
-      - COUCHDB_USER=toeicdb
-      - COUCHDB_PASSWORD=toeicdb
+      - COUCHDB_USER=smudb
+      - COUCHDB_PASSWORD=smudb
     ports:
-      - 7984:5984
+      - 9984:5984
     networks:
       proofit:
         aliases:
-          - toeicdb
+          - smudb
 
   admin.license.com:
     image: hyperledger/fabric-ca:1.4.1 
@@ -367,13 +367,14 @@ services:
       - COUCHDB_USER=qnetdb
       - COUCHDB_PASSWORD=qnetdb
     ports:
-      - 8984:5984
+      - 10984:5984
     networks:
       proofit:
         aliases:
           - qnetdb
 
-  admin.univ.com:
+
+  admin.language.com:
     image: hyperledger/fabric-ca:1.4.1 
     environment:
       - GODEBUG=netdns=go
@@ -386,18 +387,18 @@ services:
     command: peer node start
     volumes:
       - /var/run/:/host/var/run/
-      - ./univ/admin.univ.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
-      - ./univ/admin.univ.com/production/:/var/hyperledger/production/
+      - ./language/admin.language.com/fabric-ca-client/:/etc/hyperledger/fabric-ca-client/
+      - ./language/admin.language.com/production/:/var/hyperledger/production/
       - ./y_binaries/:/usr/local/bin/
       - ./y_chaincode/:/etc/hyperledger/chaincode/
-    container_name: admin.univ.com
+    container_name: admin.language.com
     networks:
       proofit:
         aliases:
-          - admin.univ.com
+          - admin.language.com
 
-  smu.univ.com:
-    container_name: smu.univ.com
+  toeic.language.com:
+    container_name: toeic.language.com
     image: hyperledger/fabric-peer:1.4.1 
     environment:
       - GODEBUG=netdns=go
@@ -411,29 +412,29 @@ services:
       - 11052:7052
     volumes:
         - /var/run/:/host/var/run/
-        - ./univ/smu.univ.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
-        - ./univ/smu.univ.com/etc/:/etc/hyperledger/fabric/
-        - ./univ/smu.univ.com/production/:/var/hyperledger/production/
+        - ./language/toeic.language.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
+        - ./language/toeic.language.com/etc/:/etc/hyperledger/fabric/
+        - ./language/toeic.language.com/production/:/var/hyperledger/production/
         - ./y_binaries/:/usr/local/bin/
     depends_on:
       - orderer.ca.com
-      - smudb
+      - toeicdb
     networks:
       proofit:
         aliases:
-          - smu.univ.com
+          - toeic.language.com
 
-  smudb:
-    container_name: smudb
-    image: hyperledger/fabric-couchdb:0.4.15
+  toeicdb:
+    container_name: toeicdb
+    image: hyperledger/fabric-couchdb:0.4.15 
     # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
     # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
     environment:
-      - COUCHDB_USER=smudb
-      - COUCHDB_PASSWORD=smudb
+      - COUCHDB_USER=toeicdb
+      - COUCHDB_PASSWORD=toeicdb
     ports:
-      - 9984:5984
+      - 11984:5984
     networks:
       proofit:
         aliases:
-          - smudb
+          - toeicdb
