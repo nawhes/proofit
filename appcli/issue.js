@@ -35,6 +35,7 @@ async function main() {
     let connectionOptions = {
       identity: userName,
       wallet: wallet,
+      clientTlsIdentity: userName,
       discovery: { enabled: true, asLocalhost: true },
       eventHandlerOptions: {
 	  commitTimeout: 100

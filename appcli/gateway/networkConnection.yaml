@@ -21,8 +21,6 @@ channels:
             chaincodeQuery: true
             ledgerQuery: true
             eventSource: true
-    chaincodes: 
-      - account:beta0
 
 organizations:
     app:
@@ -49,7 +47,7 @@ organizations:
 
 orderers:
     orderer.example.com:
-        url: grpc://localhost:7050
+        url: grpcs://localhost:7050
         grpcOptions:
             ssl-target-name-override: orderer.ca.com
             grpc-max-send-message-length: -1
@@ -58,8 +56,8 @@ orderers:
 
 peers:
     app.app.com:
-        url: grpc://localhost:7051
-        eventUrl: grpc://localhost:7053
+        url: grpcs://localhost:7051
+        eventUrl: grpcs://localhost:7053
         grpcOptions:
             ssl-target-name-override: app.app.com
             grpc.keepalive_time_ms: 600000
@@ -68,8 +66,8 @@ peers:
             path: /home/nawhes/proofit/ca/server.ca.com/fabric-ca-server/tlscacerts/ca-cert.pem
 
     sk.recruit.com:
-        url: grpc://localhost:8051
-        eventUrl: grpc://localhost:8053
+        url: grpcs://localhost:8051
+        eventUrl: grpcs://localhost:8053
         grpcOptions:
             ssl-target-name-override: sk.recruit.com
         tlsCACerts:
