@@ -502,7 +502,7 @@ Profiles:
             ACLs: 
                 <<: *ACLsDefault
                 peer/Propose: /Channel/Application/UnivOwners
-                peer/ChaincodeToChaincode: /Channel/Application/UnivOwners
+                # peer/ChaincodeToChaincode: /Channel/Application/UnivOwners
             Organizations:
                 - *ca
                 - *app
@@ -515,7 +515,7 @@ Profiles:
             ACLs: 
                 <<: *ACLsDefault
                 peer/Propose: /Channel/Application/LicenseOwners
-                peer/ChaincodeToChaincode: /Channel/Application/LicenseOwners
+                # peer/ChaincodeToChaincode: /Channel/Application/LicenseOwners
             Organizations:
                 - *ca
                 - *app
@@ -529,7 +529,7 @@ Profiles:
             ACLs: 
                 <<: *ACLsDefault
                 peer/Propose: /Channel/Application/LanguageOwners
-                peer/ChaincodeToChaincode: /Channel/Application/LanguageOwners
+                # peer/ChaincodeToChaincode: /Channel/Application/LanguageOwners
             Organizations:
                 - *ca
                 - *app

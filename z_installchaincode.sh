@@ -74,13 +74,13 @@ docker exec -e "CORE_PEER_ADDRESS=admin.univ.com:7051" admin.univ.com peer chain
 
 
 echo "###[admin.univ.com] install account chaincode to smu.univ.com"
-docker exec -e "CORE_PEER_ADDRESS=smu.univ.com:7051" admin.univ.com peer chaincode install -n account -v beta0 -l node -p /etc/hyperledger/chaincode/account --tls --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
+docker exec -e "CORE_PEER_ADDRESS=smu.univ.com:9051" admin.univ.com peer chaincode install -n account -v beta0 -l node -p /etc/hyperledger/chaincode/account --tls --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
 
 echo "###[admin.univ.com] install proofitUniv chaincode to smu.univ.com"
-docker exec -e "CORE_PEER_ADDRESS=smu.univ.com:7051" admin.univ.com peer chaincode install -n proofitUniv -v beta0 -l node -p /etc/hyperledger/chaincode/proofitUniv --tls --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
+docker exec -e "CORE_PEER_ADDRESS=smu.univ.com:9051" admin.univ.com peer chaincode install -n proofitUniv -v beta0 -l node -p /etc/hyperledger/chaincode/proofitUniv --tls --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
 
 echo "###[admin.univ.com] install univ chaincode to smu.univ.com"
-docker exec -e "CORE_PEER_ADDRESS=smu.univ.com:7051" admin.univ.com peer chaincode install -n univ -v beta0 -l node -p /etc/hyperledger/chaincode/univ --tls --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
+docker exec -e "CORE_PEER_ADDRESS=smu.univ.com:9051" admin.univ.com peer chaincode install -n univ -v beta0 -l node -p /etc/hyperledger/chaincode/univ --tls --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
 
 
 echo "###[admin.license.com] install account chaincode to admin.license.com"

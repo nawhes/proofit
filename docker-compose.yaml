@@ -272,14 +272,14 @@ services:
     environment:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - FABRIC_LOGGING_SPEC=grpc=debug:debug
+        #- FABRIC_LOGGING_SPEC=grpc=debug:debug
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=proofit_proofit
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
     command: peer node start
     tty: true
     ports:
-      - 9051:7051
-      - 9052:7052
+      - 9051:9051
+      - 9052:9052
     volumes:
         - /var/run/:/host/var/run/
         - ./univ/smu.univ.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
