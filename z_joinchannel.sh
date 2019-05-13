@@ -67,7 +67,6 @@ docker exec -e "CORE_PEER_ADDRESS=admin.license.com:7051" admin.license.com peer
 
 echo "###[admin.license.com] is joining admin.license.com to license channel"
 docker exec -e "CORE_PEER_ADDRESS=admin.license.com:7051" admin.license.com peer channel join -b license.block -o orderer.ca.com:7050 --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
-#docker exec -e "CORE_PEER_ADDRESS=admin.license.com:7051" admin.license.com peer channel join -b license.block -o orderer.ca.com:7050 #--certfile PATH --cafile PATH --tls
 
 
 echo "###[admin.license.com] is joining qnet.license.com to account channel"

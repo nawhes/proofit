@@ -272,6 +272,7 @@ services:
     environment:
       - GODEBUG=netdns=go
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=grpc=debug:debug
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=proofit_proofit
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/
     command: peer node start

@@ -46,8 +46,6 @@ Organizations:
         AnchorPeers:
             - Host: admin.app.com
               Port: 7051
-            - Host: app.app.com
-              Port: 7051
 
     - &recruit
         Name: recruit
@@ -66,8 +64,6 @@ Organizations:
         AnchorPeers:
             - Host: admin.recruit.com
               Port: 7051
-            - Host: sk.recruit.com
-              Port: 7051
 
     - &univ
         Name: univ
@@ -85,8 +81,6 @@ Organizations:
                 Rule: "OR('univ.member')"
         AnchorPeers:
             - Host: admin.univ.com
-              Port: 7051
-            - Host: smu.univ.com
               Port: 7051
 
 
@@ -107,8 +101,7 @@ Organizations:
         AnchorPeers:
             - Host: admin.license.com
               Port: 7051
-            - Host: qnet.license.com
-              Port: 7051
+
 
     - &language
         Name: language
@@ -127,8 +120,7 @@ Organizations:
         AnchorPeers:
             - Host: admin.language.com
               Port: 7051
-            - Host: toeic.language.com
-              Port: 7051
+
 
 ################################################################################
 #
@@ -283,6 +275,20 @@ Application: &ApplicationDefaults
         Admins:
             Type: ImplicitMeta
             Rule: "ANY Admins"
+        # user defined
+        ProofitOwners:
+            Type: Signature
+            Rule: "OR('app.member')"
+        UnivOwners:
+            Type: Signature
+            Rule: "OR('univ.member')"
+        LicenseOwners:
+            Type: Signature
+            Rule: "OR('license.member')"
+        LanguageOwners:
+            Type: Signature
+            Rule: "OR('language.member')"
+
 
     # Capabilities describes the application level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
@@ -415,7 +421,6 @@ Channel: &ChannelDefaults
             Type: ImplicitMeta
             Rule: "ANY Admins"
 
-
     # Capabilities describes the channel level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
     # description
@@ -460,6 +465,7 @@ Profiles:
 
     Account:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
             Organizations:
@@ -469,10 +475,16 @@ Profiles:
                 - *license
                 - *language
 
+
     Proofit:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            ACLs: 
+                <<: *ACLsDefault
+                peer/Propose: /Channel/Application/ProofitOwners
+                peer/ChaincodeToChaincode: /Channel/Application/ProofitOwners
             Organizations:
                 - *ca
                 - *app
@@ -484,16 +496,26 @@ Profiles:
 
     Univ:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            ACLs: 
+                <<: *ACLsDefault
+                peer/Propose: /Channel/Application/UnivOwners
+                peer/ChaincodeToChaincode: /Channel/Application/UnivOwners
             Organizations:
                 - *ca
                 - *app
                 - *univ
     License:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            ACLs: 
+                <<: *ACLsDefault
+                peer/Propose: /Channel/Application/LicenseOwners
+                peer/ChaincodeToChaincode: /Channel/Application/LicenseOwners
             Organizations:
                 - *ca
                 - *app
@@ -501,8 +523,13 @@ Profiles:
 
     Language:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            ACLs: 
+                <<: *ACLsDefault
+                peer/Propose: /Channel/Application/LanguageOwners
+                peer/ChaincodeToChaincode: /Channel/Application/LanguageOwners
             Organizations:
                 - *ca
                 - *app

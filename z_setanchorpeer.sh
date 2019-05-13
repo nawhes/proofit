@@ -8,10 +8,10 @@ echo "###[admin.app.com] set AnchorPeers to univ channel"
 docker exec admin.app.com peer channel update -o orderer.ca.com:7050 -c univ -f appAnchorPeerUniv.tx --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
 
 echo "###[admin.app.com] set AnchorPeers to license channel"
-docker exec admin.app.com peer channel update -o orderer.ca.com:7050 -c univ -f appAnchorPeerLicense.tx --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
+docker exec admin.app.com peer channel update -o orderer.ca.com:7050 -c license -f appAnchorPeerLicense.tx --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
 
 echo "###[admin.app.com] set AnchorPeers to language channel"
-docker exec admin.app.com peer channel update -o orderer.ca.com:7050 -c univ -f appAnchorPeerLanguage.tx --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
+docker exec admin.app.com peer channel update -o orderer.ca.com:7050 -c language -f appAnchorPeerLanguage.tx --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
 
 
 echo "###[admin.recruit.com] set AnchorPeers to recruit channel"

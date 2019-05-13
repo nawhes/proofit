@@ -220,7 +220,7 @@ peer:
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
-              - /etc/hyperledger/fabric-ac-client/tls/server-ca-com-7054.crt
+              - /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:

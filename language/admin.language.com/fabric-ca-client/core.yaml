@@ -216,11 +216,11 @@ peer:
             file: /etc/hyperledger/fabric-ca-client/tls/server.key
         # Trusted root certificate chain for tls.cert
         rootcert:
-            file: /etc/hyperleder/fabric-ca-client/tls/server-ca-com-7054.crt
+            file: /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
-              - /etc/hyperleder/fabric-ca-client/tls/server-ca-com-7054.crt
+              - /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:

@@ -26,7 +26,6 @@ then
 
 	echo "###[admin.language.com] create language channel"
 	docker exec admin.language.com peer channel create -o orderer.ca.com:7050 -c language -f language.tx --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
-	docker exec admin.language.com peer channel create -o orderer.ca.com:7050 -c language -f language.tx #--certfile PATH --cafile PATH --tls
 	cp ./language/admin.language.com/fabric-ca-client/language.block ./app/admin.app.com/fabric-ca-client/
 else
 	echo "please run with root permission"
