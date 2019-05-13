@@ -105,13 +105,13 @@ csr:
     size: 256
   serialnumber:
   names:
-    - C: US
-      ST: North Carolina
+    - C: KR
+      ST: Seoul
       L:
-      O: Hyperledger
-      OU: Fabric
+      O: SMU
+      OU: Proofit
   hosts:
-    - ba06e5d43d95
+    - smu.univ.com
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server

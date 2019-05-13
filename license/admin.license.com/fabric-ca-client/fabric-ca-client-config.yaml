@@ -111,7 +111,7 @@ csr:
       O: SMU
       OU: Proofit
   hosts:
-    - 8151a5e0ace6
+    - admin.license.com
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server

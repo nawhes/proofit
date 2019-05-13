@@ -45,13 +45,25 @@ Organizations:
                 Rule: "OR('app.member')"
         AnchorPeers:
             - Host: admin.app.com
-              Port: 7051
-            - Host: app.app.com
-              Port: 7051
-            - Host: recruit.app.com
-              Port: 7051
+              Port: 7151
 
-
+    - &recruit
+        Name: recruit
+        ID: recruit
+        MSPDir: crypto-config/recruit
+        Policies: &appPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('recruit.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('recruit.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('recruit.member')"
+        AnchorPeers:
+            - Host: admin.recruit.com
+              Port: 8151
 
     - &univ
         Name: univ
@@ -69,9 +81,7 @@ Organizations:
                 Rule: "OR('univ.member')"
         AnchorPeers:
             - Host: admin.univ.com
-              Port: 7051
-            - Host: smu.univ.com
-              Port: 7051
+              Port: 9151
 
 
     - &license
@@ -90,9 +100,8 @@ Organizations:
                 Rule: "OR('license.member')"
         AnchorPeers:
             - Host: admin.license.com
-              Port: 7051
-            - Host: qnet.license.com
-              Port: 7051
+              Port: 10151
+
 
     - &language
         Name: language
@@ -110,9 +119,8 @@ Organizations:
                 Rule: "OR('language.member')"
         AnchorPeers:
             - Host: admin.language.com
-              Port: 7051
-            - Host: toeic.language.com
-              Port: 7051
+              Port: 11151
+
 
 ################################################################################
 #
@@ -267,6 +275,20 @@ Application: &ApplicationDefaults
         Admins:
             Type: ImplicitMeta
             Rule: "ANY Admins"
+        # user defined
+        ProofitOwners:
+            Type: Signature
+            Rule: "OR('app.member')"
+        UnivOwners:
+            Type: Signature
+            Rule: "OR('univ.member')"
+        LicenseOwners:
+            Type: Signature
+            Rule: "OR('license.member')"
+        LanguageOwners:
+            Type: Signature
+            Rule: "OR('language.member')"
+
 
     # Capabilities describes the application level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
@@ -399,7 +421,6 @@ Channel: &ChannelDefaults
             Type: ImplicitMeta
             Rule: "ANY Admins"
 
-
     # Capabilities describes the channel level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
     # description
@@ -428,6 +449,7 @@ Profiles:
             Organizations:
                 - *ca
                 - *app
+                - *recruit
                 - *univ
                 - *license
                 - *language
@@ -436,12 +458,14 @@ Profiles:
                 Organizations:
                     - *ca
                     - *app
+                    - *recruit
                     - *univ
                     - *license
                     - *language
 
     Account:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
             Organizations:
@@ -451,18 +475,47 @@ Profiles:
                 - *license
                 - *language
 
-    Univ:
+
+    Proofit:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            ACLs: 
+                <<: *ACLsDefault
+                peer/Propose: /Channel/Application/ProofitOwners
+                peer/ChaincodeToChaincode: /Channel/Application/ProofitOwners
+            Organizations:
+                - *ca
+                - *app
+                - *recruit
+                - *univ
+                - *license
+                - *language
+
+
+    Univ:
+        Consortium: Proofit
+        <<: *ChannelDefaults
+        Application:
+            <<: *ApplicationDefaults
+            ACLs: 
+                <<: *ACLsDefault
+                peer/Propose: /Channel/Application/UnivOwners
+                # peer/ChaincodeToChaincode: /Channel/Application/UnivOwners
             Organizations:
                 - *ca
                 - *app
                 - *univ
     License:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            ACLs: 
+                <<: *ACLsDefault
+                peer/Propose: /Channel/Application/LicenseOwners
+                # peer/ChaincodeToChaincode: /Channel/Application/LicenseOwners
             Organizations:
                 - *ca
                 - *app
@@ -470,8 +523,13 @@ Profiles:
 
     Language:
         Consortium: Proofit
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            ACLs: 
+                <<: *ACLsDefault
+                peer/Propose: /Channel/Application/LanguageOwners
+                # peer/ChaincodeToChaincode: /Channel/Application/LanguageOwners
             Organizations:
                 - *ca
                 - *app

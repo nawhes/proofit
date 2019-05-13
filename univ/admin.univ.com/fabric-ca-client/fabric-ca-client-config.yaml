@@ -111,7 +111,7 @@ csr:
       O: SMU
       OU: Proofit
   hosts:
-    - d98f7c69364a
+    - admin.univ.com
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server

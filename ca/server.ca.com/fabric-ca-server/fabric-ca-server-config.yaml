@@ -312,6 +312,7 @@ csr:
         O: SMU
         OU: proofit
    hosts:
+     - server.ca.com
      - localhost
    ca:
       expiry: 131400h

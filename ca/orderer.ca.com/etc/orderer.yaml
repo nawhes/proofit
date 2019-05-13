@@ -29,15 +29,15 @@ General:
 
     # TLS: TLS settings for the GRPC server.
     TLS:
-        Enabled: false
+        Enabled: true
         # PrivateKey governs the file location of the private key of the TLS certificate.
-        PrivateKey: 
+        PrivateKey: /etc/hyperledger/fabric/tls/server.key
         # Certificate governs the file location of the server TLS certificate.
-        Certificate: 
+        Certificate: /etc/hyperledger/fabric/tls/server.crt
         RootCAs:
-          - 
-        ClientAuthRequired: false
-        ClientRootCAs:
+          - /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
+        ClientAuthRequired: true
+        ClientRootCAs: /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
     # Keepalive settings for the GRPC server.
     Keepalive:
         # ServerMinInterval is the minimum permitted time between client pings.
@@ -54,9 +54,9 @@ General:
     Cluster:
         # ClientCertificate governs the file location of the client TLS certificate
         # used to establish mutual TLS connections with other ordering service nodes.
-        ClientCertificate:
+        ClientCertificate: /etc/hyperledger/fabric/tls/server.crt
         # ClientPrivateKey governs the file location of the private key of the client TLS certificate.
-        ClientPrivateKey:
+        ClientPrivateKey: /etc/hyperledger/fabric/tls/server.key
         # DialTimeout governs the maximum duration of time after which connection
         # attempts are considered as failed.
         DialTimeout: 5s
@@ -66,7 +66,7 @@ General:
         # RootCAs governs the file locations of certificates of the Certificate Authorities
         # which authorize connections to remote ordering service nodes.
         RootCAs:
-          - tls/ca.crt
+          - /etc/hyperledger/fabric/tls/server-ca-com-7054.crt
         # ReplicationBuffersSize is the maximum number of bytes that can be allocated
         # for each in-memory buffer used for block replication from other cluster nodes.
         # Each channel has its own memory buffer.
