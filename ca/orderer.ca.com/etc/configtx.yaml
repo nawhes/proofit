@@ -45,7 +45,7 @@ Organizations:
                 Rule: "OR('app.member')"
         AnchorPeers:
             - Host: admin.app.com
-              Port: 7051
+              Port: 7151
 
     - &recruit
         Name: recruit
@@ -63,7 +63,7 @@ Organizations:
                 Rule: "OR('recruit.member')"
         AnchorPeers:
             - Host: admin.recruit.com
-              Port: 7051
+              Port: 8151
 
     - &univ
         Name: univ
@@ -81,7 +81,7 @@ Organizations:
                 Rule: "OR('univ.member')"
         AnchorPeers:
             - Host: admin.univ.com
-              Port: 7051
+              Port: 9151
 
 
     - &license
@@ -100,7 +100,7 @@ Organizations:
                 Rule: "OR('license.member')"
         AnchorPeers:
             - Host: admin.license.com
-              Port: 7051
+              Port: 10151
 
 
     - &language
@@ -119,7 +119,7 @@ Organizations:
                 Rule: "OR('language.member')"
         AnchorPeers:
             - Host: admin.language.com
-              Port: 7051
+              Port: 11151
 
 
 ################################################################################

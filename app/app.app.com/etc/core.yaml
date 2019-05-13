@@ -79,7 +79,7 @@ peer:
         # Important: The endpoints here have to be endpoints of peers in the same
         # organization, because the peer would refuse connecting to these endpoints
         # unless they are in the same organization as the peer.
-        bootstrap: admin.app.com:7051
+        bootstrap: admin.app.com:7151
 
         # NOTE: orgLeader and useLeaderElection parameters are mutual exclusive.
         # Setting both to true would result in the termination of the peer
@@ -567,7 +567,7 @@ ledger:
        # not map the CouchDB container port to a server port in docker-compose.
        # Otherwise proper security must be provided on the connection between
        # CouchDB client (on the peer) and server.
-       couchDBAddress: appdb:5984
+       couchDBAddress: appdb:7984
        # This username must have read and write authority on CouchDB
        username: appdb
        # The password is recommended to pass as an environment variable

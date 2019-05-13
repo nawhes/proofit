@@ -18,24 +18,24 @@ peer:
 
     # The Address at local network interface this Peer will listen on.
     # By default, it will listen on all network interfaces
-    listenAddress: 0.0.0.0:7051
+    listenAddress: 0.0.0.0:10151
 
     # The endpoint this peer uses to listen for inbound chaincode connections.
     # If this is commented-out, the listen address is selected to be
     # the peer's address (see below) with port 7052
-    # chaincodeListenAddress: 0.0.0.0:7052
+    chaincodeListenAddress: admin.license.com:10152
 
     # The endpoint the chaincode for this peer uses to connect to the peer.
     # If this is not specified, the chaincodeListenAddress address is selected.
     # And if chaincodeListenAddress is not specified, address is selected from
     # peer listenAddress.
-    # chaincodeAddress: 0.0.0.0:7052
+    chaincodeAddress: admin.license.com:10152
 
     # When used as peer config, this represents the endpoint to other peers
     # in the same organization. For peers in other organization, see
     # gossip.externalEndpoint for more info.
     # When used as CLI config, this means the peer's endpoint to interact with
-    address: admin.license.com:7051
+    address: admin.license.com:10151
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
@@ -79,7 +79,7 @@ peer:
         # Important: The endpoints here have to be endpoints of peers in the same
         # organization, because the peer would refuse connecting to these endpoints
         # unless they are in the same organization as the peer.
-        bootstrap: qnet.license.com:7051
+        bootstrap: qnet.license.com:10051
 
         # NOTE: orgLeader and useLeaderElection parameters are mutual exclusive.
         # Setting both to true would result in the termination of the peer
@@ -105,7 +105,7 @@ peer:
         # Overrides the endpoint that the peer publishes to peers
         # in its organization. For peers in foreign organizations
         # see 'externalEndpoint'
-        endpoint: 
+        endpoint: admin.license.com:10151
         # Maximum count of blocks stored in memory
         maxBlockCountToStore: 100
         # Max time between consecutive message pushes(unit: millisecond)
@@ -155,7 +155,7 @@ peer:
         reconnectInterval: 25s
         # This is an endpoint that is published to peers outside of the organization.
         # If this isn't set, the peer will not be known to other organizations.
-        externalEndpoint: 0.0.0.0:7051
+        externalEndpoint: admin.license.com:10151
         # Leader election service configuration
         election:
             # Longest time peer waits for stable membership during leader election startup (unit: second)
@@ -390,7 +390,7 @@ peer:
         authCachePurgeRetentionRatio: 0.75
         # Whether to allow non-admins to perform non channel scoped queries.
         # When this is false, it means that only peer admins can perform non channel scoped queries.
-        orgMembersAllowedAccess: false
+        orgMembersAllowedAccess: true
 ###############################################################################
 #
 #    VM section

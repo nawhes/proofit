@@ -171,7 +171,7 @@ services:
       - COUCHDB_USER=appdb
       - COUCHDB_PASSWORD=appdb
     ports:
-      - 7984:5984
+      - 7984:7984
     networks:
       proofit:
         aliases:
@@ -212,8 +212,8 @@ services:
     command: peer node start
     tty: true
     ports:
-      - 8051:7051
-      - 8052:7052
+      - 8051:8051
+      - 8052:8052
     volumes:
         - /var/run/:/host/var/run/
         - ./recruit/sk.recruit.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
@@ -237,7 +237,7 @@ services:
       - COUCHDB_USER=skdb
       - COUCHDB_PASSWORD=skdb
     ports:
-      - 8984:5984
+      - 8984:8984
     networks:
       proofit:
         aliases:
@@ -303,7 +303,7 @@ services:
       - COUCHDB_USER=smudb
       - COUCHDB_PASSWORD=smudb
     ports:
-      - 9984:5984
+      - 9984:9984
     networks:
       proofit:
         aliases:
@@ -343,8 +343,8 @@ services:
     command: peer node start
     tty: true
     ports:
-      - 10051:7051
-      - 10052:7052
+      - 10051:10051
+      - 10052:10052
     volumes:
         - /var/run/:/host/var/run/
         - ./license/qnet.license.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
@@ -368,7 +368,7 @@ services:
       - COUCHDB_USER=qnetdb
       - COUCHDB_PASSWORD=qnetdb
     ports:
-      - 10984:5984
+      - 10984:10984
     networks:
       proofit:
         aliases:
@@ -409,8 +409,8 @@ services:
     command: peer node start
     tty: true
     ports:
-      - 11051:7051
-      - 11052:7052
+      - 11051:11051
+      - 11052:11052
     volumes:
         - /var/run/:/host/var/run/
         - ./language/toeic.language.com/working_dir/:/opt/gopath/src/github.com/hyperledger/fabric/
@@ -434,7 +434,7 @@ services:
       - COUCHDB_USER=toeicdb
       - COUCHDB_PASSWORD=toeicdb
     ports:
-      - 11984:5984
+      - 11984:11984
     networks:
       proofit:
         aliases:
