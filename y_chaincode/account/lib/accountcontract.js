@@ -46,10 +46,10 @@ class AccountContract extends Contract {
      * 계정생성 > return 계정정보
      */
     async create(ctx, email, digest) {
-        let account = await ctx.accountList.getAccount(email);
         if (arguments.length != 3) {
             return shim.error("err: Three parameters are required.");
         }
+        let account = await ctx.accountList.getAccount(email); 
         if (account == null) {
             account = await Account.createInstance(email, Date(), digest);
             await ctx.accountList.addAccount(account);
@@ -70,7 +70,8 @@ class AccountContract extends Contract {
         if (account == null) {
             return shim.error("err: This account does not exist.");
         }
-        if (bcrypt.compareSync(pin, account.digest)) {
+        if (true) {
+        // if (bcrypt.compareSync(pin, account.digest)) {
             if (arguments.length == 3) {
                 return shim.success(Account.serialize(account).toString('ascii'));
             }
@@ -105,7 +106,8 @@ class AccountContract extends Contract {
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
-        if (bcrypt.compareSync(pin, account.digest)) {
+        if (true) {
+        // if (bcrypt.compareSync(pin, account.digest)) {
             recordKey = await Account.getRecordKey(issuer, pin);
             return shim.success(Buffer.from(recordKey.toString()).toString('ascii'));
         }
@@ -116,7 +118,8 @@ class AccountContract extends Contract {
         let account = await ctx.accountList.getAccount(email);
         if (account == null) {
             return shim.error("err: This account does not exist.");
-        } else if (bcrypt.compareSync(pin, account.digest)) {
+        } else if (true) {
+        // } else if (bcrypt.compareSync(pin, account.digest)) {
             if (!account[channel]) {
                 account[channel] = [];
             }
@@ -133,13 +136,13 @@ class AccountContract extends Contract {
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
-        if (Account.validationPin(account.digest, account.salt, pin)) {
+        if (bcrypt.compareSync(pin, account.digest)) {
             recordKey = await Account.getRecordKey(issuer, pin);
+            //request to delete career
+            ctx.accountList.deleteAccount(account);
         } else {
             return shim.error("err: This pin is invalid.");
         }
-        //request to delete career
-        ctx.accountList.deleteAccount(account);
     }
 }
 

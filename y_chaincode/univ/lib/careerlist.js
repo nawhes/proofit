@@ -16,20 +16,20 @@ class CareerList extends StateList {
     this.use(Career);
   }
 
-  async addCareer(career) {
-    return this.addState(career);
+  async addCareer(key, career) {
+    return this.addState(key, career);
   }
 
-  async getCareer(recordKey) {
-    return this.getState(recordKey);
+  async getCareer(key) {
+    return this.getState(key);
   }
 
-  async updateCareer(career) {
-    return this.updateState(career);
+  async updateCareer(key, career) {
+    return this.updateState(key, career);
   }
 
-  async deleteCareer(career) {
-    return this.deleteState(career);
+  async deleteCareer(key) {
+    return this.deleteState(key);
   }
 }
 

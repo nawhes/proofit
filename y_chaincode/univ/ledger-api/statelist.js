@@ -9,10 +9,10 @@ class StateList {
         this.supportedClasses = {};
     }
 
-    async addState(state) {
-        let key = this.ctx.stub.createCompositeKey(this.name, [state.recordKey]);
+    async addState(key, state) {
+        let ledgerKey = this.ctx.stub.createCompositeKey(this.name, [key]);
         let data = State.serialize(state);
-        await this.ctx.stub.putState(key, data);
+        await this.ctx.stub.putState(ledgerKey, data);
     }
 
     async getState(key) {
@@ -24,15 +24,15 @@ class StateList {
         return State.deserialize(data);
     }
 
-    async updateState(state) {
-        let key = this.ctx.stub.createCompositeKey(this.name, [state.recordKey]);
+    async updateState(key, state) {
+        let ledgerKey = this.ctx.stub.createCompositeKey(this.name, [key]);
         let data = State.serialize(state);
-        await this.ctx.stub.putState(key, data);
+        await this.ctx.stub.putState(ledgerKey, data);
     }
 
-    async deleteState(state) {
-        let key = this.ctx.stub.createCompositeKey(this.name, [state.recordKey]);
-        await this.ctx.stub.deleteState(key);
+    async deleteState(key) {
+        let ledgerKey = this.ctx.stub.createCompositeKey(this.name, [key]);
+        await this.ctx.stub.deleteState(ledgerKey);
     }
 
     use(stateClass) {

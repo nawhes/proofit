@@ -7,17 +7,17 @@ const channelName = "univ";
 
 class Career extends State {
 
-    constructor(recordKey) {
+    constructor(career) {
         super(Career.getClass());
-	    this.recordKey = recordKey;
+	    Object.assign(this, career);
     }
 
     static fromBuffer(buffer) {
         return State.deserialize(buffer);
     }
 
-    static createInstance(recordKey) {
-        return new Career(recordKey);
+    static createInstance(career) {
+        return new Career(career);
     }
 
     static getClass() {
