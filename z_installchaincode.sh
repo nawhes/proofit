@@ -121,3 +121,4 @@ docker exec -e "CORE_PEER_ADDRESS=toeic.language.com:11051" admin.language.com p
 
 echo "###[admin.language.com] install language chaincode to toeic.language.com"
 docker exec -e "CORE_PEER_ADDRESS=toeic.language.com:11051" admin.language.com peer chaincode install -n language -v beta0 -l node -p /etc/hyperledger/chaincode/language --tls --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
+

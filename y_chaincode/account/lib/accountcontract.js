@@ -77,7 +77,7 @@ class AccountContract extends Contract {
 
             let recordKey = await Account.getRecordKey(issuer, pin);
             await console.log(recordKey);
-            let temp = await ctx.stub.invokeChaincode("univ", new Array("queryByKey", recordKey), "univ");
+            let temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
             temp = temp.payload;
             let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
 

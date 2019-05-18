@@ -72,13 +72,13 @@ class ProofitContract extends Contract {
 
         let record = Proofit.deserialize(response.payload);
 
-        if (!proofit[channel]) {
-            proofit[channel] = [];
+        if (!proofit) {
+            proofit = [];
         }
-        if (!proofit[channel][issuer]) {
-            proofit[channel][issuer] = [];
+        if (!proofit[issuer]) {
+            proofit[issuer] = [];
         }
-        await proofit[channel][issuer].push(record);
+        await proofit[issuer].push(record);
 
         await ctx.proofitList.addProofit(proofit);
         return shim.success(Proofit.serialize(proofit).toString('ascii'));
