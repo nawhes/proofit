@@ -15,9 +15,9 @@ then
 
     docker-compose -f docker-compose.yaml up -d admin.app.com app.app.com admin.recruit.com sk.recruit.com admin.univ.com smu.univ.com admin.license.com qnet.license.com admin.language.com toeic.language.com
 
-    ./z_createchannel.sh
-    ./z_joinchannel.sh
-    ./z_setanchorpeer.sh
+    sh z_createchannel.sh
+    sh z_joinchannel.sh
+    sh z_setanchorpeer.sh
 else
 	echo "please run with root permission"
 	echo "this script need "
