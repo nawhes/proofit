@@ -54,7 +54,7 @@ class ProofitContract extends Contract {
     }
 
 
-    async append(ctx, email, id, pin, channel, issuer) {
+    async append(ctx, email, id, pwd, pin, channel, issuer) {
         if (arguments.length != 6) {
             return shim.error("Six parameters are required.");
         }
@@ -63,6 +63,9 @@ class ProofitContract extends Contract {
         let proofit = await ctx.proofitList.getProofit(key);
         if (proofit == null) {
             return shim.error("err: This proofit does not exist.");
+        }
+        if (!bcrypt.compareSync(pwd, proofit.digest)) {
+            return shim.error("err: ");
         }
 
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer), "account");
@@ -95,13 +98,17 @@ class ProofitContract extends Contract {
 
     }
 
-    async appendEmail(ctx, email, id) {
-        if (arguments.length != 3) {
-            return shim.error("Three parameters are required.");
+    async appendEmail(ctx, email, id, pwd) {
+        if (arguments.length != 4) {
+            return shim.error("Four parameters are required.");
         }
         let key = crypto.pbkdf2Sync(email, id, 4, 32, 'sha256');
         key = key.toString('hex');
         let proofit = await ctx.proofitList.getProofit(key);
+
+        if (!bcrypt.compareSync(pwd, proofit.digest)) {
+            return shim.error("err:");
+        }
         proofit.email = email;
         await ctx.proofitList.addProofit(key, proofit);
         return shim.success(Proofit.serialize(proofit).toString('ascii'));
@@ -130,14 +137,12 @@ class ProofitContract extends Contract {
         let proofit = await ctx.proofitList.getProofit(key);
         if (proofit == null) {
             return shim.error("err: This proofit does not exist.");
-        } else if (true) {
-        // } else if (bcrypt.compareSync(pwd, proofit.digest)) {
-            ctx.proofitList.deleteProofit(key);
-            return shim.success("deleted.");
-        } else {
-            return shim.error("err: This pin is invalid.");
+        } 
+        if (!bcrypt.compareSync(pwd, proofit.digest)) {
+            return shim.error("err: This pwd is invalid.");
         }
-
+        ctx.proofitList.deleteProofit(key);
+        return shim.success("deleted.");
     }
 }
 
