@@ -1,4 +1,4 @@
-docker-compose -f docker-compose.yaml up -d dku.univ.compose
+docker-compose -f docker-compose.yaml up -d dku.univ.com
 
 
 echo "###[admin.univ.com] is joining dku.univ.com to account channel"
