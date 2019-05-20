@@ -52,6 +52,7 @@ class AccountContract extends Contract {
         let account = await ctx.accountList.getAccount(email); 
         if (account == null) {
             account = await Account.createInstance(email, Date(), digest);
+            account.txid.push(ctx.stub.getTxID());
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
         }
@@ -70,8 +71,8 @@ class AccountContract extends Contract {
         if (account == null) {
             return shim.error("err: This account does not exist.");
         }
-        if (true) {
-        // if (bcrypt.compareSync(pin, account.digest)) {
+        // if (true) {
+        if (bcrypt.compareSync(pin, account.digest)) {
             if (arguments.length == 3) {
                 return shim.success(Account.serialize(account).toString('ascii'));
             }
@@ -106,8 +107,8 @@ class AccountContract extends Contract {
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
-        if (true) {
-        // if (bcrypt.compareSync(pin, account.digest)) {
+        // if (true) {
+        if (bcrypt.compareSync(pin, account.digest)) {
             recordKey = await Account.getRecordKey(issuer, pin);
             return shim.success(Buffer.from(recordKey.toString()).toString('ascii'));
         }
@@ -118,12 +119,13 @@ class AccountContract extends Contract {
         let account = await ctx.accountList.getAccount(email);
         if (account == null) {
             return shim.error("err: This account does not exist.");
-        } else if (true) {
-        // } else if (bcrypt.compareSync(pin, account.digest)) {
+        // } else if (true) {
+        } else if (bcrypt.compareSync(pin, account.digest)) {
             if (!account[channel]) {
                 account[channel] = [];
             }
             account[channel].push(issuer);
+            account.txid.push(ctx.stub.getTxID());
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
         }

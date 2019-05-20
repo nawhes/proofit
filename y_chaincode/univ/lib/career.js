@@ -7,9 +7,10 @@ const channelName = "univ";
 
 class Career extends State {
 
-    constructor(career) {
+    constructor(obj) {
         super(Career.getClass());
-	    Object.assign(this, career);
+        obj.txid = [];
+	    Object.assign(this, obj);
     }
 
     static fromBuffer(buffer) {

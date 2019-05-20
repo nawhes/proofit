@@ -56,9 +56,11 @@ class CareerContract extends Contract {
         let career = await ctx.careerList.getCareer(recordKey);
         if (!career) {
             career = Career.createInstance(postRecord);
+            career.txid.push(ctx.stub.getTxID());
             await ctx.careerList.addCareer(recordKey, career);
         } else {
             Object.assign(career, postRecord);
+            career.txid.push(ctx.stub.getTxID());
             await ctx.careerList.updateCareer(recordKey, career);  
         }
         return shim.success(Career.serialize(career).toString('ascii'));

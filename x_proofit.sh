@@ -9,7 +9,7 @@ then
     docker-compose -f docker-compose.yaml down
 
     echo "Proofit network up with 5 organizations and more 20 peers"
-    docker-compose -f docker-compose.yaml up -d server.ca.com admin.ca.com zookeeper.ca.com orderer.ca.com kafka.ca.com appdb skdb smudb qnetdb toeicdb
+    docker-compose -f docker-compose.yaml up -d server.ca.com admin.ca.com zookeeper.ca.com orderer.ca.com kafka.ca.com appdb skdb dkudb smudb qnetdb toeicdb
 
     sleep 10
 

@@ -9,6 +9,7 @@ class Proofit extends State {
 
     constructor(digest) {
         super(Proofit.getClass());
+        this.txid = [];
         this.digest = digest
     }
 

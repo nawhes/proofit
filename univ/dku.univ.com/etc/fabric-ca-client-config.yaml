@@ -99,7 +99,7 @@ tls:
 #
 #############################################################################
 csr:
-  cn: admin.univ.com
+  cn: dku.univ.com
   keyrequest:
     algo: ecdsa
     size: 256
@@ -111,7 +111,7 @@ csr:
       O: SMU
       OU: Proofit
   hosts:
-    - admin.univ.com
+    - dku.univ.com
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server
@@ -125,15 +125,13 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: dku.univ.com
-  secret: dku
-  type: peer
-  affiliation: univ
+  name:
+  type:
+  affiliation:
   maxenrollments: 0
   attributes:
-    - name: role
-      value: peer
-      ecert: true
+   # - name:
+   #   value:
 
 #############################################################################
 #  Enrollment section used to enroll an identity with fabric-ca server

@@ -14,6 +14,7 @@ class Account extends State {
 
     constructor(obj) {
         super(Account.getClass());
+        obj.txid = [];
         Object.assign(this, obj);
     }
 
