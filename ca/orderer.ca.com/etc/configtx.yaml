@@ -476,7 +476,7 @@ Profiles:
                 <<: *ApplicationDefaultPolicies
                 ProofitOwners:
                     Type: Signature
-                    Rule: "OR('app.member')"
+                    Rule: "OR('app.member','recruit.member')"
             ACLs: 
                 <<: *ACLsDefault
                 peer/Propose: /Channel/Application/ProofitOwners
