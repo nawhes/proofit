@@ -56,7 +56,7 @@ class ProofitContract extends Contract {
 
 
     async append(ctx, email, id, pwd, pin, channel, issuer) {
-        if (arguments.length != 7) {
+        if (arguments.length < 7) {
             return shim.error("Seven parameters are required.");
         }
         let key = crypto.pbkdf2Sync(email, id, 4, 32, 'sha256');
@@ -64,20 +64,19 @@ class ProofitContract extends Contract {
         let proofit = await ctx.proofitList.getProofit(key);
         if (proofit == null) {
             return shim.error("err: This proofit does not exist.");
-        }
-        if (!bcrypt.compareSync(pwd, proofit.digest)) {
+        } else if (!bcrypt.compareSync(pwd, proofit.digest)) {
             return shim.error("err: This pwd is invalid.");
         }
 
         let temp = await ctx.stub.invokeChaincode("account", new Array("queryKey", email, pin, issuer), "account");
         temp = temp.payload;
         let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
-
         response = JSON.parse(response);
         if (response.status == 500) {
             return shim.error("InvokeChaincode was returned 500. >> " + response.message);
         }
         let recordKey = await response.payload;
+
         temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
         temp = temp.payload;
         response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -92,7 +91,19 @@ class ProofitContract extends Contract {
         if (!proofit[channel]) {
             proofit[channel] = [];
         }
-        await proofit[channel].push(record);
+        
+        if (arguments.length > 7){
+            let record2 = new Object();
+            for (let i = 7; i < arguments.length; i++) {
+                if (record[arguments[i]]) {
+                    record2[arguments[i]] = record[arguments[i]];
+                }
+            }
+            await proofit[channel].push(record2);
+        } else {
+            await proofit[channel].push(record);
+        }
+
         proofit.txid.push(ctx.stub.getTxID());
         await ctx.proofitList.addProofit(key, proofit);
         return shim.success(Proofit.serialize(proofit).toString('ascii'));

@@ -77,8 +77,8 @@ class AccountContract extends Contract {
                 return shim.success(Account.serialize(account).toString('ascii'));
             }
 
-            let recordKey = await Account.getRecordKey(issuer, pin);
-            await console.log(recordKey);
+            let recordKey = await Account.getRecordKey(email, issuer);
+            recordKey = recordKey.toString('hex');
             let temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
             temp = temp.payload;
             let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
@@ -109,7 +109,8 @@ class AccountContract extends Contract {
         let recordKey;
         // if (true) {
         if (bcrypt.compareSync(pin, account.digest)) {
-            recordKey = await Account.getRecordKey(issuer, pin);
+            recordKey = await Account.getRecordKey(email, issuer);
+            recordKey = recordKey.toString('hex');
             return shim.success(Buffer.from(recordKey.toString()).toString('ascii'));
         }
         return shim.error("err: This pin is invalid");
@@ -139,7 +140,8 @@ class AccountContract extends Contract {
         }
         let recordKey;
         if (bcrypt.compareSync(pin, account.digest)) {
-            recordKey = await Account.getRecordKey(issuer, pin);
+            recordKey = await Account.getRecordKey(email, issuer);
+            recordKey = recordKey.toString('hex');
             //request to delete career
             ctx.accountList.deleteAccount(account);
         } else {
