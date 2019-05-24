@@ -125,7 +125,9 @@ class AccountContract extends Contract {
             if (!account[channel]) {
                 account[channel] = [];
             }
-            account[channel].push(issuer);
+            if (account[channel].indexOf(issuer) == -1){
+                account[channel].push(issuer);
+            }
             account.txid.push(ctx.stub.getTxID());
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
