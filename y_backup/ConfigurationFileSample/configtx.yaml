@@ -56,57 +56,6 @@ Organizations:
             - Host: 127.0.0.1
               Port: 7051
  
-    - &app
-        Name: app
-        ID: app
-        MSPDir: /fabric/app/msp
-        Policies: &appPolicies
-            Readers:
-                Type: Signature
-                Rule: "OR('app.member')"
-            Writers:
-                Type: Signature
-                Rule: "OR('app.member')"
-            Admins:
-                Type: Signature
-                Rule: "OR('app.admin')"
-        AnchorPeers:
-            - Host: app.app.com
-              Port: 7051
-    - &academy
-        Name: academy
-        ID: academy
-        MSPDir: /fabric/academy/msp
-        Policies: &academyPolicies
-            Readers:
-                Type: Signature
-                Rule: "OR('academy.member')"
-            Writers:
-                Type: Signature
-                Rule: "OR('academy.member')"
-            Admins:
-                Type: Signature
-                Rule: "OR('academy.admin')"
-        AnchorPeers:
-            - Host: academy.academy.com
-              Port: 7051
-    - &hiring
-        Name: hiring
-        ID: hiring
-        MSPDir: /fabric/hiring/msp
-        Policies: &hiringPolicies
-            Readers:
-                Type: Signature
-                Rule: "OR('hiring.member')"
-            Writers:
-                Type: Signature
-                Rule: "OR('hiring.member')"
-            Admins:
-                Type: Signature
-                Rule: "OR('hiring.admin')"
-        AnchorPeers:
-            - Host: hiring.hiring.com
-              Port: 7051
 
 
 ################################################################################
@@ -415,28 +364,6 @@ Channel: &ChannelDefaults
 #
 ################################################################################
 Profiles:
-    pheromoneGenesis:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            Organizations:
-                - *app
-                - *academy
-                - *hiring
-        Consortiums:
-            pheromone:
-                Organizations:
-                    - *app
-                    - *academy
-                    - *hiring
-    academyChannel:
-        Consortium: chacademy
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - *app
-                - *academy
-                - *hiring
     # SampleSingleMSPSolo defines a configuration which uses the Solo orderer,
     # and contains a single MSP definition (the MSP sampleconfig).
     # The Consortium SampleConsortium has only a single member, SampleOrg.

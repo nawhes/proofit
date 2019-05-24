@@ -35,7 +35,7 @@ echo "###[admin.recruit.com] is joining admin.recruit.com to proofit channel"
 docker exec -e "CORE_PEER_ADDRESS=admin.recruit.com:8151" admin.recruit.com peer channel join -b proofit.block -o orderer.ca.com:7050 --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
 
 echo "###[admin.recruit.com] is joining sk.recruit.com to proofit channel"
-docker exec -e "CORE_PEER_ADDRESS=sk.recruit.com:851" admin.recruit.com peer channel join -b proofit.block -o orderer.ca.com:7050 --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
+docker exec -e "CORE_PEER_ADDRESS=sk.recruit.com:8051" admin.recruit.com peer channel join -b proofit.block -o orderer.ca.com:7050 --tls --clientauth --cafile /etc/hyperledger/fabric-ca-client/tls/server-ca-com-7054.crt --certfile /etc/hyperledger/fabric-ca-client/tls/server.crt --keyfile /etc/hyperledger/fabric-ca-client/tls/server.key --ordererTLSHostnameOverride orderer.ca.com
 
 
 

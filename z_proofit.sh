@@ -5,7 +5,7 @@ export MSYS_NO_PATHCONV=1
 echo "Proofit network down"
 docker-compose -f docker-compose.yaml down
 
-echo "Proofit network up with 5 organizations and blah"
+echo "Proofit network up with 5 organizations and more 20 peers"
 docker-compose -f docker-compose.yaml up -d server.ca.com admin.ca.com zookeeper.ca.com orderer.ca.com kafka.ca.com appdb skdb smudb qnetdb toeicdb
 
 sleep 10

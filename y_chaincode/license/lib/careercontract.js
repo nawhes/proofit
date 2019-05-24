@@ -55,12 +55,13 @@ class CareerContract extends Contract {
 
         let career = await ctx.careerList.getCareer(recordKey);
         if (!career) {
-            career = Career.createInstance(recordKey);
-            Object.assign(career, postRecord);
-            await ctx.careerList.addCareer(career);
+            career = Career.createInstance(postRecord);
+            career.txid.push(ctx.stub.getTxID());
+            await ctx.careerList.addCareer(recordKey, career);
         } else {
             Object.assign(career, postRecord);
-            await ctx.careerList.updateCareer(career);  
+            career.txid.push(ctx.stub.getTxID());
+            await ctx.careerList.updateCareer(recordKey, career);  
         }
         return shim.success(Career.serialize(career).toString('ascii'));
     }
@@ -191,7 +192,7 @@ class CareerContract extends Contract {
         if (career == null){
             return shim.error("err: This career does not exist.");
         }
-        ctx.careerList.deleteCareer(career);
+        ctx.careerList.deleteCareer(recordKey);
         return shim.success("deleted");
     }
 

@@ -24,6 +24,9 @@ then
 
 	sudo rm -rf ./univ/smu.univ.com/production
 	sudo mkdir -p ./univ/smu.univ.com/production
+	
+	sudo rm -rf ./univ/dku.univ.com/production
+	sudo mkdir -p ./univ/dku.univ.com/production
 
 	sudo rm -rf ./license/admin.license.com/production 
 	sudo mkdir -p ./license/admin.license.com/production

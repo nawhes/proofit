@@ -125,8 +125,8 @@ csr:
 #  attributes - List of name/value pairs of attribute for identity
 #############################################################################
 id:
-  name: smu.univ.com
-  secret: smu
+  name: dku.univ.com
+  secret: dku
   type: peer
   affiliation: univ
   maxenrollments: 0

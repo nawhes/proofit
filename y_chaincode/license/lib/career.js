@@ -7,17 +7,18 @@ const channelName = "license";
 
 class Career extends State {
 
-    constructor(recordKey) {
+    constructor(obj) {
         super(Career.getClass());
-	    this.recordKey = recordKey;
+        obj.txid = [];
+        Object.assign(this, obj);
     }
 
     static fromBuffer(buffer) {
         return State.deserialize(buffer);
     }
 
-    static createInstance(recordKey) {
-        return new Career(recordKey);
+    static createInstance(career) {
+        return new Career(career);
     }
 
     static getClass() {

@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 // Utility class for ledger state
 const State = require('../ledger-api/state.js');
-const hash = require('hash.js');
+const crypto = require('crypto');
 
 const channelName = "account";
 
@@ -14,6 +14,7 @@ class Account extends State {
 
     constructor(obj) {
         super(Account.getClass());
+        obj.txid = [];
         Object.assign(this, obj);
     }
 
@@ -29,10 +30,9 @@ class Account extends State {
         return channelName;
     }
 
-    static async getRecordKey(issuer, pin) {
-        let key = hash.sha256().update(pin).update(issuer).digest('hex');
-        let recordKey = issuer + "-" + key;
-        return recordKey;
+    static async getRecordKey(email, issuer) {
+        let recordKey = crypto.pbkdf2Sync(email, issuer, 4, 32, 'sha256');
+        return recordKey.toString('hex');
     }
 }
 

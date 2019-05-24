@@ -46,12 +46,13 @@ class AccountContract extends Contract {
      * 계정생성 > return 계정정보
      */
     async create(ctx, email, digest) {
-        let account = await ctx.accountList.getAccount(email);
         if (arguments.length != 3) {
             return shim.error("err: Three parameters are required.");
         }
+        let account = await ctx.accountList.getAccount(email); 
         if (account == null) {
             account = await Account.createInstance(email, Date(), digest);
+            account.txid.push(ctx.stub.getTxID());
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
         }
@@ -70,14 +71,15 @@ class AccountContract extends Contract {
         if (account == null) {
             return shim.error("err: This account does not exist.");
         }
+        // if (true) {
         if (bcrypt.compareSync(pin, account.digest)) {
             if (arguments.length == 3) {
                 return shim.success(Account.serialize(account).toString('ascii'));
             }
 
-            let recordKey = await Account.getRecordKey(issuer, pin);
-            await console.log(recordKey);
-            let temp = await ctx.stub.invokeChaincode("univ", new Array("queryByKey", recordKey), "univ");
+            let recordKey = await Account.getRecordKey(email, issuer);
+            recordKey = recordKey.toString('hex');
+            let temp = await ctx.stub.invokeChaincode(channel, new Array("queryByKey", recordKey), channel);
             temp = temp.payload;
             let response = temp.buffer.toString('ascii', temp.offset, temp.limit);
 
@@ -105,8 +107,10 @@ class AccountContract extends Contract {
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
+        // if (true) {
         if (bcrypt.compareSync(pin, account.digest)) {
-            recordKey = await Account.getRecordKey(issuer, pin);
+            recordKey = await Account.getRecordKey(email, issuer);
+            recordKey = recordKey.toString('hex');
             return shim.success(Buffer.from(recordKey.toString()).toString('ascii'));
         }
         return shim.error("err: This pin is invalid");
@@ -116,11 +120,15 @@ class AccountContract extends Contract {
         let account = await ctx.accountList.getAccount(email);
         if (account == null) {
             return shim.error("err: This account does not exist.");
+        // } else if (true) {
         } else if (bcrypt.compareSync(pin, account.digest)) {
             if (!account[channel]) {
                 account[channel] = [];
             }
-            account[channel].push(issuer);
+            if (account[channel].indexOf(issuer) == -1){
+                account[channel].push(issuer);
+            }
+            account.txid.push(ctx.stub.getTxID());
             await ctx.accountList.addAccount(account);
             return shim.success(Account.serialize(account).toString('ascii'));
         }
@@ -133,13 +141,14 @@ class AccountContract extends Contract {
             return shim.error("err: This account does not exist.");
         }
         let recordKey;
-        if (Account.validationPin(account.digest, account.salt, pin)) {
-            recordKey = await Account.getRecordKey(issuer, pin);
+        if (bcrypt.compareSync(pin, account.digest)) {
+            recordKey = await Account.getRecordKey(email, issuer);
+            recordKey = recordKey.toString('hex');
+            //request to delete career
+            ctx.accountList.deleteAccount(account);
         } else {
             return shim.error("err: This pin is invalid.");
         }
-        //request to delete career
-        ctx.accountList.deleteAccount(account);
     }
 }
 

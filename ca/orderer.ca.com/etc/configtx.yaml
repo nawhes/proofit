@@ -79,6 +79,9 @@ Organizations:
             Admins:
                 Type: Signature
                 Rule: "OR('univ.member')"
+            Univs:
+                Type: Signature
+                Rule: "OR('univ.member')"
         AnchorPeers:
             - Host: admin.univ.com
               Port: 9151
@@ -276,18 +279,6 @@ Application: &ApplicationDefaults
             Type: ImplicitMeta
             Rule: "ANY Admins"
         # user defined
-        ProofitOwners:
-            Type: Signature
-            Rule: "OR('app.member')"
-        UnivOwners:
-            Type: Signature
-            Rule: "OR('univ.member')"
-        LicenseOwners:
-            Type: Signature
-            Rule: "OR('license.member')"
-        LanguageOwners:
-            Type: Signature
-            Rule: "OR('language.member')"
 
 
     # Capabilities describes the application level capabilities, see the
@@ -308,7 +299,7 @@ Orderer: &OrdererDefaults
 
     # Orderer Type: The orderer implementation to start.
     # Available types are "solo" and "kafka".
-    OrdererType: kafka
+    OrdererType: solo
 
     # Addresses here is a nonexhaustive list of orderers the peers and clients can
     # connect to. Adding/removing nodes from this list has no impact on their
@@ -387,7 +378,7 @@ Orderer: &OrdererDefaults
         # from the orderer for the peer to validate it.
         BlockValidation:
             Type: ImplicitMeta
-            Rule: "ANY Writers"
+            Rule: "MAJORITY Writers"
 
     # Capabilities describes the orderer level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
@@ -481,10 +472,15 @@ Profiles:
         <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            Policies: 
+                <<: *ApplicationDefaultPolicies
+                ProofitOwners:
+                    Type: Signature
+                    Rule: "OR('app.member','recruit.member')"
             ACLs: 
                 <<: *ACLsDefault
                 peer/Propose: /Channel/Application/ProofitOwners
-                peer/ChaincodeToChaincode: /Channel/Application/ProofitOwners
+                # peer/ChaincodeToChaincode: /Channel/Application/ProofitOwners
             Organizations:
                 - *ca
                 - *app
@@ -493,12 +489,16 @@ Profiles:
                 - *license
                 - *language
 
-
     Univ:
         Consortium: Proofit
         <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            Policies: 
+                <<: *ApplicationDefaultPolicies
+                UnivOwners:
+                    Type: Signature
+                    Rule: "OR('univ.member')"
             ACLs: 
                 <<: *ACLsDefault
                 peer/Propose: /Channel/Application/UnivOwners
@@ -512,6 +512,11 @@ Profiles:
         <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            Policies: 
+                <<: *ApplicationDefaultPolicies
+                LicenseOwners:
+                    Type: Signature
+                    Rule: "OR('license.member')"
             ACLs: 
                 <<: *ACLsDefault
                 peer/Propose: /Channel/Application/LicenseOwners
@@ -526,6 +531,11 @@ Profiles:
         <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
+            Policies: 
+                <<: *ApplicationDefaultPolicies
+                LanguageOwners:
+                    Type: Signature
+                    Rule: "OR('language.member')"
             ACLs: 
                 <<: *ACLsDefault
                 peer/Propose: /Channel/Application/LanguageOwners
